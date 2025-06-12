@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,20 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Past Orders - My Account</title>
     <!-- Main stylesheets -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/font-awesome-all.css" rel="stylesheet">
-    <link href="/css/flaticon.css" rel="stylesheet">
-    <link href="/css/owl.css" rel="stylesheet">
-    <link href="/css/jquery.fancybox.min.css" rel="stylesheet">
-    <link href="/css/animate.css" rel="stylesheet">
-    <link href="/css/color.css" rel="stylesheet">
-    <link href="/css/nice-select.css" rel="stylesheet">
-    <link href="/css/global.css" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/responsive.css" rel="stylesheet">
-    <link href="/css/account.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/chatbot.css">
-    <%- include("partials/links.ejs")%>
+     <link rel="stylesheet" href="/css/account.css">
+ <%- include("partials/links.ejs")%>
 </head>
 <body>
     <%- include("partials/navbar.ejs") %>
@@ -27,215 +16,26 @@
         <%- include("partials/sidebar.ejs") %>
         
         <main class="main-content">
-            <div class="content-header">
-                <h1>Past Orders</h1>
-                <p class="content-subtitle">Your order history</p>
-            </div>
+           
             
-            <% if (orders && orders.length > 0) { %>
-                <div class="orders-table-container">
-                    <table class="orders-table">
-                        <thead>
-                            <tr>
-                                <th>Order #</th>
-                                <th>Date</th>
-                                <th>Items</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Payment</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% orders.forEach(order => { %>
-                                <tr>
-                                    <td class="order-id">#<%= order.orderNumber || order._id.toString().slice(-6) %></td>
-                                    <td class="order-date">
-                                        <%= new Date(order.createdAt).toLocaleDateString('en-US', { 
-                                            year: 'numeric', 
-                                            month: 'short', 
-                                            day: 'numeric' 
-                                        }) %>
-                                    </td>
-                                    <td class="order-items">
-                                        <% if (order.items && order.items.length > 0) { %>
-                                            <div class="items-preview">
-                                                <% order.items.slice(0, 2).forEach(item => { %>
-                                                    <span class="item-name"><%= item.name || item.product?.name %></span>
-                                                <% }); %>
-                                                <% if (order.items.length > 2) { %>
-                                                    <span class="more-items">+<%= order.items.length - 2 %> more</span>
-                                                <% } %>
-                                            </div>
-                                        <% } else { %>
-                                            <span class="no-items">No items</span>
-                                        <% } %>
-                                    </td>
-                                    <td class="order-total">
-                                        <%= (order.amount || order.totalPrice || 0).toFixed(2) %> <%= order.currency || 'EGP' %>
-                                    </td>
-                                    <td class="order-status">
-                                        <span class="status-badge status-<%= (order.status || 'pending').toLowerCase() %>">
-                                            <%= order.status || 'Pending' %>
-                                        </span>
-                                    </td>
-                                    <td class="order-payment">
-                                        <%= order.paymentMethod %> (<%= order.paymentStatus %>)
-                                    </td>
-                                    <td class="order-actions">
-                                        <button class="btn-view" onclick="viewOrder('<%= order._id %>')">👁️ View</button>
-                                        <% if ((order.status || 'pending').toLowerCase() === 'delivered') { %>
-                                            <button class="btn-reorder" onclick="reorder('<%= order._id %>')">🔄 Reorder</button>
-                                        <% } %>
-                                    </td>
-                                </tr>
-                            <% }); %>
-                        </tbody>
-                    </table>
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    📦💭
                 </div>
-            <% } else { %>
-                <div class="empty-state">
-                    <div class="empty-state-icon">
-                        📦💭
-                    </div>
-                    <h3 class="empty-state-title">No Past Orders Yet</h3>
-                    <p class="empty-state-message">
-                        Once you place your first order, it will appear here for easy tracking and reordering!
-                    </p>
-                    <div class="empty-state-actions">
-                        <a href="/categories" class="btn btn-primary">Start Shopping</a>
-                    </div>
+                <h3 class="empty-state-title">No Past Orders Yet</h3>
+                <p class="empty-state-message">
+                    Once you place your first order, it will appear here for easy tracking and reordering!
+                </p>
+                <div class="empty-state-actions">
+                    <a href="/categories" class="btn btn-primary">Start Shopping</a>
                 </div>
-            <% } %>
+            </div>
         </main>
     </div>
     
-    <!-- Order Details Modal -->
-    <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="order-details">
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <h6>Order Information</h6>
-                                <p><strong>Order Number:</strong> <span id="modalOrderNumber"></span></p>
-                                <p><strong>Date:</strong> <span id="modalOrderDate"></span></p>
-                                <p><strong>Status:</strong> <span id="modalOrderStatus"></span></p>
-                                <p><strong>Payment Method:</strong> <span id="modalPaymentMethod"></span></p>
-                                <p><strong>Payment Status:</strong> <span id="modalPaymentStatus"></span></p>
-                            </div>
-                            <div class="col-md-6">
-                                <h6>Shipping Information</h6>
-                                <p><strong>Name:</strong> <span id="modalShippingName"></span></p>
-                                <p><strong>Email:</strong> <span id="modalShippingEmail"></span></p>
-                                <p><strong>Phone:</strong> <span id="modalShippingPhone"></span></p>
-                                <p><strong>Address:</strong> <span id="modalShippingAddress"></span></p>
-                            </div>
-                        </div>
-                        <div class="order-items">
-                            <h6>Order Items</h6>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Item</th>
-                                            <th>Quantity</th>
-                                            <th>Price</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="modalOrderItems">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="order-total text-end mt-3">
-                            <h5>Total: <span id="modalOrderTotal"></span></h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add JavaScript files for navbar scroll effect -->
-    <script src="/js/jquery.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/main.js"></script>
-    <script src="/js/account.js"></script>
-    
-    <!-- Past Orders Functionality -->
-    <script>
-        function viewOrder(orderId) {
-            fetch(`/api/orders/${orderId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const order = data.order;
-                        
-                        // Update modal content
-                        document.getElementById('modalOrderNumber').textContent = order.orderNumber;
-                        document.getElementById('modalOrderDate').textContent = new Date(order.createdAt).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                        });
-                        document.getElementById('modalOrderStatus').textContent = order.status;
-                        document.getElementById('modalPaymentMethod').textContent = order.paymentMethod;
-                        document.getElementById('modalPaymentStatus').textContent = order.paymentStatus;
-                        
-                        // Shipping info
-                        document.getElementById('modalShippingName').textContent = `${order.shippingInfo.firstName} ${order.shippingInfo.lastName}`;
-                        document.getElementById('modalShippingEmail').textContent = order.shippingInfo.email;
-                        document.getElementById('modalShippingPhone').textContent = order.shippingInfo.phone;
-                        document.getElementById('modalShippingAddress').textContent = 
-                            `${order.shippingInfo.address.street}, ${order.shippingInfo.address.city}, ${order.shippingInfo.address.governorate}, ${order.shippingInfo.address.postCode}`;
-                        
-                        // Order items
-                        const itemsContainer = document.getElementById('modalOrderItems');
-                        itemsContainer.innerHTML = '';
-                        order.items.forEach(item => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${item.name}</td>
-                                <td>${item.quantity}</td>
-                                <td>${item.price} ${order.currency || 'EGP'}</td>
-                                <td>${(item.price * item.quantity).toFixed(2)} ${order.currency || 'EGP'}</td>
-                            `;
-                            itemsContainer.appendChild(row);
-                        });
-                        
-                        // Total
-                        document.getElementById('modalOrderTotal').textContent = 
-                            `${order.amount || order.totalPrice} ${order.currency || 'EGP'}`;
-                        
-                        // Show modal
-                        const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
-                        modal.show();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to load order details. Please try again.');
-                });
-        }
-
-        function reorder(orderId) {
-            // Implement reorder functionality
-            alert('Reorder functionality coming soon!');
-        }
-    </script>
- 
-    <%- include("partials/footer.ejs") %>
-    <%- include("partials/scripts.ejs") %>
-    <%- include('partials/chatbot.ejs') %>
+      <script src="/js/account.js"></script>
+    <%- include("partials/footer")%> 
+    <%- include("partials/scripts")%>
+    <%- include('partials/chatbot') %>
 </body>
 </html>

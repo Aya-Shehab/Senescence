@@ -2,7 +2,6 @@ import Cart from '../models/cart.js';
 import Order from '../models/order.js';
 import axios from 'axios';
 import crypto from 'crypto';
-import { createPastOrder } from './pastOrder.js';
 
 //user
 export const placeOrder = async (req, res) => {
@@ -60,9 +59,6 @@ export const placeOrder = async (req, res) => {
         paymentMethod: 'cash',
         paymentStatus: 'pending'
       });
-
-      // Create a past order record
-      await createPastOrder(order);
 
       return res.status(201).json({ 
         message: 'Order placed successfully for Cash on Delivery', 
@@ -131,9 +127,6 @@ export const placeOrder = async (req, res) => {
 
         // generate payment URL
         const paymentUrl = `https://accept.paymob.com/api/acceptance/iframes/${process.env.PAYMOB_IFRAME_ID}?payment_token=${paymentToken}`;
-
-        // Create a past order record
-        await createPastOrder(order);
 
         return res.status(200).json({ 
           success: true, 
@@ -250,70 +243,6 @@ export const updateOrderStatus = async (req, res) => {
     res.status(200).json({ message: 'Order status updated', order });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
-  }
-};
-
-
-export const renderUserOrders = async (req, res) => {
-  try {
-    if (!req.user || !req.user._id) {
-      return res.redirect('/login');
-    }
-
-    const orders = await Order.find({ userId: req.user._id })
-      .populate('items.productId', 'name imageUrl')
-      .sort({ createdAt: -1 });
-    
-    res.render('pastorders', { 
-      orders,
-      user: req.user,
-      title: 'Past Orders'
-    });
-  } catch (error) {
-    console.error('Error fetching orders:', error);
-    res.render('pastorders', { 
-      orders: [],
-      user: req.user,
-      title: 'Past Orders',
-      error: 'Failed to load orders'
-    });
-  }
-};
-
-export const createOrder = async (req, res) => {
-  try {
-    const { items, shippingInfo, paymentMethod } = req.body;
-
-    if (!items || !shippingInfo || !paymentMethod) {
-      return res.status(400).json({
-        success: false,
-        message: 'Missing required fields'
-      });
-    }
-
-    const order = new Order({
-      userId: req.user._id,
-      items,
-      shippingInfo,
-      paymentMethod,
-      totalPrice: items.reduce((total, item) => total + (item.price * item.quantity), 0)
-    });
-
-    await order.save();
-
-    // Create a past order record
-    await createPastOrder(order);
-
-    res.status(201).json({
-      success: true,
-      order
-    });
-  } catch (error) {
-    console.error('Error creating order:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to create order'
-    });
   }
 };
 
