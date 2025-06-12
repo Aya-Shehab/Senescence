@@ -143,88 +143,7 @@
             class="search-box-btn"
             type="button"
             id="searchToggle"
-            style="color: #000; background: none; border: none; padding: 8px 12px;"
-          >
-            <img
-              src="/img/icons/whisk (1).png"
-              alt="Search"
-              style="width: 30px; height: 30px"
-            />
-          </button>
-          <div class="search-panel" id="searchPanel" style="display: none;">
-            <form method="post" action="/search" class="p-3">
-              <div class="form-group position-relative">
-                <input
-                  type="search"
-                  name="search-field"
-                  class="form-control"
-                  placeholder="Search...."
-                  required
-                />
-                <button type="submit" class="search-btn">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
-            </form>
-          </div>
-        </li>
-        <li class="user-btn">
-          <% if (user == null){%>
-          <button
-            type="button"
-            class="btn btn-link p-0"
-            data-bs-toggle="modal"
-            data-bs-target="#authModal"
-          >
-            join us
-          </button>
-    <% }else{%>
-  <a class="btn btn-link p-0" href="/account">
-    <img
-      src="/img/icons/baker.png"
-      alt="User"
-      style="width: 30px; height: 30px"
-    />
-  </a>
-<% } %>
-        </li>
-        <% if (user != null){%>
-        <li class="cart-btn">
-          <button class="btn position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="background: none; border: none; padding: 8px 12px;">
-            <img src="/img/icons/shopping-cart.png" alt="Cart" style="width: 24px; height: 24px;" />
-            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem; padding: 0.25em 0.5em;">
-              0
-            </span>
-          </button>
-        </li>
-        <li>
-          <a href="/api/v1/users/logout">logout</a>
-        </li>
-        <% }%>
-      </ul>
-    </div>
-  </div>
-
-  <!--sticky Header-->
-  <div class="sticky-header">
-    <div class="outer-box">
-      <div class="logo-box">
-        <figure class="logo">
-          <a href="/"><img src="/img/icon/logo-5.png" alt="" /></a>
-        </figure>
-      </div>
-      <div class="menu-area">
-        <nav class="main-menu clearfix">
-          <!--Keep This Empty / Menu will come through Javascript-->
-        </nav>
-      </div>
-      <ul class="menu-right-content clearfix">
-        <li class="search-box-outer">
-          <button
-            class="search-box-btn"
-            type="button"
-            id="searchToggle"
-            style="color: #000; background: none; border: none; padding: 8px 12px;"
+            style="color: #000; background: none; border: none; padding: 8px 12px; display: flex; align-items: center;"
           >
             <img
               src="/img/icons/whisk (1).png"
@@ -260,14 +179,37 @@
             join us
           </button>
           <% }else{%>
-          <a class="btn btn-link p-0" href="/account">
-            <img
-              src="/img/icons/baker.png"
-              alt="User"
-              style="width: 30px; height: 30px"
-            />
-          </a>
-
+          <div class="dropdown">
+            <button
+              class="btn btn-link p-0"
+              type="button"
+              id="accountDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              style="background: none; border: none; padding: 8px 12px; display: flex; align-items: center;"
+            >
+              <img
+                src="/img/icons/baker.png"
+                alt="User"
+                style="width: 30px; height: 30px"
+              />
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="accountDropdown" style="min-width: 200px; padding: 10px; border-radius: 5px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
+              <li>
+                <a class="dropdown-item" href="/account" style="color: #000; padding: 8px 15px; display: flex; align-items: center; gap: 10px;">
+                  <i class="fas fa-user"></i>
+                  My Account
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item" href="/api/v1/users/logout" style="color: #000; padding: 8px 15px; display: flex; align-items: center; gap: 10px;">
+                  <i class="fas fa-sign-out-alt"></i>
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </div>
           <% }%>
         </li>
         <% if (user != null){%>
@@ -279,8 +221,107 @@
             </span>
           </button>
         </li>
-        <li>
-          <a href="/api/v1/users/logout">logout</a>
+        <% }%>
+      </ul>
+    </div>
+  </div>
+
+  <!--sticky Header-->
+  <div class="sticky-header">
+    <div class="outer-box">
+      <div class="logo-box">
+        <figure class="logo">
+          <a href="/"><img src="/img/icon/logo-5.png" alt="" /></a>
+        </figure>
+      </div>
+      <div class="menu-area">
+        <nav class="main-menu clearfix">
+          <!--Keep This Empty / Menu will come through Javascript-->
+        </nav>
+      </div>
+      <ul class="menu-right-content clearfix">
+        <li class="search-box-outer">
+          <button
+            class="search-box-btn"
+            type="button"
+            id="searchToggle"
+            style="color: #000; background: none; border: none; padding: 8px 12px; display: flex; align-items: center;"
+          >
+            <img
+              src="/img/icons/whisk (1).png"
+              alt="Search"
+              style="width: 24px; height: 24px"
+            />
+          </button>
+          <div class="search-panel" id="searchPanel" style="display: none;">
+            <form method="post" action="/search" class="p-3">
+              <div class="form-group position-relative">
+                <input
+                  type="search"
+                  name="search-field"
+                  class="form-control"
+                  placeholder="Search...."
+                  required
+                />
+                <button type="submit" class="search-btn">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </li>
+        <li class="user-btn">
+          <% if (user == null){%>
+          <button
+            type="button"
+            class="btn btn-link p-0"
+            data-bs-toggle="modal"
+            data-bs-target="#authModal"
+          >
+            join us
+          </button>
+          <% }else{%>
+          <div class="dropdown">
+            <button
+              class="btn btn-link p-0"
+              type="button"
+              id="accountDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              style="background: none; border: none; padding: 8px 12px; display: flex; align-items: center;"
+            >
+              <img
+                src="/img/icons/baker.png"
+                alt="User"
+                style="width: 30px; height: 30px"
+              />
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="accountDropdown" style="min-width: 200px; padding: 10px; border-radius: 5px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
+              <li>
+                <a class="dropdown-item" href="/account" style="color: #000; padding: 8px 15px; display: flex; align-items: center; gap: 10px;">
+                  <i class="fas fa-user"></i>
+                  My Account
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item" href="/api/v1/users/logout" style="color: #000; padding: 8px 15px; display: flex; align-items: center; gap: 10px;">
+                  <i class="fas fa-sign-out-alt"></i>
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+          <% }%>
+        </li>
+        <% if (user != null){%>
+        <li class="cart-btn">
+          <button class="btn position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="background: none; border: none; padding: 8px 12px;">
+            <img src="/img/icons/shopping-cart.png" alt="Cart" style="width: 24px; height: 24px;" />
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem; padding: 0.25em 0.5em;">
+              0
+            </span>
+          </button>
         </li>
         <% }%>
       </ul>
