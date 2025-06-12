@@ -5,31 +5,36 @@ import jwt from "jsonwebtoken"
 import User from "../models/user.js"
 import { getProductById } from '../controllers/product.js';
 import Product from "../models/product.js";
+import { getUserPastOrders, getPastOrder } from '../controllers/pastOrder.js';
+import Order from "../models/order.js"; 
 
 
 
 const router = express.Router();
 
 // Middleware to check for user from JWT
-router.use(async (req, res, next) => {
+const getUserFromToken = async (req, res, next) => {
   try {
     const token = req.cookies.token;
 
     if (!token) {
-      res.locals.user = null;
-      return next();
+      return res.status(401).redirect('/login');
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
-    res.locals.user = user || null;
+    
+    if (!user) {
+      return res.status(401).redirect('/login');
+    }
+
+    req.user = user;
     next();
   } catch (error) {
     console.error("JWT middleware error:", error);
-    res.locals.user = null;
-    return next();
+    return res.status(401).redirect('/login');
   }
-});
+};
 
 // Main Pages
 router.get("/", async (req, res) => {
@@ -95,70 +100,19 @@ router.get("/admin", auth(["admin"]),async (req, res) => {
 // Mount shop routes before the catch-all route
 router.use("/shop", shopRoutes);
 
-const getUserFromToken = async (req, res, next) => {
-  try {
-    const token = req.cookies.token; // Assuming you store JWT in cookies
-    if (!token) {
-      return res.redirect('/login'); // Redirect to login if no token
-    }
-    
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
-    
-    if (!user) {
-      return res.redirect('/login');
-    }
-    
-    req.user = user;
-    next();
-  } catch (error) {
-    return res.redirect('/login');
-  }
-};
-
 // Account route
 router.get('/account', getUserFromToken, (req, res) => {
   res.render('account', { user: req.user });
 });
 
-
-//////////////
-
-router.get('/account', async (req, res) => {
-  try {
-    // Get user data from your database
-    // (Replace this with however you get the current user)
-    const user = await User.findById(req.user.id); // Adjust based on your auth system
-    
-    res.render('account', { user: user });
-  } catch (error) {
-    console.error('Error:', error);
-    res.render('account', { user: { name: 'User' } }); // Fallback
-  }
-});
-router.get('/pastorders', (req, res) => {
-    res.render('pastorders');
-});
+// Past Orders Routes
+router.get('/pastorders', auth(["customer"]), getUserPastOrders);
+router.get('/api/orders/:orderId', auth(["customer"]), getPastOrder);
 
 router.get('/favorites', (req, res) => {
     res.render('favorites');
 });
 
-/*router.get('/pastorders', getUserFromToken, async (req, res) => {
-  const orders = await Order.find({ userId: req.user._id }).sort({ createdAt: -1 });
-  res.render('pastorders', { user: req.user, orders });
-});
 
-// Favorites Page  
-router.get('/account/favorites', getUserFromToken, async (req, res) => {
-  const favorites = await Favorite.find({ userId: req.user._id }).populate('product');
-  res.render('favorites', { user: req.user, favorites });
-});
-
-// Remove favorite API
-router.delete('/api/v1/favorites/:id', async (req, res) => {
-  await Favorite.findByIdAndDelete(req.params.id);
-  res.json({ success: true });
-});*/
 
 export default router;
