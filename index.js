@@ -14,10 +14,23 @@ import multer from "multer";
 import path from "path";
 import cookieParser from "cookie-parser";
 import frontendRouter from "./routes/frontend.js"
+
 dotenv.config();
 
 const app = express();
 const port = 3000;
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Global error handler caught:', err);
+  res.status(500).json({ error: 'Internal server error' });
+});
+
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  next();
+});
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -43,21 +56,24 @@ app.use(express.static("public"));
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/order", orderRoutes);
-app.use("/api/v1/custom-orders", customOrderRoutes);
+app.use("/api/v1/custom-order", customOrderRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/contact", contactRoutes);
 app.use("/api/v1/chat", chatRoutes);
 app.use("/api/v1/feedback", feedbackRoutes);
 app.use(frontendRouter);
 
-connectDB();
+// Connect to database
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(port, () => {
+      console.log(`Server started on port ${port}`);
+    });
+  } catch (err) {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+  }
+};
 
-// Add a catch-all route for debugging
-app.use((req, res, next) => {
-  console.log(`404 - Route not found: ${req.method} ${req.url}`);
-  res.status(404).render("404");
-});
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+startServer();

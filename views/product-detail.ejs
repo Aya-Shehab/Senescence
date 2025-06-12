@@ -72,6 +72,10 @@
         display: inline-block;
         margin-right: 5px;
       }
+      .price-select.active {
+        background-color: #ff6b6b;
+        color: white;
+      }
     </style>
   </head>
 
@@ -111,16 +115,25 @@
                                     <% } %>
                                 </div>
                                 <div class="price-buttons">
-                                    <button type="button" class="theme-btn-one">Whole Cake ($<%= product.pricePackWhole %>)</button>
+                                    <button type="button" class="theme-btn-one price-select" data-price-type="whole" data-price="<%= product.pricePackWhole %>">Whole Cake ($<%= product.pricePackWhole %>)</button>
                                     <% if (product.pricePiece) { %>
-                                        <button type="button" class="theme-btn-one">Single Piece ($<%= product.pricePiece %>)</button>
+                                        <button type="button" class="theme-btn-one price-select" data-price-type="piece" data-price="<%= product.pricePiece %>">Single Piece ($<%= product.pricePiece %>)</button>
                                     <% } %>
                                 </div>
+                                <input type="hidden" id="selectedPrice" value="<%= product.pricePackWhole %>">
+                                <input type="hidden" id="selectedPriceType" value="whole">
                                 <div class="addto-cart-box">
                                     <label for="quantity">Quantity:</label>
                                     <input type="number" id="quantity" class="quantity-input" value="1" min="1">
                                     <ul class="clearfix">
-                                        <li><button type="button" class="theme-btn-one" <%= !product.inStock ? 'disabled' : '' %>><%= product.inStock ? 'Add To Cart' : 'Out of Stock' %></button></li>
+                                        <li><button type="button" class="theme-btn-one" onclick="addToCart({
+                                            id: '<%= product._id %>',
+                                            name: '<%= product.name %>',
+                                            price: parseFloat(document.getElementById('selectedPrice').value),
+                                            image: '<%= product.imageUrl %>',
+                                            quantity: parseInt(document.getElementById('quantity').value),
+                                            priceType: document.getElementById('selectedPriceType').value
+                                        })" <%= !product.inStock ? 'disabled' : '' %>><%= product.inStock ? 'Add To Cart' : 'Out of Stock' %></button></li>
                                         <li><button type="button" class="theme-btn-one"><i class="fa fa-heart"></i> Add to Favorites</button></li>
                                     </ul>
                                 </div>
@@ -234,5 +247,28 @@
     <%- include("partials/footer")%>
     <%- include("partials/scripts")%>
     <%- include('partials/chatbot') %>
+    <script src="/js/cart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceButtons = document.querySelectorAll('.price-select');
+            const selectedPriceInput = document.getElementById('selectedPrice');
+            const selectedPriceTypeInput = document.getElementById('selectedPriceType');
+
+            priceButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    priceButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    // Update hidden inputs
+                    selectedPriceInput.value = this.dataset.price;
+                    selectedPriceTypeInput.value = this.dataset.priceType;
+                });
+            });
+
+            // Set initial active state for whole cake button
+            priceButtons[0].classList.add('active');
+        });
+    </script>
   </body>
 </html>

@@ -101,7 +101,7 @@ export const getCustomOrderById = async (req, res) => {
 export const deleteCustomOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
-    const order = await customOrder.findByIdAndDelete(orderId);
+    const order = await CustomOrder.findByIdAndDelete(orderId);
     if (!order) {
       return res.status(404).json({ error: "Custom order not found" });
     }

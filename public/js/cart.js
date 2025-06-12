@@ -60,7 +60,7 @@ function updateCartDisplay() {
       <div class="d-flex align-items-center">
         <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover;" class="me-3">
         <div class="flex-grow-1">
-          <h6 class="mb-1">${item.name}</h6>
+          <h6 class="mb-1">${item.name} (${item.priceType === 'whole' ? 'Whole Cake' : 'Single Piece'})</h6>
           <p class="mb-1 text-muted">$${item.price.toFixed(2)}</p>
           <div class="d-flex align-items-center">
             <button class="btn btn-sm btn-outline-secondary me-2" onclick="updateQuantity(${index}, -1)">-</button>
@@ -117,7 +117,10 @@ function addToCart(item) {
     cart = JSON.parse(savedCart);
   }
 
-  const existingItem = cart.find(cartItem => cartItem.id === item.id);
+  // Check for existing item with same ID AND price type
+  const existingItem = cart.find(cartItem => 
+    cartItem.id === item.id && cartItem.priceType === item.priceType
+  );
   
   if (existingItem) {
     existingItem.quantity += item.quantity;
