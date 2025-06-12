@@ -10,6 +10,7 @@ export const createCustomOrder = async (req, res) => {
       address,
       description,
       preferredDate,
+      notes
     } = req.body;
 
     if (
@@ -56,6 +57,7 @@ export const createCustomOrder = async (req, res) => {
       description,
       preferredDate: preferredDate || null,
       imageUrl,
+      notes: notes || null,
       status: "pending",
     });
 
@@ -66,6 +68,7 @@ export const createCustomOrder = async (req, res) => {
       order: newOrder,
     });
   } catch (e) {
+    console.error('Custom order creation error:', e);
     return res
       .status(500)
       .json({ error: "Internal server error .. try again later" });
@@ -101,7 +104,7 @@ export const getCustomOrderById = async (req, res) => {
 export const deleteCustomOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
-    const order = await CustomOrder.findByIdAndDelete(orderId);
+    const order = await customOrder.findByIdAndDelete(orderId);
     if (!order) {
       return res.status(404).json({ error: "Custom order not found" });
     }

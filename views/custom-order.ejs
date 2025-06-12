@@ -296,7 +296,7 @@
                 submitBtn.prop('disabled', true).text('Sending...');
 
                 $.ajax({
-                    url: '/api/v1/custom-orders',
+                    url: '/api/v1/custom-order',
                     type: 'POST',
                     data: formData,
                     processData: false,

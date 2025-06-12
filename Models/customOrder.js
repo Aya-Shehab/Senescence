@@ -55,5 +55,6 @@ const customOrderSchema = new mongoose.Schema({
     }
 });
 
-const customOrder = mongoose.model('customOrder', customOrderSchema);
+const customOrder = mongoose.model('CustomOrder', customOrderSchema);
 export default customOrder;
+
