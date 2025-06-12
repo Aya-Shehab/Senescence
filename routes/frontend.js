@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken"
 import User from "../models/user.js"
 import { getProductById } from '../controllers/product.js';
 import Product from "../models/product.js";
+import { searchProducts } from '../controllers/searchController.js';
 
 
 
@@ -160,5 +161,8 @@ router.delete('/api/v1/favorites/:id', async (req, res) => {
   await Favorite.findByIdAndDelete(req.params.id);
   res.json({ success: true });
 });*/
+
+// Search route
+router.post('/search', searchProducts);
 
 export default router;

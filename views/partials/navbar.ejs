@@ -139,46 +139,33 @@
       </div>
       <ul class="menu-right-content clearfix">
         <li class="search-box-outer">
-          <div class="dropdown">
-            <button
-              class="search-box-btn"
-              style="
-                background-image: url(/img/icons/icon-bg-6.png);
-                color: #000;
-              "
-              type="button"
-              id="dropdownMenu3"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <img
-                src="/img/icons/whisk (1).png"
-                alt="Search"
-                style="width: 30px; height: 30px"
-              />
-            </button>
-            <div
-              class="dropdown-menu search-panel"
-              aria-labelledby="dropdownMenu3"
-            >
-              <div class="form-container">
-                <form method="post" action="/search">
-                  <div class="form-group">
-                    <input
-                      type="search"
-                      name="search-field"
-                      value=""
-                      placeholder="Search...."
-                      required=""
-                    />
-                    <button type="submit" class="search-btn">
-                      <span class="fas fa-search"></span>
-                    </button>
-                  </div>
-                </form>
+          <button
+            class="search-box-btn"
+            type="button"
+            id="searchToggle"
+            style="color: #000; background: none; border: none; padding: 8px 12px;"
+          >
+            <img
+              src="/img/icons/whisk (1).png"
+              alt="Search"
+              style="width: 30px; height: 30px"
+            />
+          </button>
+          <div class="search-panel" id="searchPanel" style="display: none;">
+            <form method="post" action="/search" class="p-3">
+              <div class="form-group position-relative">
+                <input
+                  type="search"
+                  name="search-field"
+                  class="form-control"
+                  placeholder="Search...."
+                  required
+                />
+                <button type="submit" class="search-btn">
+                  <i class="fas fa-search"></i>
+                </button>
               </div>
-            </div>
+            </form>
           </div>
         </li>
         <li class="user-btn">
@@ -233,43 +220,33 @@
       </div>
       <ul class="menu-right-content clearfix">
         <li class="search-box-outer">
-          <div class="dropdown">
-            <button
-              class="search-box-btn"
-              type="button"
-              id="dropdownMenu4"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-              style="color: #000"
-            >
-              <img
-                src="/img/icons/whisk (1).png"
-                alt="Search"
-                style="width: 30px; height: 30px"
-              />
-            </button>
-            <div
-              class="dropdown-menu search-panel"
-              aria-labelledby="dropdownMenu4"
-            >
-              <div class="form-container">
-                <form method="post" action="/search">
-                  <div class="form-group">
-                    <input
-                      type="search"
-                      name="search-field"
-                      value=""
-                      placeholder="Search...."
-                      required=""
-                    />
-                    <button type="submit" class="search-btn">
-                      <span class="fas fa-search"></span>
-                    </button>
-                  </div>
-                </form>
+          <button
+            class="search-box-btn"
+            type="button"
+            id="searchToggle"
+            style="color: #000; background: none; border: none; padding: 8px 12px;"
+          >
+            <img
+              src="/img/icons/whisk (1).png"
+              alt="Search"
+              style="width: 30px; height: 30px"
+            />
+          </button>
+          <div class="search-panel" id="searchPanel" style="display: none;">
+            <form method="post" action="/search" class="p-3">
+              <div class="form-group position-relative">
+                <input
+                  type="search"
+                  name="search-field"
+                  class="form-control"
+                  placeholder="Search...."
+                  required
+                />
+                <button type="submit" class="search-btn">
+                  <i class="fas fa-search"></i>
+                </button>
               </div>
-            </div>
+            </form>
           </div>
         </li>
         <li class="user-btn">
@@ -572,5 +549,54 @@
       console.error("Signin error:", error);
       showToast("Something went wrong. Try again later.", "error");
     }
+  });
+
+  // Initialize Bootstrap dropdowns
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Bootstrap dropdowns
+    const dropdowns = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+    dropdowns.forEach(dropdown => {
+      new bootstrap.Dropdown(dropdown);
+    });
+
+    // Handle search form submission
+    const searchForms = document.querySelectorAll('.search-panel form');
+    searchForms.forEach(form => {
+      form.addEventListener('submit', function(e) {
+        const searchInput = this.querySelector('input[type="search"]');
+        if (!searchInput.value.trim()) {
+          e.preventDefault();
+        }
+      });
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchToggle = document.getElementById('searchToggle');
+    const searchPanel = document.getElementById('searchPanel');
+    
+    // Toggle search panel
+    searchToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      searchPanel.style.display = searchPanel.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Close search panel when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!searchPanel.contains(e.target) && !searchToggle.contains(e.target)) {
+        searchPanel.style.display = 'none';
+      }
+    });
+
+    // Handle search form submission
+    const searchForms = document.querySelectorAll('.search-panel form');
+    searchForms.forEach(form => {
+      form.addEventListener('submit', function(e) {
+        const searchInput = this.querySelector('input[type="search"]');
+        if (!searchInput.value.trim()) {
+          e.preventDefault();
+        }
+      });
+    });
   });
 </script>
