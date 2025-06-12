@@ -19,6 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Add this line -->
     <script src="/js/admin.js"></script>
+    <script src="/js/inventory.js"></script>
   </head>
   <body>
     <div class="sidebar">
@@ -117,13 +118,72 @@
         <div class="card-container">
           <div class="card highlight-card">
             <h3>Inventory Items</h3>
-            <p>87</p>
+            <p id="totalItems">0</p>
+          </div>
+          <div class="card highlight-card">
+            <button class="btn btn-primary" onclick="showAddProductForm()">
+              <i class="bi bi-plus-circle"></i> Add New Product
+            </button>
           </div>
         </div>
+
+        <!-- Add/Edit Product Form -->
+        <div id="productForm" class="chart-container" style="display: none;">
+          <h3 id="formTitle">Add New Product</h3>
+          <form id="inventoryForm" class="user-form">
+            <input type="hidden" id="productId">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="name">Product Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                  <option value="Cake">Cake</option>
+                  <option value="Cookie">Cookie</option>
+                  <option value="Croissant">Croissant</option>
+                </select>
+
+                <label for="imageUrl">Image URL:</label>
+                <input type="text" id="imageUrl" name="imageUrl">
+
+                <label for="pricePackWhole">Pack Price ($):</label>
+                <input type="number" id="pricePackWhole" name="pricePackWhole" min="0" step="0.01" required>
+
+                <label for="pricePiece">Piece Price ($):</label>
+                <input type="number" id="pricePiece" name="pricePiece" min="0" step="0.01">
+              </div>
+              <div class="col-md-6">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description"></textarea>
+
+                <label for="ingredients">Ingredients (comma-separated):</label>
+                <input type="text" id="ingredients" name="ingredients">
+
+                <label for="inStock">In Stock:</label>
+                <select id="inStock" name="inStock">
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" min="0" required>
+
+                <label for="tags">Tags (comma-separated):</label>
+                <input type="text" id="tags" name="tags">
+              </div>
+            </div>
+            <div class="form-buttons">
+              <button type="submit" class="btn btn-primary">Save</button>
+              <button type="button" class="btn btn-secondary" onclick="hideProductForm()">Cancel</button>
+            </div>
+          </form>
+        </div>
+
         <div class="chart-container">
           <h3>Inventory Status</h3>
           <div class="table-container">
-            <table>
+            <table class="table">
               <thead>
                 <tr>
                   <th>Product Name</th>
@@ -136,79 +196,11 @@
                   <th>In Stock</th>
                   <th>Quantity</th>
                   <th>Tags</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>Bread</td>
-                  <td>Cake</td>
-                  <td>
-                    <img
-                      src="images/bread.jpg"
-                      alt="Bread"
-                      style="
-                        width: 40px;
-                        height: 40px;
-                        object-fit: cover;
-                        border-radius: 5px;
-                      "
-                    />
-                  </td>
-                  <td>3.00</td>
-                  <td>0.50</td>
-                  <td>Freshly baked bread loaf</td>
-                  <td>Flour, Water, Yeast, Salt</td>
-                  <td>Yes</td>
-                  <td>50</td>
-                  <td>classic, daily</td>
-                </tr>
-                <tr>
-                  <td>Croissant</td>
-                  <td>Croissant</td>
-                  <td>
-                    <img
-                      src="images/croissant.jpg"
-                      alt="Croissant"
-                      style="
-                        width: 40px;
-                        height: 40px;
-                        object-fit: cover;
-                        border-radius: 5px;
-                      "
-                    />
-                  </td>
-                  <td>2.50</td>
-                  <td>0.80</td>
-                  <td>Buttery French pastry</td>
-                  <td>Flour, Butter, Yeast, Milk</td>
-                  <td>Yes</td>
-                  <td>30</td>
-                  <td>pastry, breakfast</td>
-                </tr>
-                <tr>
-                  <td>Chocolate Cake</td>
-                  <td>Cake</td>
-                  <td>
-                    <img
-                      src="images/chocolate_cake.jpg"
-                      alt="Chocolate Cake"
-                      style="
-                        width: 40px;
-                        height: 40px;
-                        object-fit: cover;
-                        border-radius: 5px;
-                      "
-                    />
-                  </td>
-                  <td>15.00</td>
-                  <td>2.00</td>
-                  <td>Rich chocolate layered cake</td>
-                  <td>Flour, Cocoa, Sugar, Eggs</td>
-                  <td>No</td>
-                  <td>0</td>
-                  <td>dessert, chocolate</td>
-                </tr>
-                <!-- Add more rows as needed -->
+              <tbody id="inventory-tbody">
+                <!-- Products will be loaded here dynamically -->
               </tbody>
             </table>
           </div>
@@ -572,3 +564,5 @@
     </script>
   </body>
 </html>
+
+
