@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Bakery</title>
+    <link rel="stylesheet" href="/css/account.css">
+      <%- include("partials/links.ejs")%>
+  </head>
+<body>
+    <%- include("partials/navbar.ejs")%>
+    
+    <div class="account-container">
+        <%- include("partials/sidebar.ejs") %>
+        
+        <main class="main-content">
+            <div class="welcome-section">
+                <div class="user-avatar">
+                    <img src="/img/icons/baker.png" alt="User" style="width: 60px; height: 60px;" />
+                </div>
+                <h1 class="user-name">Welcome back,
+                    <%= user.name %>
+                </h1>    <div class="card-icon">🎂</div>
+                <p class="user-subtitle">Enjoy your sweet journey with us</p>
+            </div>
+            
+            <div class="account-grid">
+                <div class="account-card">
+                    <div class="card-icon">📊</div>
+                    <h3>Order Summary</h3>
+                    <p>Total Orders: <strong>0</strong></p>
+                    <p>This Month: <strong>0</strong></p>
+                </div>
+                
+                
+                <div class="account-card">
+                    <div class="card-icon">🎂</div>
+                    <h3>Favorite Category</h3>
+                    <p><strong>Croissants</strong></p>
+                    <p>0 orders this year</p>
+                </div>
+          
+            </div>
+            
+       
+        </main>
+    </div>
+    
+    <script src="/js/account.js"></script>
+    <%- include("partials/footer")%> 
+    <%- include("partials/scripts")%>
+    <%- include('partials/chatbot') %>
+</body>
+</html>

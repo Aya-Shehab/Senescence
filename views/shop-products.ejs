@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+
+    <title>Senescence Bakery</title>
+
+    <%- include("partials/links.ejs")%>
+    <link rel="stylesheet" href="/css/custom.css">
+  </head>
+
+  <body>
+    <%- include("partials/navbar.ejs")%>
+    <main>
+
+        <!--Page Title-->
+        <section class="page-title centred" style="background-image: url(/img/banner/banner-4.jpg);">
+            <div class="auto-container">
+                <div class="content-box">
+                    <div class="title">
+                        <h1>Shop Page</h1>
+                    </div>
+                    <ul class="bread-crumb clearfix">
+                        <li><a href="/">Home</a></li>
+                        <li>Shop</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!--End Page Title-->
+
+        <!-- shop-page-section -->
+        <section class="shop-page-section shop-page-1">
+            <div class="auto-container">
+                <div class="row clearfix">
+                    <div class="col-lg-3 col-md-12 col-sm-12 sidebar-side">
+                        <div class="shop-sidebar default-sidebar">
+                            <div class="sidebar-widget sidebar-categories">
+                                <div class="widget-title">
+                                    <h3>Shop by Categories</h3>
+                                </div>
+                                <div class="widget-content">
+                                    <ul class="categories-list clearfix">
+                                        <li><a href="/shop" class="<%= !currentCategory || currentCategory === 'all' ? 'active' : '' %>">All Products</a></li>
+                                        <li><a href="/shop?category=Cake" class="<%= currentCategory === 'Cake' ? 'active' : '' %>">Cakes</a></li>
+                                        <li><a href="/shop?category=Cookie" class="<%= currentCategory === 'Cookie' ? 'active' : '' %>">Cookies</a></li>
+                                        <li><a href="/shop?category=Croissant" class="<%= currentCategory === 'Croissant' ? 'active' : '' %>">Croissants</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 col-md-12 col-sm-12 content-side">
+                        <div class="our-shop">
+                            <div class="item-sorting clearfix">
+                                <div class="right-column pull-right clearfix">
+                                    <div class="short-box clearfix">
+                                        <p>Sort by</p>
+                                        <div class="select-box">
+                                            <select class="wide">
+                                                <option>Featured</option>
+                                                <option>Highest Price</option>
+                                                <option>Lowest Price</option>
+                                                <option>Name (A-Z)</option>
+                                                <option>Name (Z-A)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <% products.forEach(product => { %>
+                                <div class="col-lg-4 col-md-6 col-sm-12 shop-block">
+                                    <div class="shop-block-one">
+                                        <div class="inner-box">
+                                            <figure class="image-box">
+                                                <img src="<%= product.imageUrl %>" alt="<%= product.name %>">
+                                            </figure>
+                                            <div class="lower-content">
+                                                <span class="price-box">$<%= product.pricePackWhole %></span>
+                                                <h3><a href="/product/<%= product._id %>"><%= product.name %></a></h3>
+                                                <div class="cart-btn">
+                                                    <button onclick="addToCart({
+                                                        id: '<%= product._id %>',
+                                                        name: '<%= product.name %>',
+                                                        price: <%= product.pricePackWhole %>,
+                                                        image: '<%= product.imageUrl %>',
+                                                        quantity: 1
+                                                    })" class="theme-btn-two">Add to cart</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }); %>
+                            </div>
+                            <div class="pagination-wrapper centred">
+                                <ul class="pagination">
+                                    <li><a href="/shop">Prev</a></li>
+                                    <li><a href="/shop">1</a></li>
+                                    <li><a href="/shop" class="active">2</a></li>
+                                    <li><a href="/shop">3</a></li>
+                                    <li><a href="/shop">4</a></li>
+                                    <li><a href="/shop">5</a></li>
+                                    <li><a href="/shop">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- shop-page-section end -->
+    </main>
+    <%- include("partials/footer")%>
+    <%- include("partials/scripts")%>
+    <%- include('partials/chatbot') %>
+  </body>
+</html>

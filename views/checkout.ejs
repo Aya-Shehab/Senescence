@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+
+    <title>Senescence Bakery - Checkout</title>
+
+    <%- include("partials/links.ejs")%>
+    <link rel="stylesheet" href="/css/custom.css">
+    <style>
+      .checkout-section {
+        padding: 80px 0;
+        background-color: #f8f9fa;
+      }
+      .checkout-form {
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.05);
+      }
+      .order-summary {
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        position: sticky;
+        top: 20px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .field-input input,
+      .field-input select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+      .field-input input:focus,
+      .field-input select:focus {
+        border-color: #ff6b6b;
+        box-shadow: 0 0 0 2px rgba(255,107,107,0.1);
+      }
+      .payment-inner {
+        background: #fff;
+        padding: 25px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+      }
+      .option-block {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .option-block:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .theme-btn-one {
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .order-items {
+        margin-bottom: 20px;
+      }
+      .single-box {
+        padding: 15px 0;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .single-box:last-child {
+        border-bottom: none;
+      }
+      .single-box img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+      .sub-title {
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #ff6b6b;
+      }
+      .payment-iframe-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+      .payment-iframe-wrapper {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 800px;
+        height: 90vh;
+        position: relative;
+      }
+      .payment-iframe-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #666;
+      }
+      .payment-iframe {
+        width: 100%;
+        height: calc(100% - 20px);
+        border: none;
+      }
+      .field-input {
+        position: relative;
+      }
+      .error-message {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+      }
+      .field-input.error input,
+      .field-input.error select {
+        border-color: #dc3545;
+      }
+      .field-input.error .error-message {
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <%- include("partials/navbar.ejs")%>
+    <main>
+      <section class="checkout-section">
+        <div class="auto-container">
+          <div class="row">
+            <div class="col-lg-8 col-md-12 col-sm-12">
+              <div class="checkout-form">
+                <div class="billing-info">
+                  <h4 class="sub-title">Billing Details</h4>
+                  <form
+                    action="#"
+                    method="post"
+                    class="billing-form"
+                    id="checkout-form"
+                  >
+                    <div class="row">
+                      <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                        <label>First Name*</label>
+                        <div class="field-input">
+                          <input type="text" name="firstName" required />
+                          <div class="error-message">First name is required</div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                        <label>Last Name*</label>
+                        <div class="field-input">
+                          <input type="text" name="lastName" required />
+                          <div class="error-message">Last name is required</div>
+                        </div>
+                      </div>
+                      <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                        <label>Email Address*</label>
+                        <div class="field-input">
+                          <input type="email" name="email" required />
+                          <div class="error-message">Please enter a valid email address</div>
+                        </div>
+                      </div>
+                      <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                        <label>Phone Number*</label>
+                        <div class="field-input">
+                          <input type="tel" name="phone" required />
+                          <div class="error-message">Phone number must start with 01 and be 11 digits long</div>
+                        </div>
+                      </div>
+                      <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                        <label>Street Address*</label>
+                        <div class="field-input">
+                          <input
+                            type="text"
+                            name="street"
+                            placeholder="Street address"
+                            required
+                          />
+                          <div class="error-message">Street address is required</div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                        <label>City*</label>
+                        <div class="field-input">
+                          <input type="text" name="city" required />
+                          <div class="error-message">City is required</div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                        <label>Postal Code*</label>
+                        <div class="field-input">
+                          <input type="text" name="postCode" required />
+                          <div class="error-message">Postal code is required</div>
+                        </div>
+                      </div>
+                      <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                        <label>Governorate*</label>
+                        <div class="field-input">
+                          <select class="selectmenu" name="governorate" required>
+                            <option value="">Select Governorate</option>
+                            <option value="Cairo">Cairo</option>
+                            <option value="Alexandria">Alexandria</option>
+                            <option value="Ismailia">Ismailia</option>
+                            <option value="Luxor">Luxor</option>
+                            <option value="Giza">Giza</option>
+                            <option value="Aswan">Aswan</option>
+                          </select>
+                          <div class="error-message">Please select a governorate</div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="payment-info">
+                  <h4 class="sub-title">Payment Method</h4>
+                  <div class="payment-inner">
+                    <div class="option-block">
+                      <div class="custom-controls-stacked">
+                        <label class="custom-control material-checkbox">
+                          <input
+                            type="radio"
+                            name="payment_method"
+                            value="cash"
+                            class="material-control-input"
+                          />
+                          <span class="material-control-indicator"></span>
+                          <span class="description">Cash on Delivery</span>
+                        </label>
+                      </div>
+                      <p>
+                        Pay with cash when your order is delivered to your
+                        doorstep. Additional delivery charges may apply.
+                      </p>
+                    </div>
+
+                    <div class="option-block">
+                      <div class="custom-controls-stacked">
+                        <label class="custom-control material-checkbox">
+                          <input
+                            type="radio"
+                            name="payment_method"
+                            value="card"
+                            class="material-control-input"
+                          />
+                          <span class="material-control-indicator"></span>
+                          <span class="description">Credit/Debit Card</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    
+
+                    <div class="btn-box">
+                      <button
+                        type="submit"
+                        form="checkout-form"
+                        class="theme-btn-one"
+                      >
+                        Place Your Order
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-12 col-sm-12">
+              <div class="order-summary">
+                <h4 class="sub-title">Order Summary</h4>
+                <div class="order-items">
+                  <ul id="orderItemsList" class="order-items-list">
+                    <!-- Cart items will be dynamically added here -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <%- include("partials/footer")%>
+    <%- include("partials/scripts")%>
+    <%- include('partials/chatbot') %>
+
+    <!-- Paymob Payment Iframe Container -->
+    <div id="paymentIframeContainer" class="payment-iframe-container">
+      <div class="payment-iframe-wrapper">
+        <button class="payment-iframe-close" onclick="closePaymentIframe()">&times;</button>
+        <iframe id="paymentIframe" class="payment-iframe" src="" frameborder="0"></iframe>
+      </div>
+    </div>
+
+    <script>
+      // Check if user is logged in and cart has items
+      document.addEventListener("DOMContentLoaded", function () {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const user = JSON.parse('<%- JSON.stringify(user || null) %>');
+
+        if (!user) {
+          window.location.href = '/login?redirect=checkout';
+          return;
+        }
+
+        if (cart.length === 0) {
+          window.location.href = '/';
+          return;
+        }
+
+        const orderItemsList = document.getElementById('orderItemsList');
+        let subtotal = 0;
+
+        // Display cart items
+        cart.forEach(item => {
+          const itemTotal = item.price * item.quantity;
+          subtotal += itemTotal;
+          
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <div class="single-box clearfix">
+              <img src="${item.image}" alt="${item.name}" />
+              <h6>${item.name} x ${item.quantity}</h6>
+              <span>$${itemTotal.toFixed(2)}</span>
+            </div>
+          `;
+          orderItemsList.appendChild(li);
+        });
+
+        // Add subtotal and shipping
+        const shipping = 5.99;
+        const total = subtotal + shipping;
+
+        // Add totals to the list
+        orderItemsList.innerHTML += `
+          <li class="sub-total clearfix">
+            <h6>Sub Total</h6>
+            <span>$${subtotal.toFixed(2)}</span>
+          </li>
+          <li class="shipping clearfix">
+            <h6>Shipping</h6>
+            <span>$${shipping.toFixed(2)}</span>
+          </li>
+          <li class="order-total clearfix">
+            <h6>Order Total</h6>
+            <span>$${total.toFixed(2)}</span>
+          </li>
+        `;
+
+        // Validation functions
+        const validations = {
+          email: (value) => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(value);
+          },
+          phone: (value) => {
+            const phoneRegex = /^01[0125][0-9]{8}$/;
+            return phoneRegex.test(value);
+          },
+          required: (value) => value.trim() !== '',
+          governorate: (value) => value !== ''
+        };
+
+        // Form submission handler
+        document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          // Clear previous error states
+          clearErrors();
+          
+          // Validate form
+          if (!validateForm()) {
+            return;
+          }
+
+          const formData = {
+            shippingInfo: {
+              firstName: document.querySelector('input[name="firstName"]').value,
+              lastName: document.querySelector('input[name="lastName"]').value,
+              email: document.querySelector('input[name="email"]').value,
+              phone: document.querySelector('input[name="phone"]').value,
+              address: {
+                street: document.querySelector('input[name="street"]').value,
+                city: document.querySelector('input[name="city"]').value,
+                postCode: document.querySelector('input[name="postCode"]').value,
+                governorate: document.querySelector('select[name="governorate"]').value
+              }
+            },
+            paymentMethod: document.querySelector('input[name="payment_method"]:checked').value,
+            items: JSON.parse(localStorage.getItem('cart') || '[]')
+          };
+
+          try {
+            const response = await fetch(`/api/orders/${user._id}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              throw new Error(data.error || 'Failed to place order');
+            }
+
+            if (formData.paymentMethod === 'card') {
+              // Show Paymob iframe for card payment
+              showPaymentIframe(data.paymentUrl);
+            } else {
+              // For cash payment, redirect to success page
+              localStorage.removeItem('cart'); // Clear cart
+              window.location.href = `/order-success?orderNumber=${data.order.orderNumber}&amount=${data.order.amount}&paymentMethod=${data.order.paymentMethod}`;
+            }
+          } catch (error) {
+            showToast(error.message, 'error');
+          }
+        });
+
+        // Handle payment completion
+        window.addEventListener('message', function(event) {
+          if (event.data === 'payment_completed') {
+            closePaymentIframe();
+            localStorage.removeItem('cart'); // Clear cart
+            window.location.href = '/order-success?orderNumber=' + event.data.orderNumber + '&amount=' + event.data.amount + '&paymentMethod=card';
+          } else if (event.data === 'payment_failed') {
+            closePaymentIframe();
+            showToast('Payment failed. Please try again.', 'error');
+          }
+        });
+
+        // Payment iframe functions
+        function showPaymentIframe(url) {
+          const container = document.getElementById('paymentIframeContainer');
+          const iframe = document.getElementById('paymentIframe');
+          iframe.src = url;
+          container.style.display = 'flex';
+        }
+
+        function closePaymentIframe() {
+          const container = document.getElementById('paymentIframeContainer');
+          const iframe = document.getElementById('paymentIframe');
+          iframe.src = '';
+          container.style.display = 'none';
+        }
+
+        // Listen for payment completion
+        window.addEventListener('message', function(event) {
+          // Verify the origin of the message
+          if (event.origin !== 'https://accept.paymob.com') return;
+
+          try {
+            const data = JSON.parse(event.data);
+            if (data.success) {
+              // Payment successful
+              localStorage.removeItem('cart');
+              window.location.href = '/order-success';
+            } else {
+              // Payment failed
+              closePaymentIframe();
+              alert('Payment failed. Please try again.');
+            }
+          } catch (error) {
+            console.error('Error processing payment message:', error);
+          }
+          });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success - Senescence Bakery</title>
+    <%- include("partials/links.ejs")%>
+    <style>
+        .success-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            text-align: center;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .success-icon {
+            color: #28a745;
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .order-details {
+            margin: 30px 0;
+            text-align: left;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .order-details p {
+            margin: 10px 0;
+        }
+        .btn-continue {
+            margin-top: 20px;
+            padding: 10px 30px;
+        }
+    </style>
+</head>
+<body>
+    <%- include("partials/navbar.ejs")%>
+    
+    <main class="container">
+        <div class="success-container">
+            <div class="success-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h1>Order Placed Successfully!</h1>
+            <p class="lead">Thank you for your order. We'll start preparing it right away.</p>
+            
+            <div class="order-details">
+                <h3>Order Details</h3>
+                <p><strong>Order Number:</strong> <span id="orderNumber"></span></p>
+                <p><strong>Total Amount:</strong> <span id="orderAmount"></span></p>
+                <p><strong>Payment Method:</strong> <span id="paymentMethod"></span></p>
+                <p><strong>Estimated Delivery:</strong> 2-3 business days</p>
+            </div>
+
+            <p>We've sent a confirmation email with all the details.</p>
+            <a href="/" class="btn btn-primary btn-continue">Continue Shopping</a>
+        </div>
+    </main>
+
+    <%- include("partials/footer")%>
+    <%- include("partials/scripts")%>
+    <%- include('partials/chatbot') %>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get order details from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderNumber = urlParams.get('orderNumber');
+            const amount = urlParams.get('amount');
+            const paymentMethod = urlParams.get('paymentMethod');
+
+            // Update the page with order details
+            document.getElementById('orderNumber').textContent = orderNumber || 'N/A';
+            document.getElementById('orderAmount').textContent = amount ? `$${amount}` : 'N/A';
+            document.getElementById('paymentMethod').textContent = paymentMethod === 'cash' ? 'Cash on Delivery' : 'Credit Card';
+        });
+    </script>
+</body>
+</html> 

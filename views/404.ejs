@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+
+    <title>Senescence Bakery</title>
+
+    <%- include("partials/links.ejs")%>
+  </head>
+
+  <body>
+    <%- include("partials/navbar.ejs")%>
+    <main>
+      <div class="boxed_wrapper">
+        <!-- error-section -->
+        <section class="error-section centred sec-pad">
+            <div class="auto-container">
+                <div class="inner-box">
+                    <h1>404</h1>
+                    <h2>Oops! Page Not Found!</h2>
+                    <p>Please go back to <a href="/"> homepage</a></p>
+                    <div class="btn-box">
+                        <a href="/" class="theme-btn-two">Go Back To Home</a>
+                        <a href="/" class="theme-btn-one">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- error-section end -->
+      </div>
+    </main>
+    <%- include("partials/footer")%>
+  </body>
+</html>

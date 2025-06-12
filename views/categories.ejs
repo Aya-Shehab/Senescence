@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+
+    <title>Senescence Bakery</title>
+
+    <%- include("partials/links.ejs")%>
+    
+    <link rel="stylesheet" href="/css/custom.css">
+  </head>
+
+  <body>
+    <%- include("partials/navbar.ejs")%>
+    <main>
+        <!-- new-products-section -->
+      <section class="shop-section">
+        <div class="auto-container">
+          <div class="sec-title">
+            <p>Our Shop</p>
+            <h2>Our Cakes <br />Collection</h2>
+          </div>
+          <div class="three-item-carousel owl-carousel owl-theme owl-dots-none nav-style-one centred">
+            <% 
+              const cakeProducts = products.filter(p => p.category === 'Cake');
+              if (cakeProducts.length > 0) {
+                cakeProducts.forEach(product => { 
+            %>
+              <div class="shop-block-one">
+                <div class="inner-box">
+                  <figure class="image-box">
+                    <img src="<%= product.imageUrl %>" alt="<%= product.name %>" />
+                  </figure>
+                  <div class="lower-content">
+                    <span class="price-box">$<%= product.pricePackWhole %></span>
+                    <h3><a href="/product/<%= product._id %>"><%= product.name %></a></h3>
+                    <div class="cart-btn">
+                      <a href="/product/<%= product._id %>" class="theme-btn-two">Add to cart</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% 
+                });
+              } else {
+            %>
+              <div class="no-products">
+                <p>No cakes available at the moment.</p>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </section>
+      <!-- new-products-section end -->
+
+      <!-- new-products-section -->
+      <section class="shop-section">
+        <div class="auto-container">
+          <div class="sec-title">
+            <h2>Our Cookies <br />Collection</h2>
+          </div>
+          <div class="three-item-carousel owl-carousel owl-theme owl-dots-none nav-style-one centred">
+            <% 
+              const cookieProducts = products.filter(p => p.category === 'Cookie');
+              if (cookieProducts.length > 0) {
+                cookieProducts.forEach(product => { 
+            %>
+              <div class="shop-block-one">
+                <div class="inner-box">
+                  <figure class="image-box">
+                    <img src="<%= product.imageUrl %>" alt="<%= product.name %>" />
+                  </figure>
+                  <div class="lower-content">
+                    <span class="price-box">$<%= product.pricePackWhole %></span>
+                    <h3><a href="/product/<%= product._id %>"><%= product.name %></a></h3>
+                    <div class="cart-btn">
+                      <a href="/product/<%= product._id %>" class="theme-btn-two">Add to cart</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% 
+                });
+              } else {
+            %>
+              <div class="no-products">
+                <p>No cookies available at the moment.</p>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </section>
+      <!-- new-products-section end -->
+
+      <!-- new-products-section -->
+      <section class="shop-section">
+        <div class="auto-container">
+          <div class="sec-title">
+            <h2>Our Croissants <br />Collection</h2>
+          </div>
+          <div class="three-item-carousel owl-carousel owl-theme owl-dots-none nav-style-one centred">
+            <% 
+              const croissantProducts = products.filter(p => p.category === 'Croissant');
+              if (croissantProducts.length > 0) {
+                croissantProducts.forEach(product => { 
+            %>
+              <div class="shop-block-one">
+                <div class="inner-box">
+                  <figure class="image-box">
+                    <img src="<%= product.imageUrl %>" alt="<%= product.name %>" />
+                  </figure>
+                  <div class="lower-content">
+                    <span class="price-box">$<%= product.pricePackWhole %></span>
+                    <h3><a href="/product/<%= product._id %>"><%= product.name %></a></h3>
+                    <div class="cart-btn">
+                      <a href="/product/<%= product._id %>" class="theme-btn-two">Add to cart</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% 
+                });
+              } else {
+            %>
+              <div class="no-products">
+                <p>No croissants available at the moment.</p>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </section>
+      <!-- new-products-section end -->
+
+    </main>
+    <%- include("partials/footer")%>
+    <%- include("partials/scripts")%>
+    <%- include('partials/chatbot') %>
+  </body>
+</html>

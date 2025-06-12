@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+
+    <title>Senescence Bakery</title>
+
+    <%- include("partials/links.ejs")%>
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/notifications.css">
+  </head>
+
+  <body>
+    <%- include("partials/navbar.ejs")%>
+    <main>
+        <!-- contact-section -->
+        <section class="contact-section sec-pad">
+            <div class="auto-container">
+                <div class="sec-title centred">
+                    <p>Contact us</p>
+                    <h2>Get In Touch</h2>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 form-column">
+                        <div class="form-inner">
+                            <h3>Drop us a line</h3>
+                            <form id="contact-form" class="default-form"> 
+                                <div class="row clearfix">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                        <input type="text" name="username" placeholder="Your Name *">
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                        <input type="email" name="email" placeholder="Your Email *">
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12 form-group">
+                                        <input type="text" name="phone" placeholder="Your Phone *">
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12 form-group">
+                                        <input type="text" name="subject" placeholder="Subject *">
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                        <textarea name="message" placeholder="Your Message *"></textarea>
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group message-btn">
+                                        <button class="theme-btn-one" type="submit" name="submit-form">Submit Now</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 info-column">
+                        <div class="contact-info-inner">
+                            <div class="single-box">
+                                <h3>Opening hours</h3>
+                                <ul class="list clearfix"> 
+                                    <li>Daily: 9.30 AM–6.00 PM</li>
+                                    <li>Sunday & Holidays: Closed</li>
+                                </ul>
+                            </div>
+                            <div class="single-box">
+                                <h3>Contact info</h3>
+                                <ul class="list clearfix">
+                                    <li><a href="mailto:example@info.com">example@info.com</a></li>
+                                    <li><a href="tel:6174959400326">(617) 495-9400-326</a></li>
+                                </ul>
+                            </div>
+                            <div class="single-box">
+                                <h3>Location</h3>
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d221082.78135104929!2d31.389189678804595!3d30.02485050703663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145822cffcd270e7%3A0x98b73d687889fd8!2sNew%20Cairo%20City%2C%20Cairo%20Governorate!5e0!3m2!1sen!2seg!4v1749523631533!5m2!1sen!2seg" width="100%" height="130" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- contact-section end -->
+    </main>
+    <%- include("partials/footer")%> 
+    <%- include("partials/scripts")%>
+    <%- include('partials/chatbot') %>
+    <script src="/js/notifications.js"></script>
+
+    <!-- Custom Notification Styles -->
+    <style>
+        /* Contact Info Styling */
+        .contact-section .contact-info-inner {
+            background-color: #fffefc; /* warm pastel background */
+            border: 10px solid #e5d3bc;
+            padding: 25px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 50px; /* Increased space between form and contact info */
+        }
+
+        .contact-section .contact-info-inner .single-box {
+            margin-bottom: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .contact-section .contact-info-inner h3 {
+            font-size: 22px;
+            color: #8c5e3c;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e6b98c;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .contact-section .contact-info-inner .list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .contact-section .contact-info-inner .list li {
+            font-size: 16px;
+            color: #5a3e2b;
+            margin-bottom: 8px;
+            padding-left: 0; /* Removed left padding since we're centering */
+            position: relative;
+            text-align: center;
+        }
+
+        /* Form card */
+        .contact-section .form-inner {
+            padding: 30px;
+            background-color: #fffefc;
+            border: 10px solid #e5d3bc;
+            box-shadow: 0 4px 12px rgba(165, 120, 80, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Form elements */
+        .contact-section .default-form input,
+        .contact-section .default-form textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #c2a98d;
+            background-color: #fffaf5;
+            margin-bottom: 10px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .contact-section .default-form input:focus,
+        .contact-section .default-form textarea:focus {
+            border-color: #a67c52;
+            outline: none;
+        }
+
+        /* Labels and small notes */
+        .contact-section .default-form small {
+            color: #7a5c3f;
+            font-size: 13px;
+            display: block;
+            margin-top: 3px;
+        }
+
+        /* Submit button */
+        .contact-section .theme-btn-one {
+            background-color: #a67c52;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+        .contact-section .theme-btn-one:hover {
+            background-color: #8c6239;
+        }
+
+        /* Error styling */
+        .contact-section .error {
+            border-color: #dc3545 !important;
+        }
+
+        /* Notification Styles */
+        .custom-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            color: white;
+            font-size: 16px;
+            z-index: 9999;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .notification-success {
+            background-color: #28a745;
+        }
+
+        .notification-error {
+            background-color: #dc3545;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 991px) {
+            .contact-section .contact-info-inner {
+                flex-direction: column;
+            }
+            .contact-section .contact-info-inner .single-box {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+
+    <!-- Notification Container -->
+    <div id="notification" class="custom-notification"></div>
+
+    <!-- Contact Form Validation Script -->
+    <script>
+        $(document).ready(function() {
+            const form = $('#contact-form');
+            const submitBtn = form.find('button[type="submit"]');
+            const originalBtnText = submitBtn.text();
+
+            // Prevent default form submission
+            form.on('submit', function(e) {
+                e.preventDefault();
+                validateAndSubmit();
+            });
+
+            function validateAndSubmit() {
+                // Reset previous errors
+                $('.error-message').text('');
+                $('.error').removeClass('error');
+
+                // Get form data
+                const formData = {
+                    username: form.find('[name="username"]').val().trim(),
+                    email: form.find('[name="email"]').val().trim(),
+                    phone: form.find('[name="phone"]').val().trim(),
+                    subject: form.find('[name="subject"]').val().trim(),
+                    message: form.find('[name="message"]').val().trim()
+                };
+
+                // Validate all fields
+                let isValid = true;
+                const errors = {};
+
+                // Username validation
+                if (!formData.username) {
+                    errors.username = 'Please enter your name';
+                    isValid = false;
+                } else if (formData.username.length < 2) {
+                    errors.username = 'Name must be at least 2 characters long';
+                    isValid = false;
+                }
+
+                // Email validation
+                if (!formData.email) {
+                    errors.email = 'Please enter your email address';
+                    isValid = false;
+                } else if (!isValidEmail(formData.email)) {
+                    errors.email = 'Please enter a valid email address';
+                    isValid = false;
+                }
+
+                // Phone validation
+                if (!formData.phone) {
+                    errors.phone = 'Please enter your phone number';
+                    isValid = false;
+                } else if (!isValidPhone(formData.phone)) {
+                    errors.phone = 'Please enter a valid Egyptian phone number (e.g., 01123456789)';
+                    isValid = false;
+                }
+
+                // Subject validation
+                if (!formData.subject) {
+                    errors.subject = 'Please enter a subject';
+                    isValid = false;
+                } else if (formData.subject.length < 2) {
+                    errors.subject = 'Subject must be at least 2 characters long';
+                    isValid = false;
+                }
+
+                // Message validation
+                if (!formData.message) {
+                    errors.message = 'Please enter your message';
+                    isValid = false;
+                } else if (formData.message.length < 10) {
+                    errors.message = 'Message must be at least 10 characters long';
+                    isValid = false;
+                }
+
+                // Display errors if any
+                if (!isValid) {
+                    Object.keys(errors).forEach(field => {
+                        const input = form.find(`[name="${field}"]`);
+                        input.addClass('error');
+                        input.siblings('.error-message').text(errors[field]);
+                    });
+                    return;
+                }
+
+                // If all validations pass, submit the form
+                submitForm(formData);
+            }
+
+            function submitForm(formData) {
+                submitBtn.prop('disabled', true).text('Sending...');
+
+                $.ajax({
+                    url: '/api/v1/contact',
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        showNotification('Thank you for your message! We will get back to you soon.', 'success');
+                        form[0].reset();
+                    },
+                    error: function(xhr) {
+                        showNotification('Sorry, there was an error sending your message. Please try again later.', 'error');
+                    },
+                    complete: function() {
+                        submitBtn.prop('disabled', false).text(originalBtnText);
+                    }
+                });
+            }
+
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            function isValidPhone(phone) {
+                return /^01[0125][0-9]{8}$/.test(phone);
+            }
+        });
+    </script>
+  </body>
+</html>

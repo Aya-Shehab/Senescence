@@ -1,0 +1,378 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f4f4;
+  display: flex;
+}
+.sidebar {
+  width: 250px;
+  background: #c6def1;
+  min-height: 100vh;
+  color: white;
+  padding: 1rem;
+}
+.sidebar h2 {
+  margin-bottom: 2rem;
+}
+.sidebar a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  padding: 0.7rem 0;
+  cursor: pointer;
+}
+.sidebar a:hover {
+  background: #fAEDCB;
+  padding-left: 10px;
+}
+.main {
+  flex: 1;
+  padding: 2rem;
+}
+.navbar {
+  background: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+.section {
+  display: none;
+}
+.active-section {
+  display: block;
+}
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+.card, .chart-container {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.card h3 {
+  margin-bottom: 1rem;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+th, td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+th {
+  background-color: #cce0f5;
+}
+.btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.btn-view {
+  background-color: #fdd9b5;
+  color: black;
+}
+.btn-respond {
+  background-color: #f5b0d5;
+  color: black;
+}
+
+.highlight-card {
+background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+border-left: 5px solid #4e73df;
+}
+
+.view-btn {
+background-color: #4e73df;
+color: white;
+padding: 8px 12px;
+border: none;
+margin-top: 1rem;
+border-radius: 5px;
+cursor: pointer;
+}
+.view-btn:hover {
+background-color: #3a5dc8;
+}
+
+.icon {
+        background: #e6f0fa;
+        width: 50px;
+        height: 50px;
+        margin: 0 auto 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+    }
+    .icon::before {
+        content: "💰";
+        font-size: 24px;
+    }
+    .title {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    .amount {
+        color: #333;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .change {
+        color: #2ecc71;
+        font-size: 14px;
+    }
+    .change::before {
+        content: "↑ ";
+    }
+
+
+    .chart {
+        position: relative;
+        height: 100px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 0 10px;
+    }
+    .bar {
+        flex: 1;
+        background: #2ecc71;
+        margin: 0 2px;
+        border-radius: 4px;
+    }
+    .labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #666;
+        margin-top: 10px;
+    }
+    .tooltip {
+        position: absolute;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px 10px;
+        font-size: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: none;
+    }
+
+    .value {
+        color: #333;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .usage {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .pie {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+        border-radius: 50%;
+        position: relative;
+    }
+    .pie.orders {
+        background: conic-gradient(#2ecc71 0deg 252deg, #f1c40f 252deg 324deg, #e74c3c 324deg 360deg);
+    }
+    .pie.customer-orders {
+        background: conic-gradient(#3498db 0deg 216deg, #9b59b6 216deg 306deg, #e74c3c 306deg 360deg);
+    }
+    .pie::before {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 80px;
+        background: #f9f9f9;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+
+    .dots-menu {
+position: relative;
+display: inline-block;
+}
+.dots-btn {
+background: none;
+border: none;
+font-size: 20px;
+cursor: pointer;
+padding: 0 8px;
+}
+.dots-dropdown {
+display: none;
+position: absolute;
+right: 0;
+top: 28px;
+background: #fff;
+min-width: 120px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+border-radius: 6px;
+z-index: 10;
+flex-direction: column;
+}
+
+.user-table {
+width: 100%;
+border-collapse: collapse;
+margin: 1.5rem 0;
+background: #fff;
+border-radius: 8px;
+overflow: hidden;
+box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+}
+.user-table th, .user-table td {
+padding: 12px 16px;
+border-bottom: 1px solid #eee;
+text-align: left;
+}
+.user-table th {
+background: #f5f7fa;
+color: #4e73df;
+font-weight: 600;
+font-size: 15px;
+}
+.user-table tr:last-child td {
+border-bottom: none;
+}
+.user-table tr:hover {
+background: #f0f6ff;
+}
+.user-table button {
+background: #4e73df;
+color: #fff;
+border: none;
+padding: 6px 14px;
+border-radius: 5px;
+cursor: pointer;
+transition: background 0.2s;
+}
+.user-table button:hover {
+background: #375ab7;
+}
+
+.user-form {
+background: #fff;
+padding: 1.5rem;
+border-radius: 8px;
+box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+margin-top: 2rem;
+max-width: 400px;
+}
+.user-form label {
+display: block;
+margin-bottom: 6px;
+color: #4e73df;
+font-weight: 500;
+}
+.user-form input,
+.user-form select {
+width: 100%;
+padding: 8px 10px;
+margin-bottom: 16px;
+border: 1px solid #cce0f5;
+border-radius: 5px;
+font-size: 15px;
+background: #f5f7fa;
+}
+.user-form button[type="submit"] {
+background: #4e73df;
+color: #fff;
+border: none;
+padding: 8px 18px;
+border-radius: 5px;
+cursor: pointer;
+font-size: 15px;
+transition: background 0.2s;
+}
+.user-form button[type="submit"]:hover {
+background: #375ab7;
+}
+
+#search {
+width: 250px;
+padding: 8px 12px;
+margin-bottom: 1rem;
+border: 1px solid #cce0f5;
+border-radius: 5px;
+font-size: 15px;
+background: #f5f7fa;
+display: block;
+}
+
+/* Make all tables look like Inventory table */
+table,
+.user-table {
+width: 100%;
+max-width: 1200px; /* Increased from 900px */
+border-collapse: collapse;
+margin: 1.5rem auto;
+background: #fff;
+border-radius: 10px;
+overflow: hidden;
+box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+}
+
+th, td,
+.user-table th, .user-table td {
+padding: 12px 16px;
+border-bottom: 1px solid #eee;
+text-align: left;
+}
+
+th,
+.user-table th {
+background: #cce0f5;
+color: #4e73df;
+font-weight: 600;
+font-size: 15px;
+}
+
+tr:last-child td,
+.user-table tr:last-child td {
+border-bottom: none;
+}
+
+tr:hover,
+.user-table tr:hover {
+background: #f0f6ff;
+}
+
+/* Center table container */
+.table-container {
+display: flex;
+justify-content: center;
+align-items: flex-start;
+}
+
+/* If you want the tables to be centered vertically as well, add this to the parent container:
+.main {
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+*/
+

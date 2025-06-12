@@ -1,0 +1,40 @@
+<div class="chatbot-container">
+    <button class="chat-toggle" id="chatToggle" title="Chat with us">
+        💬
+    </button>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <h3>Chat Support</h3>
+            <p>Ask us anything about our products!</p>
+            <button class="clear-chat" id="clearChat" title="Clear chat">🗑️</button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message">
+                <div class="icon">👨‍🍳</div>
+                <h4>Welcome!</h4>
+                <p>How can I help you today? Ask me about our cakes, products, or place a custom order!</p>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="chat-input">
+            <input 
+                type="text" 
+                id="messageInput" 
+                placeholder="Type your message..." 
+                maxlength="1000"
+            >
+            <button class="send-button" id="sendButton">
+                ➤
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+
+    <title><%= product.name %> - Senescence Bakery</title>
+
+    <%- include("partials/links.ejs")%>
+    <link rel="stylesheet" href="/css/custom.css">
+    <style>
+      .product-image img {
+        max-width: 60%; /* Adjust as needed */
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+      .price-buttons,
+      .addto-cart-box ul {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .price-buttons .theme-btn-one {
+        margin: 5px;
+      }
+      .addto-cart-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+      .addto-cart-box .quantity-input {
+        width: 60px;
+        text-align: center;
+        padding: 8px 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px; /* Space between quantity and buttons */
+      }
+      .addto-cart-box label {
+        margin-bottom: 5px;
+      }
+      .addto-cart-box ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .addto-cart-box ul li {
+        margin: 5px;
+      }
+      .product-discription {
+        padding-top: 30px; /* Adjust this value to decrease/increase space */
+      }
+      .other-links {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center; /* Center the tags/ingredients */
+      }
+      .other-links .list {
+        margin-right: 20px;
+        margin-bottom: 10px;
+      }
+      .other-links .list li {
+        display: inline-block;
+        margin-right: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <%- include("partials/navbar.ejs")%>
+    <main>
+        <!-- single-product -->
+        <section class="single-product">
+            <div class="product-details-content" style="background-image: url(assets/images/background/single-shop-1.jpg);">
+                <div class="auto-container">
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-12 col-sm-12 image-column">
+                            <div class="product-image">
+                                <figure class="image">
+                                    <img src="<%= product.imageUrl %>" alt="<%= product.name %>">
+                                </figure>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-sm-12 content-column">
+                            <div class="product-details">
+                                <h2><%= product.name %></h2>
+                                <div class="text">
+                                    <p><%= product.description %></p>
+                                </div>
+                                <div class="other-links">
+                                    <ul class="category list">
+                                        <li>Category:</li>
+                                        <li><a href="#"><%= product.category %></a></li>
+                                    </ul>
+                                    <% if (product.tags && product.tags.length > 0) { %>
+                                    <ul class="tags list">
+                                        <li>Tags:</li>
+                                        <% product.tags.forEach((tag, index) => { %>
+                                            <li><a href="#"><%= tag %></a><%= index < product.tags.length - 1 ? ',' : '' %></li>
+                                        <% }); %>
+                                    </ul>
+                                    <% } %>
+                                </div>
+                                <div class="price-buttons">
+                                    <button type="button" class="theme-btn-one">Whole Cake ($<%= product.pricePackWhole %>)</button>
+                                    <% if (product.pricePiece) { %>
+                                        <button type="button" class="theme-btn-one">Single Piece ($<%= product.pricePiece %>)</button>
+                                    <% } %>
+                                </div>
+                                <div class="addto-cart-box">
+                                    <label for="quantity">Quantity:</label>
+                                    <input type="number" id="quantity" class="quantity-input" value="1" min="1">
+                                    <ul class="clearfix">
+                                        <li><button type="button" class="theme-btn-one" <%= !product.inStock ? 'disabled' : '' %>><%= product.inStock ? 'Add To Cart' : 'Out of Stock' %></button></li>
+                                        <li><button type="button" class="theme-btn-one"><i class="fa fa-heart"></i> Add to Favorites</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product-discription">
+                <div class="auto-container">
+                    <div class="tabs-box">
+                        <div class="tab-btn-box">
+                            <ul class="tab-btns tab-buttons clearfix">
+                                <li class="tab-btn active-btn" data-tab="#tab-1">Description</li>
+                                <li class="tab-btn" data-tab="#tab-2">Reviews (2)</li>
+                            </ul>
+                        </div>
+                        <div class="tabs-content">
+                            <div class="tab active-tab" id="tab-1">
+                                <div class="content-box">
+                                    <h3>Product Description</h3>
+                                    <p><%= product.description %></p>
+                                    <% if (product.ingredients && product.ingredients.length > 0) { %>
+                                        <h4>Ingredients:</h4>
+                                        <ul>
+                                            <% product.ingredients.forEach(ingredient => { %>
+                                                <li><%= ingredient %></li>
+                                            <% }); %>
+                                        </ul>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <div class="tab" id="tab-2">
+                                <div class="row clearfix">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 review-block">
+                                        <div class="customer-review">
+                                            <h3>Reviews</h3>
+                                            <div class="single-review">
+                                                <figure class="image-box"><img src="assets/images/resource/shop/review-1.png" alt=""></figure>
+                                                <div class="inner">
+                                                    <ul class="rating">
+                                                        <li><i class="icon-Star"></i></li>
+                                                        <li><i class="icon-Star"></i></li>
+                                                        <li><i class="icon-Star"></i></li>
+                                                        <li><i class="icon-Star"></i></li>
+                                                        <li><i class="icon-Star"></i></li>
+                                                    </ul>
+                                                    <h5>Eileen Alene<span> - May 2, 2020</span></h5>
+                                                    <p>Excepteur sint occaecat cupidatat non proident sunt in culpa  qui officia deserunt mollit anim  est laborum. Sed perspiciatis unde omnis natus.</p>
+                                                </div>
+                                            </div>
+                                            <div class="single-review">
+                                                <figure class="image-box"><img src="assets/images/resource/shop/review-2.png" alt=""></figure>
+                                                <div class="inner">
+                                                    <ul class="rating">
+                                                        <li><i class="icon-Star"></i></li>
+                                                        <li><i class="icon-Star"></i></li>
+                                                        <li><i class="icon-Star"></i></li>
+                                                        <li><i class="icon-Star"></i></li>
+                                                        <li><i class="icon-Star"></i></li>
+                                                    </ul>
+                                                    <h5>Jhon Matter<span> - May 1, 2020</span></h5>
+                                                    <p>Excepteur sint occaecat cupidatat non proident sunt in culpa  qui officia deserunt mollit anim  est laborum. Sed perspiciatis unde omnis natus.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 comment-column">
+                                        <div class="customer-comments">
+                                            <h3>Be First To Rate It</h3>
+                                            <div class="rating-box clearfix">
+                                                <p>Your Rating</p>
+                                                <ul class="rating clearfix">
+                                                    <li><i class="icon-Star"></i></li>
+                                                    <li><i class="icon-Star"></i></li>
+                                                    <li><i class="icon-Star"></i></li>
+                                                    <li><i class="icon-Star"></i></li>
+                                                    <li><i class="icon-Star"></i></li>
+                                                </ul>
+                                            </div>
+                                            <form action="single-shop-1.html" method="post" class="comment-form">
+                                                <div class="row clearfix">
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                                        <label>Your Review</label>
+                                                        <textarea name="message"></textarea>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                                        <label>Your Name</label>
+                                                        <input type="text" name="name" required="">
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                                        <label>Your Email</label>
+                                                        <input type="email" name="email" required="">
+                                                    </div>
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group message-btn">
+                                                        <button type="submit" class="theme-btn-one">Submit Now</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- single-product end -->
+    </main>
+    <%- include("partials/footer")%>
+    <%- include("partials/scripts")%>
+    <%- include('partials/chatbot') %>
+  </body>
+</html>

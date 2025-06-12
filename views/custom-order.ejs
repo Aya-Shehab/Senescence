@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+
+    <title>Senescence Bakery</title>
+
+    <%- include("partials/links.ejs")%>
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/notifications.css">
+  </head>
+
+  <body>
+    <%- include("partials/navbar.ejs")%>
+    <main>
+        <!-- custom-order-section -->
+        <section class="contact-section sec-pad">
+            <div class="auto-container">
+                <div class="sec-title centred">
+                    <p>Custom Order</p>
+                    <h2>Place Your Custom Order</h2>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 form-column">
+                        <div class="form-inner">
+                            <h3>Tell us about your custom order</h3>
+                            <form method="post" action="/api/v1/custom-orders" id="custom-order-form" class="default-form" enctype="multipart/form-data"> 
+                                <div class="row clearfix">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                        <input type="text" name="firstName" placeholder="First Name *" required>
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                        <input type="text" name="lastName" placeholder="Last Name *" required>
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                        <input type="email" name="email" placeholder="Your Email *" required>
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                        <input type="text" name="phone" placeholder="Your Phone *" required>
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                        <input type="text" name="address" placeholder="Delivery Address *" required>
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                        <textarea name="description" placeholder="Describe your custom order in detail *" required></textarea>
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                        <input type="file" name="imageUrl" accept="image/*">
+                                        <small>Upload reference image (optional)</small>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                        <input type="date" name="preferredDate">
+                                        <small>Preferred delivery date (optional)</small>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                        <textarea name="notes" placeholder="Additional notes (optional)"></textarea>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group message-btn">
+                                        <button class="theme-btn-one" type="submit" name="submit-form">Submit Order</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- custom-order-section end -->
+    </main>
+    <%- include("partials/footer")%> 
+    <%- include("partials/scripts")%>
+    <%- include('partials/chatbot') %>
+    <script src="/js/notifications.js"></script>
+
+    <!-- Custom Notification Styles -->
+    <style>
+        /* Form card */
+        .form-inner {
+            padding: 30px;
+            background-color: #fffefc;
+            border: 10px solid #e5d3bc;
+            box-shadow: 0 4px 12px rgba(165, 120, 80, 0.1);
+        }
+
+        /* Form elements */
+        .default-form input,
+        .default-form textarea,
+        .default-form input[type="file"],
+        .default-form input[type="date"] {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #c2a98d;
+            background-color: #fffaf5;
+            margin-bottom: 10px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .default-form input:focus,
+        .default-form textarea:focus {
+            border-color: #a67c52;
+            outline: none;
+        }
+
+        /* Labels and small notes */
+        .default-form small {
+            color: #7a5c3f;
+            font-size: 13px;
+            display: block;
+            margin-top: 3px;
+        }
+
+        /* Submit button */
+        .theme-btn-one {
+            background-color: #a67c52;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+        .theme-btn-one:hover {
+            background-color: #8c6239;
+        }
+
+        /* Center submit button container */
+        .message-btn {
+            text-align: center;
+        }
+
+        /* Error styling (already present but enhancing) */
+        .error {
+            border-color: #dc3545 !important;
+        }
+
+        .custom-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            color: white;
+            font-size: 16px;
+            z-index: 9999;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .notification-success {
+            background-color: #28a745;
+        }
+
+        .notification-error {
+            background-color: #dc3545;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+        }
+    </style>
+
+    <!-- Notification Container -->
+    <div id="notification" class="custom-notification"></div>
+
+    <script>
+        $(document).ready(function() {
+            const form = $('#custom-order-form');
+            const submitBtn = form.find('button[type="submit"]');
+            const originalBtnText = submitBtn.text();
+
+            form.on('submit', function(e) {
+                e.preventDefault();
+                validateAndSubmit();
+            });
+
+            function validateAndSubmit() {
+                // Reset previous errors
+                $('.error-message').text('');
+                $('.error').removeClass('error');
+
+                // Get form data
+                const formData = new FormData(form[0]);
+
+                // Validate all fields
+                let isValid = true;
+                const errors = {};
+
+                // First Name validation
+                const firstName = form.find('[name="firstName"]').val().trim();
+                if (!firstName) {
+                    errors.firstName = 'Please enter your first name';
+                    isValid = false;
+                }
+
+                // Last Name validation
+                const lastName = form.find('[name="lastName"]').val().trim();
+                if (!lastName) {
+                    errors.lastName = 'Please enter your last name';
+                    isValid = false;
+                }
+
+                // Email validation
+                const email = form.find('[name="email"]').val().trim();
+                if (!email) {
+                    errors.email = 'Please enter your email address';
+                    isValid = false;
+                } else if (!isValidEmail(email)) {
+                    errors.email = 'Please enter a valid email address';
+                    isValid = false;
+                }
+
+                // Phone validation
+                const phone = form.find('[name="phone"]').val().trim();
+                if (!phone) {
+                    errors.phone = 'Please enter your phone number';
+                    isValid = false;
+                } else if (!isValidPhone(phone)) {
+                    errors.phone = 'Please enter a valid Egyptian phone number (e.g., 01123456789)';
+                    isValid = false;
+                }
+
+                // Address validation
+                const address = form.find('[name="address"]').val().trim();
+                if (!address) {
+                    errors.address = 'Please enter your delivery address';
+                    isValid = false;
+                } else if (address.length < 10) {
+                    errors.address = 'Address must be at least 10 characters long';
+                    isValid = false;
+                }
+
+                // Description validation
+                const description = form.find('[name="description"]').val().trim();
+                if (!description) {
+                    errors.description = 'Please describe your custom order';
+                    isValid = false;
+                } else if (description.length < 15) {
+                    errors.description = 'Description must be at least 15 characters long';
+                    isValid = false;
+                }
+
+                // Display errors if any
+                if (!isValid) {
+                    Object.keys(errors).forEach(field => {
+                        const input = form.find(`[name="${field}"]`);
+                        input.addClass('error');
+                        input.siblings('.error-message').text(errors[field]);
+                    });
+                    return;
+                }
+
+                // If all validations pass, submit the form
+                submitForm(formData);
+            }
+
+            function submitForm(formData) {
+                submitBtn.prop('disabled', true).text('Sending...');
+
+                $.ajax({
+                    url: '/api/v1/custom-orders',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        showNotification('Your custom order has been submitted successfully!', 'success');
+                        form[0].reset();
+                    },
+                    error: function(xhr) {
+                        const errorMessage = xhr.responseJSON?.error || 'Sorry, there was an error submitting your order. Please try again later.';
+                        showNotification(errorMessage, 'error');
+                    },
+                    complete: function() {
+                        submitBtn.prop('disabled', false).text(originalBtnText);
+                    }
+                });
+            }
+
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            function isValidPhone(phone) {
+                return /^01[0125][0-9]{8}$/.test(phone);
+            }
+        });
+    </script>
+  </body>
+</html>
