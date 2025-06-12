@@ -4,6 +4,7 @@ import {
   getAllCustomOrders,
   getCustomOrderById,
   deleteCustomOrder,
+  updateCustomOrder
 } from "../controllers/customOrder.js";
 import multer from "multer";
 import path from "path";
@@ -26,6 +27,7 @@ const upload = multer({ storage: storage });
 router.post("/", upload.single("imageUrl"), createCustomOrder);
 router.get("/", getAllCustomOrders);    
 router.get("/:id", getCustomOrderById);
+router.put("/:id", updateCustomOrder);
 router.delete("/:id", deleteCustomOrder);
 
 export default router;

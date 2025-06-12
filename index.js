@@ -56,7 +56,7 @@ app.use(express.static("public"));
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/order", orderRoutes);
-app.use("/api/v1/custom-order", customOrderRoutes);
+app.use("/api/v1/custom-orders", customOrderRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/contact", contactRoutes);
 app.use("/api/v1/chat", chatRoutes);

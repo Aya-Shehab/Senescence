@@ -6,6 +6,9 @@ import User from "../models/user.js"
 import { getProductById } from '../controllers/product.js';
 import Product from "../models/product.js";
 import { searchProducts } from '../controllers/searchController.js';
+import customOrder from "../models/customOrder.js";
+import feedback from "../models/feedback.js";
+import Order from "../models/order.js";
 
 
 
@@ -90,7 +93,10 @@ router.get("/categories", async (req, res) => {
 router.get("/product/:id", getProductById);
 
 router.get("/admin", auth(["admin"]),async (req, res) => {
-  res.render("admin" , {users : await User.find()});
+  const customOrders = await customOrder.find();
+  const feedbacks = await feedback.find();
+  const orders = await Order.find();
+  res.render("admin" , {users : await User.find(), customOrders, feedbacks, orders});
 });
 
 // Mount shop routes before the catch-all route

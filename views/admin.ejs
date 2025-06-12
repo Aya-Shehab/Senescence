@@ -17,9 +17,11 @@
     />
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Add this line -->
     <script src="/js/admin.js"></script>
     <script src="/js/inventory.js"></script>
+    <script src="/js/feedback.js"></script>
+    <script src="/js/customOrders.js"></script>
+    <script src="/js/orders.js"></script>
   </head>
   <body>
     <div class="sidebar">
@@ -114,6 +116,9 @@
         </div>
       </div>
 
+      
+
+
       <div id="inventory" class="section">
         <div class="card-container">
           <div class="card highlight-card">
@@ -207,14 +212,28 @@
         </div>
       </div>
 
+
       <div id="orders" class="section">
         <div class="card-container">
-          <div class="card highlight-card"><h3>Pending Orders</h3></div>
+          <div class="card highlight-card">
+            <h3>Order Management</h3>
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p>Total Orders: <span id="totalOrders">0</span></p>
+                <p>Pending Orders: <span id="pendingOrders">0</span></p>
+              </div>
+              <div>
+                <button class="btn btn-primary" onclick="fetchOrders()">
+                  <i class="bi bi-arrow-clockwise"></i> Refresh
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="chart-container">
           <h3>Order Management Status</h3>
-          <div class="table-container">
-            <table>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
               <thead>
                 <tr>
                   <th>Order Number</th>
@@ -231,7 +250,7 @@
                 </tr>
               </thead>
               <tbody id="orders-tbody">
-                <!-- Orders will be inserted here by JS -->
+                <!-- Orders will be dynamically inserted here -->
               </tbody>
             </table>
           </div>
@@ -242,13 +261,68 @@
         <div class="card-container">
           <div class="card highlight-card">
             <h3>Special Requests</h3>
-            <p>12</p>
+            <p id="totalRequests">0</p>
+            <button class="btn btn-primary" onclick="showAddRequestForm()">
+              <i class="bi bi-plus-circle"></i> Add New Request
+            </button>
           </div>
         </div>
+
+        <!-- Add/Edit Request Form -->
+        <div id="requestForm" class="chart-container" style="display: none;">
+          <h3 id="formTitle">Add New Request</h3>
+          <form id="customOrderForm" class="user-form">
+            <input type="hidden" id="requestId">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="phone" required>
+
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" required>
+              </div>
+              <div class="col-md-6">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
+
+                <label for="imageUrl">Image URL:</label>
+                <input type="text" id="imageUrl" name="imageUrl">
+
+                <label for="preferredDate">Preferred Date:</label>
+                <input type="date" id="preferredDate" name="preferredDate">
+
+                <label for="notes">Notes:</label>
+                <textarea id="notes" name="notes"></textarea>
+
+                <label for="status">Status:</label>
+                <select id="status" name="status">
+                  <option value="pending">Pending</option>
+                  <option value="processing">Processing</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-buttons">
+              <button type="submit" class="btn btn-primary">Save</button>
+              <button type="button" class="btn btn-secondary" onclick="hideRequestForm()">Cancel</button>
+            </div>
+          </form>
+        </div>
+
         <div class="chart-container">
           <h3>Special Requests Status</h3>
           <div class="table-container">
-            <table>
+            <table class="table">
               <thead>
                 <tr>
                   <th>Customer</th>
@@ -263,9 +337,8 @@
                   <th>Actions</th>
                 </tr>
               </thead>
-
               <tbody id="requests-tbody">
-                <!-- Special requests will be inserted here by JS -->
+                <!-- Requests will be loaded here dynamically -->
               </tbody>
             </table>
           </div>
@@ -411,25 +484,22 @@
       </div>
 
       <div id="feedback" class="section">
-        <div class="card-container">
-          <div class="card highlight-card"><h3>Feedback & Reviews</h3></div>
-        </div>
+       
         <div class="chart-container">
-          <h3>Customer Feedback</h3>
-          <div class="table-container">
-            <table>
+          <h3>Customer Feedback List</h3>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
               <thead>
                 <tr>
                   <th>User</th>
                   <th>Email</th>
                   <th>Message</th>
                   <th>Date</th>
-                  <th>Response</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="feedback-tbody">
-                <!-- Feedback rows will be inserted here -->
+                <!-- Feedback rows will be dynamically inserted here -->
               </tbody>
             </table>
           </div>

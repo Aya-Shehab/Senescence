@@ -36,13 +36,10 @@ export const createProduct = async (req, res) => {
       tags: req.body.tags || [],
     });
     await newProduct.save();
-
-    return res.status(201).json({ message: "Product created successfully" });
-  } catch (e) {
-    console.error(e);
-    return res
-      .status(500)
-      .json({ error: "Internal server error .. try again later" });
+    return res.status(201).json(newProduct);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -51,50 +48,87 @@ export const getAllProducts = async (req, res) => {
     const products = await Product.find();
     res.status(200).json(products);
   } catch (error) {
-    return res
-      .status(500)
-      .json({ error: "Internal server error .. try again later" });
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
 export const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    
     if (!product) {
-      if (req.xhr || req.headers.accept.includes('application/json')) {
-        return res.status(404).json({ error: "Product not found" });
-      }
-      return res.status(404).render('404');
+      return res.status(404).json({ error: "Product not found" });
     }
-    
-    // Check if the request is for API or page rendering
-    if (req.xhr || req.headers.accept.includes('application/json')) {
-      return res.json(product);
-    }
-    
-    // Render the product detail page
-    res.render('product-detail', { product });
+    res.status(200).json(product);
   } catch (error) {
-    console.error('Error fetching product:', error);
-    if (req.xhr || req.headers.accept.includes('application/json')) {
-      return res.status(500).json({ error: "Internal server error .. try again later" });
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const updateProduct = async (req, res) => {
+  try {
+    const { name, category, pricePackWhole } = req.body;
+    if (!name || !category || !pricePackWhole) {
+      return res.status(400).json({ error: "All fields are required" });
     }
-    res.status(500).render('404');
+    const validCategories = ["Cake", "Cookie", "Croissant"];
+    if (!validCategories.includes(category)) {
+      return res.status(400).json({
+        error: `Category must be one of: ${validCategories.join(", ")}`,
+      });
+    }
+    if (typeof pricePackWhole !== "number" || pricePackWhole < 0) {
+      return res.status(400).json({ error: "pricePackWhole must be a non-negative number." });
+    }
+
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Check if name is being changed and if it already exists
+    if (name !== product.name) {
+      const existingProduct = await Product.findOne({ name });
+      if (existingProduct) {
+        return res.status(400).json({ error: "Product name already exists" });
+      }
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: req.body.name,
+        category: req.body.category,
+        pricePackWhole: req.body.pricePackWhole,
+        imageUrl: req.body.imageUrl || product.imageUrl,
+        pricePiece: req.body.pricePiece || product.pricePiece,
+        description: req.body.description || product.description,
+        ingredients: req.body.ingredients || product.ingredients,
+        inStock: req.body.inStock !== undefined ? req.body.inStock : product.inStock,
+        quantity: req.body.quantity || product.quantity,
+        tags: req.body.tags || product.tags,
+      },
+      { new: true }
+    );
+
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
 export const deleteProduct = async (req, res) => {
   try {
-    const productId = req.params.id;
-    const product = await Product.findByIdAndDelete(productId);
-    if (product == null) {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
-    res.json({ message: "Product deleted successfully" });
+    await Product.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ error: "Internal server error .. try again later" });
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
 }; 

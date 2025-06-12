@@ -89,3 +89,22 @@ export const respondToFeedback = async (req, res) => {
     return res.status(500).json({ error: "Internal server error. Please try again later." });
   }
 };
+
+// Update feedback by ID
+export const updateFeedback = async (req, res) => {
+  try {
+    const feedbackId = req.params.id;
+    const { user, email, message } = req.body;
+    const feedback = await Feedback.findById(feedbackId);
+    if (!feedback) {
+      return res.status(404).json({ error: "Feedback not found" });
+    }
+    if (user) feedback.user = user;
+    if (email) feedback.email = email;
+    if (message) feedback.message = message;
+    await feedback.save();
+    res.json({ message: "Feedback updated successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error. Please try again later." });
+  }
+};
