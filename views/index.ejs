@@ -351,74 +351,47 @@
             <div
               class="single-item-carousel owl-carousel owl-theme owl-dots-none nav-style-one"
             >
-              <div class="testimonial-block-one">
-                <div
-                  class="icon-box"
-                  style="
-                    background-image: url(assets/images/icons/icon-bg-4.png);
-                  "
-                >
-                  <img src="/img/icons/quotes.png" style="height: 70px; width: 70px;">
+              <% if (feedbacks && feedbacks.length > 0) { %>
+                <% feedbacks.forEach(feedback => { %>
+                  <div class="testimonial-block-one">
+                    <div
+                      class="icon-box"
+                      style="
+                        background-image: url(assets/images/icons/icon-bg-4.png);
+                      "
+                    >
+                      <img src="/img/icons/quotes.png" style="height: 70px; width: 70px;">
+                    </div>
+                    <div class="text">
+                      <p>
+                        "<%= feedback.message %>"
+                      </p>
+                    </div>
+                    <div class="author-info">
+                      <h4><%= feedback.user %></h4>
+                    </div>
+                  </div>
+                <% }); %>
+              <% } else { %>
+                <div class="testimonial-block-one">
+                  <div
+                    class="icon-box"
+                    style="
+                      background-image: url(assets/images/icons/icon-bg-4.png);
+                    "
+                  >
+                    <img src="/img/icons/quotes.png" style="height: 70px; width: 70px;">
+                  </div>
+                  <div class="text">
+                    <p>
+                      "Be the first to leave a review!"
+                    </p>
+                  </div>
+                  <div class="author-info">
+                    <h4>No Reviews Yet</h4>
+                  </div>
                 </div>
-                <div class="text">
-                  <p>
-                    "Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum. Sed
-                    ut perspiciatis unde omnis iste natus error sit voluptatem
-                    accusantium doloremque laudantium totam rem eaque quae ipsa
-                    aperiam."
-                  </p>
-                </div>
-                <div class="author-info">
-                  <h4>Fiona Edwards</h4>
-                  <span class="designation">Developer</span>
-                </div>
-              </div>
-              <div class="testimonial-block-one">
-                <div
-                  class="icon-box"
-                  style="
-                    background-image: url(assets/images/icons/icon-bg-5.png);
-                  "
-                >
-                <img src="/img/icons/quotes.png" style="height: 70px; width: 70px;">
-                </div>
-                <div class="text">
-                  <p>
-                    "Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum. Sed
-                    ut perspiciatis unde omnis iste natus error sit voluptatem
-                    accusantium doloremque laudantium totam rem eaque quae ipsa
-                    aperiam."
-                  </p>
-                </div>
-                <div class="author-info">
-                  <h4>Fiona Edwards</h4>
-                  <span class="designation">Developer</span>
-                </div>
-              </div>
-              <div class="testimonial-block-one">
-                <div
-                  class="icon-box"
-                  style="
-                    background-image: url(assets/images/icons/icon-bg-5.png);
-                  "
-                ><img src="/img/icons/quotes.png" style="height: 70px; width: 70px;">
-                </div>
-                <div class="text">
-                  <p>
-                    "Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum. Sed
-                    ut perspiciatis unde omnis iste natus error sit voluptatem
-                    accusantium doloremque laudantium totam rem eaque quae ipsa
-                    aperiam."
-                  </p>
-                </div>
-                <div class="author-info">
-                  <h4>Fiona Edwards</h4>
-                  <span class="designation">Developer</span>
-                </div>
-              </div>
+              <% } %>
             </div>
           </div>
         </div>

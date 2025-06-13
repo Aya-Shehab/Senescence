@@ -7,10 +7,8 @@ import { getProductById } from '../controllers/product.js';
 import Product from "../models/product.js";
 import { searchProducts } from '../controllers/searchController.js';
 import customOrder from "../models/customOrder.js";
-import feedback from "../models/feedback.js";
+import Feedback from "../models/feedback.js";
 import Order from "../models/order.js";
-
-
 
 const router = express.Router();
 
@@ -39,7 +37,8 @@ router.use(async (req, res, next) => {
 router.get("/", async (req, res) => {
   try {
     const products = await Product.find();
-    res.render("index", { products });
+    const feedbacks = await Feedback.find().sort({ createdAt: -1 }).limit(3);
+    res.render("index", { products, feedbacks });
   } catch (error) {
     console.error('Error loading index page:', error);
     res.status(500).render('error', { 
@@ -94,7 +93,7 @@ router.get("/product/:id", getProductById);
 
 router.get("/admin", auth(["admin"]),async (req, res) => {
   const customOrders = await customOrder.find();
-  const feedbacks = await feedback.find();
+  const feedbacks = await Feedback.find();
   const orders = await Order.find();
   res.render("admin" , {users : await User.find(), customOrders, feedbacks, orders});
 });
