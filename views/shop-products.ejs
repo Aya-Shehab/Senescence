@@ -68,18 +68,18 @@
                                     <div class="short-box clearfix">
                                         <p>Sort by</p>
                                         <div class="select-box">
-                                            <select class="wide">
-                                                <option>Featured</option>
-                                                <option>Highest Price</option>
-                                                <option>Lowest Price</option>
-                                                <option>Name (A-Z)</option>
-                                                <option>Name (Z-A)</option>
+                                            <select class="wide" id="sort-select">
+                                                <option value="featured">Featured</option>
+                                                <option value="price_desc">Highest Price</option>
+                                                <option value="price_asc">Lowest Price</option>
+                                                <option value="name_asc">Name (A-Z)</option>
+                                                <option value="name_desc">Name (Z-A)</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row clearfix">
+                            <div class="row clearfix" id="product-list-container">
                                 <% products.forEach(product => { %>
                                 <div class="col-lg-4 col-md-6 col-sm-12 shop-block">
                                     <div class="shop-block-one">
@@ -94,7 +94,7 @@
                                                     <button onclick="addToCart({
                                                         id: '<%= product._id %>',
                                                         name: '<%= product.name %>',
-                                                        price: <%= product.pricePackWhole %>,
+                                                        price: product.pricePackWhole,
                                                         image: '<%= product.imageUrl %>',
                                                         quantity: 1
                                                     })" class="theme-btn-two">Add to cart</button>

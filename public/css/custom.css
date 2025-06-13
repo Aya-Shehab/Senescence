@@ -540,10 +540,14 @@ body .theme-btn-one:active {
 
 .shop-sidebar .sidebar-widget .categories-list li a:before {
     position: absolute;
-    content: "-";
-    left: 0;
-    top: 0;
-    color: #666;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: #222;
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    margin-right: 8px;
 }
 
 .shop-sidebar .sidebar-widget .categories-list li a:hover,
@@ -568,50 +572,39 @@ body .theme-btn-one:active {
 }
 
 .item-sorting .short-box p {
+    position: relative;
+    display: inline-block;
     font-size: 16px;
-    color: #333;
-    margin: 0; /* Remove default paragraph margin */
+    line-height: 26px;
+    font-weight: 500;
+    color: #222;
+    margin-right: 15px;
+    padding-top: 5px; /* Adjust as needed */
 }
 
 /* Styling for the nice-select dropdown */
 .nice-select {
-    border: 1px solid #e5e5e5;
-    background-color: #fff;
-    height: 44px; /* Matches the desired height */
-    line-height: 42px; /* Vertically centers text */
+    border: 1px solid #e5e5e5; /* Add a subtle border */
+    border-radius: 5px; /* Slightly rounded corners */
+    height: 40px; /* Consistent height */
+    line-height: 38px; /* Vertically align text */
     padding-left: 15px;
-    padding-right: 30px; /* Space for the arrow */
-    font-size: 16px;
-    color: #333;
-    width: 200px; /* Adjust width as needed */
-    border-radius: 0; /* Square corners */
+    padding-right: 30px;
+    font-size: 15px;
+    color: #666;
 }
 
-.nice-select:after {
-    border-bottom: 2px solid #999;
-    border-right: 2px solid #999;
-    height: 8px;
-    width: 8px;
-    margin-top: -6px; /* Adjust position of the arrow */
-    right: 15px;
-}
-
-.nice-select .list {
-    width: 100%; /* Ensure dropdown list matches width of select box */
+.nice-select:focus, .nice-select.open {
+    border-color: #fbb419; /* Highlight on focus */
+    box-shadow: 0 0 0 0.2rem rgba(251, 180, 25, 0.25); /* Subtle glow */
 }
 
 .nice-select .option {
-    font-size: 16px;
-    padding: 10px 15px;
+    padding: 10px 15px; /* Adjust option padding */
 }
 
-.nice-select .option.selected {
-    background-color: #f5f5f5; /* Highlight for selected item */
-    color: #333;
-}
-
-.nice-select .option:hover {
-    background-color: #f5f5f5; /* Highlight on hover */
+.nice-select:after {
+    right: 15px;
 }
 
 .search-results-info {
@@ -680,4 +673,33 @@ body .theme-btn-one:active {
 
 .search-box-outer .search-panel .search-btn:hover {
     background: #ff5252;
+}
+
+.row.clearfix {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.shop-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.shop-block-one {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.shop-block-one .inner-box {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.shop-block-one .inner-box .lower-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Pushes 'Add to cart' to bottom */
 } 
