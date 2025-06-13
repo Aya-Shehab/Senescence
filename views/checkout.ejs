@@ -306,14 +306,6 @@
     <%- include("partials/scripts")%>
     <%- include('partials/chatbot') %>
 
-    <!-- Paymob Payment Iframe Container -->
-    <div id="paymentIframeContainer" class="payment-iframe-container">
-      <div class="payment-iframe-wrapper">
-        <button class="payment-iframe-close" onclick="closePaymentIframe()">&times;</button>
-        <iframe id="paymentIframe" class="payment-iframe" src="" frameborder="0"></iframe>
-      </div>
-    </div>
-
     <script>
       // Check if user is logged in and cart has items
       document.addEventListener("DOMContentLoaded", function () {
@@ -483,8 +475,12 @@
             }
 
             if (formData.paymentMethod === 'card') {
-              // Show Paymob iframe for card payment
-              showPaymentIframe(data.paymentUrl);
+              // Open payment URL in new tab
+              window.open(data.paymentUrl, '_blank');
+              
+              // Immediately redirect to success page
+              localStorage.removeItem('cart'); // Clear cart
+              window.location.href = `/order-success?orderNumber=${data.order.orderNumber}&amount=${data.order.amount}&paymentMethod=${data.order.paymentMethod}`;
             } else {
               // For cash payment, redirect to success page
               localStorage.removeItem('cart'); // Clear cart
@@ -492,42 +488,6 @@
             }
           } catch (error) {
             alert(error.message || 'An error occurred while placing your order');
-          }
-        });
-
-        // Payment iframe functions
-        function showPaymentIframe(url) {
-          const container = document.getElementById('paymentIframeContainer');
-          const iframe = document.getElementById('paymentIframe');
-          iframe.src = url;
-          container.style.display = 'flex';
-        }
-
-        function closePaymentIframe() {
-          const container = document.getElementById('paymentIframeContainer');
-          const iframe = document.getElementById('paymentIframe');
-          iframe.src = '';
-          container.style.display = 'none';
-        }
-
-        // Listen for payment completion
-        window.addEventListener('message', function(event) {
-          // Verify the origin of the message
-          if (event.origin !== 'https://accept.paymob.com') return;
-
-          try {
-            const data = JSON.parse(event.data);
-            if (data.success) {
-              // Payment successful
-              localStorage.removeItem('cart');
-              window.location.href = '/order-success';
-            } else {
-              // Payment failed
-              closePaymentIframe();
-              alert('Payment failed. Please try again.');
-            }
-          } catch (error) {
-            console.error('Error processing payment message:', error);
           }
         });
       });

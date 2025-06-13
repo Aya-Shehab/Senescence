@@ -633,4 +633,183 @@
 
 	
 
-})(window.jQuery);
+	$(document).ready(function() {
+        // Handle sorting functionality with AJAX
+        $('#sort-select').on('change', function() {
+            const sortBy = $(this).val();
+            const currentUrl = new URL(window.location.href);
+            const currentCategory = currentUrl.searchParams.get('category');
+
+            let newUrl = '/shop';
+            const params = new URLSearchParams();
+
+            if (currentCategory) {
+                params.append('category', currentCategory);
+            }
+            if (sortBy && sortBy !== 'featured') { // 'featured' is default, no need to add param
+                params.append('sort', sortBy);
+            }
+
+            const queryString = params.toString();
+            if (queryString) {
+                newUrl += '?' + queryString;
+            }
+
+            // Update URL without full page reload
+            history.pushState({}, '', newUrl);
+
+            fetchProducts(newUrl); // Fetch products via AJAX
+        });
+
+        function fetchProducts(url) {
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(response) {
+                    // Assuming the response is the full HTML of the shop-products page
+                    // We need to extract only the product list section
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(response, 'text/html');
+                    const newProductListHtml = $(doc).find('#product-list-container').html();
+
+                    // Before replacing content, get current sort value to preserve it
+                    const currentSortValue = $('#sort-select').val();
+
+                    $('#product-list-container').html(newProductListHtml);
+
+                    // Reinitialize nice-select for the sort dropdown
+                    // Check if nice-select was already initialized on this element
+                    if ($('#sort-select').hasClass('has-nice-select')) {
+                        $('#sort-select').niceSelect('destroy'); // Destroy existing instance
+                    }
+                    $('#sort-select').niceSelect(); // Reinitialize
+
+                    // Set the value back after reinitialization
+                    $('#sort-select').val(currentSortValue);
+                    $('#sort-select').niceSelect('update'); // Update the nice-select display
+
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching products:', error);
+                    // Optionally, show an error message to the user
+                }
+            });
+        }
+
+        // Initial fetch to set up the page based on current URL (if reloaded)
+        const initialUrl = new URL(window.location.href);
+        // Check if there's a sort parameter in the URL on initial load and set the select box
+        const initialSort = initialUrl.searchParams.get('sort');
+        if (initialSort) {
+            $('#sort-select').val(initialSort);
+            if ($('.nice-select').length) {
+                $('#sort-select').niceSelect('update');
+            }
+        }
+    });
+
+
+
+
+
+	//Jquery Pretty Photo
+	$("a[data-rel^='prettyPhoto']").prettyPhoto({
+		animation_speed:'normal',
+		theme:'light_square',
+		slideshow:3000,
+		autoplay_slideshow: false,
+		facebook:false,
+		deeplinking:false
+	});
+
+	
+	/*	When this line is executed, the DOM is not yet ready.
+		This is likely causing issues for plugins that need the DOM to be fully loaded.
+		Move functions that interact with the DOM inside a $(document).ready() block.
+	*/
+
+	// Scroll to a Specific Div
+	if($('.scroll-to-target').length){
+		$(".scroll-to-target").on('click', function() {
+			var target = $(this).attr('data-target');
+		   // animate
+		   $('html, body').animate({
+			   scrollTop: $(target).offset().top
+			 }, 1000);
+	
+		});
+	}
+
+	// Elements Animation
+	if($('.wow').length){
+		var wow = new WOW({
+		mobile:       false
+		});
+		wow.init();
+	}
+
+
+
+
+	/* ========================================================================== */
+	/*                   cart-btn in shop-products ejs                          */
+	/* ========================================================================== */
+
+
+	function addToCart(product) {
+		fetch('/api/v1/cart', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(product),
+		})
+		.then(response => {
+			if (!response.ok) {
+				// If the response is not OK, it might be a server error or a validation error.
+				// Try to parse the error message from the response body.
+				return response.json().then(err => {
+					throw new Error(err.message || 'Failed to add to cart');
+				});
+			}
+			return response.json();
+		})
+		.then(data => {
+			if (data.success) {
+				showNotification('success', data.message);
+				updateCartUI(); // Update cart icon/count on success
+			} else {
+				showNotification('error', data.message);
+			}
+		})
+		.catch(error => {
+			console.error('Error adding to cart:', error);
+			showNotification('error', error.message || 'An error occurred.');
+		});
+	}
+
+
+	// Update cart UI function (dummy for now)
+	function updateCartUI() {
+		// This function would typically fetch the latest cart quantity
+		// and update the cart icon/count in the header.
+		console.log("Cart UI updated.");
+		// Example: Fetch new cart quantity from API
+		fetch('/api/v1/cart/quantity')
+		.then(response => response.json())
+		.then(data => {
+			if(data.success && data.quantity !== undefined) {
+				$('#cart-item-count').text(data.quantity);
+			}
+		})
+		.catch(error => console.error('Error updating cart quantity:', error));
+	}
+
+
+
+
+	// Call updateCartUI on page load to set initial cart count
+	// updateCartUI();
+
+
+})(jQuery);
