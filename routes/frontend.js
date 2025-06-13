@@ -143,30 +143,65 @@ router.get('/account', async (req, res) => {
     res.render('account', { user: { name: 'User' } }); // Fallback
   }
 });
-router.get('/pastorders', (req, res) => {
-    res.render('pastorders');
+router.get('/pastorders', getUserFromToken, async (req, res) => {
+  try {
+    const userId = req.user._id; 
+    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    res.render('pastorders', { orders });
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.render('pastorders', { orders: [] }); 
+  }
 });
 
-router.get('/favorites', (req, res) => {
-    res.render('favorites');
+router.get('/favorites', getUserFromToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate('favorites');
+    res.render('favorites', { favorites: user.favorites });
+  } catch (error) {
+    console.error('Error fetching favorites:', error);
+    res.render('favorites', { favorites: [] });
+  }
 });
 
-/*router.get('/pastorders', getUserFromToken, async (req, res) => {
-  const orders = await Order.find({ userId: req.user._id }).sort({ createdAt: -1 });
-  res.render('pastorders', { user: req.user, orders });
+// Add to favorites API
+router.post('/api/v1/favorites/:productId', getUserFromToken, async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const user = await User.findById(req.user._id);
+    
+    // Check if product is already in favorites
+    if (user.favorites.includes(productId)) {
+      return res.status(400).json({ error: 'Product already in favorites' });
+    }
+    
+    // Add product to favorites
+    user.favorites.push(productId);
+    await user.save();
+    
+    res.status(200).json({ message: 'Product added to favorites' });
+  } catch (error) {
+    console.error('Error adding to favorites:', error);
+    res.status(500).json({ error: 'Failed to add to favorites' });
+  }
 });
 
-// Favorites Page  
-router.get('/account/favorites', getUserFromToken, async (req, res) => {
-  const favorites = await Favorite.find({ userId: req.user._id }).populate('product');
-  res.render('favorites', { user: req.user, favorites });
+// Remove from favorites API
+router.delete('/api/v1/favorites/:productId', getUserFromToken, async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const user = await User.findById(req.user._id);
+    
+    // Remove product from favorites
+    user.favorites = user.favorites.filter(id => id.toString() !== productId);
+    await user.save();
+    
+    res.status(200).json({ message: 'Product removed from favorites' });
+  } catch (error) {
+    console.error('Error removing from favorites:', error);
+    res.status(500).json({ error: 'Failed to remove from favorites' });
+  }
 });
-
-// Remove favorite API
-router.delete('/api/v1/favorites/:id', async (req, res) => {
-  await Favorite.findByIdAndDelete(req.params.id);
-  res.json({ success: true });
-});*/
 
 // Search route
 router.post('/search', searchProducts);
