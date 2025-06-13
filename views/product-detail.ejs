@@ -134,7 +134,7 @@
                                             quantity: parseInt(document.getElementById('quantity').value),
                                             priceType: document.getElementById('selectedPriceType').value
                                         })" <%= !product.inStock ? 'disabled' : '' %>><%= product.inStock ? 'Add To Cart' : 'Out of Stock' %></button></li>
-                                        <li><button type="button" class="theme-btn-one"><i class="fa fa-heart"></i> Add to Favorites</button></li>
+                                        <li><button type="button" class="theme-btn-one" onclick="addToFavorites('<%= product._id %>')"><i class="fa fa-heart"></i> Add to Favorites</button></li>
                                     </ul>
                                 </div>
                             </div>
@@ -314,6 +314,25 @@
                 }
             });
         });
+
+        async function addToFavorites(productId) {
+            try {
+                const response = await fetch(`/api/v1/favorites/${productId}`, {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Product added to favorites!');
+                } else {
+                    alert(data.error || 'Failed to add to favorites');
+                }
+            } catch (error) {
+                console.error('Error adding to favorites:', error);
+                alert('Failed to add to favorites');
+            }
+        }
     </script>
   </body>
 </html>
