@@ -437,21 +437,21 @@
         <div class="card-container" style="display: flex; gap: 2rem">
           <div class="card highlight-card" style="flex: 1">
             <h3>Best Seller Product</h3>
-            <p id="bestSellerName">Loading...</p>
+            <p id="bestSellerName" class="mb-2">Loading...</p>
             <h2 style="color: #4e73df" id="bestSellerRevenue">$0</h2>
-            <p id="bestSellerCount">0 sold this month</p>
+            <p id="bestSellerCount" class="text-muted">0 sold this month</p>
           </div>
           <div class="card highlight-card" style="flex: 1">
             <h3>Top Customer</h3>
-            <p id="topCustomerName">Loading...</p>
+            <p id="topCustomerName" class="mb-2">Loading...</p>
             <h2 style="color: #4e73df" id="topCustomerSpend">$0</h2>
-            <p id="topCustomerOrders">0 orders this month</p>
+            <p id="topCustomerOrders" class="text-muted">0 orders this month</p>
           </div>
           <div class="card highlight-card" style="flex: 1">
             <h3>Highest Growth Category</h3>
-            <p id="topCategoryName">Loading...</p>
-            <h2 style="color: #4e73df" id="topCategoryGrowth">0%</h2>
-            <p id="topCategorySales">0 sales this month</p>
+            <p id="topCategoryName" class="mb-2">Loading...</p>
+            <h2 style="color: #4e73df" id="topCategorySales">$0</h2>
+            <p id="topCategoryCount" class="text-muted">0 sales this month</p>
           </div>
         </div>
         <div class="chart-container">
@@ -470,7 +470,7 @@
                 <tr>
                   <th>User</th>
                   <th>Email</th>
-                  <th>Message</th>
+                  <th>Feedback</th>
                   <th>Date</th>
                   <th>Actions</th>
                 </tr>
@@ -1204,6 +1204,135 @@
         object-fit: cover;
       }
     </style>
+    <script>
+      // Load sales data when the sales section is shown
+      document.addEventListener('DOMContentLoaded', () => {
+        const salesTab = document.querySelector('[onclick="showSection(\'sales\')"]');
+        if (salesTab) {
+          salesTab.addEventListener('click', loadSalesData);
+        }
+      });
+
+      // Fetch and display sales data
+      async function loadSalesData() {
+        try {
+          console.log('Fetching sales data...'); // Debug log
+
+          const response = await fetch('/api/v1/admin/sales-analytics', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          });
+
+          console.log('Response status:', response.status); // Debug log
+
+          if (response.status === 401) {
+            console.error('Authentication error: Not logged in');
+            alert('Please log in to view sales data');
+            return;
+          }
+
+          if (response.status === 403) {
+            console.error('Authorization error: Not an admin');
+            alert('Access denied. Admin privileges required.');
+            return;
+          }
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => null);
+            console.error('Error response:', errorData);
+            throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log('Sales data received:', data); // Debug log
+
+          if (!data) {
+            throw new Error('No data received from server');
+          }
+
+          // Update Best Seller
+          const bestSellerElement = document.getElementById('bestSellerName');
+          const bestSellerRevenueElement = document.getElementById('bestSellerRevenue');
+          const bestSellerCountElement = document.getElementById('bestSellerCount');
+
+          if (bestSellerElement && bestSellerRevenueElement && bestSellerCountElement) {
+            bestSellerElement.textContent = data.bestSeller.name || 'No sales';
+            bestSellerRevenueElement.textContent = `$${(data.bestSeller.revenue || 0).toFixed(2)}`;
+            bestSellerCountElement.textContent = `${data.bestSeller.count || 0} sold this month`;
+          }
+
+          // Update Top Customer
+          const topCustomerElement = document.getElementById('topCustomerName');
+          const topCustomerSpendElement = document.getElementById('topCustomerSpend');
+          const topCustomerOrdersElement = document.getElementById('topCustomerOrders');
+
+          if (topCustomerElement && topCustomerSpendElement && topCustomerOrdersElement) {
+            topCustomerElement.textContent = data.topCustomer.name || 'No customers';
+            topCustomerSpendElement.textContent = `$${(data.topCustomer.spend || 0).toFixed(2)}`;
+            topCustomerOrdersElement.textContent = `${data.topCustomer.orders || 0} orders this month`;
+          }
+
+          // Update Top Category
+          const topCategoryElement = document.getElementById('topCategoryName');
+          const topCategorySalesElement = document.getElementById('topCategorySales');
+          const topCategoryCountElement = document.getElementById('topCategoryCount');
+
+          if (topCategoryElement && topCategorySalesElement && topCategoryCountElement) {
+            topCategoryElement.textContent = data.topCategory._id || 'No sales';
+            topCategorySalesElement.textContent = `$${(data.topCategory.sales || 0).toFixed(2)}`;
+            topCategoryCountElement.textContent = `${data.topCategory.count || 0} sales this month`;
+          }
+
+          // Update Sales Chart
+          const ctx = document.getElementById('salesChart');
+          if (ctx) {
+            new Chart(ctx.getContext('2d'), {
+              type: 'line',
+              data: {
+                labels: data.monthlySales.map(sale => sale.month),
+                datasets: [{
+                  label: 'Monthly Sales',
+                  data: data.monthlySales.map(sale => sale.total),
+                  backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                  borderColor: '#4e73df',
+                  borderWidth: 2,
+                  fill: true
+                }]
+              },
+              options: {
+                responsive: true,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      callback: function(value) {
+                        return '$' + value.toFixed(2);
+                      }
+                    }
+                  }
+                },
+                plugins: {
+                  tooltip: {
+                    callbacks: {
+                      label: function(context) {
+                        return '$' + context.raw.toFixed(2);
+                      }
+                    }
+                  }
+                }
+              }
+            });
+          }
+        } catch (error) {
+          console.error('Error loading sales data:', error);
+          alert(`Failed to load sales data: ${error.message}`);
+        }
+      }
+    </script>
   </body>
 </html>
 

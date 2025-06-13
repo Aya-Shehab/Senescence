@@ -11,15 +11,25 @@ export const getSalesAnalytics = async (req, res) => {
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
-    // Get best seller product
+    // Get best seller product with proper aggregation
     const bestSeller = await Order.aggregate([
-      { $match: { createdAt: { $gte: firstDayOfMonth, $lte: lastDayOfMonth } } },
+      { 
+        $match: { 
+          createdAt: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
+          status: { $ne: 'Cancelled' } // Exclude cancelled orders
+        } 
+      },
       { $unwind: '$items' },
-      { $group: {
+      {
+        $group: {
           _id: '$items.productId',
           name: { $first: '$items.name' },
           count: { $sum: '$items.quantity' },
-          revenue: { $sum: { $multiply: ['$items.price', '$items.quantity'] } }
+          revenue: { 
+            $sum: { 
+              $multiply: ['$items.price', '$items.quantity'] 
+            } 
+          }
         }
       },
       { $sort: { revenue: -1 } },
@@ -28,8 +38,14 @@ export const getSalesAnalytics = async (req, res) => {
 
     // Get top customer
     const topCustomer = await Order.aggregate([
-      { $match: { createdAt: { $gte: firstDayOfMonth, $lte: lastDayOfMonth } } },
-      { $group: {
+      { 
+        $match: { 
+          createdAt: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
+          status: { $ne: 'Cancelled' } // Exclude cancelled orders
+        } 
+      },
+      {
+        $group: {
           _id: '$userId',
           name: { $first: { $concat: ['$shippingInfo.firstName', ' ', '$shippingInfo.lastName'] } },
           spend: { $sum: '$totalPrice' },
@@ -40,11 +56,17 @@ export const getSalesAnalytics = async (req, res) => {
       { $limit: 1 }
     ]);
 
-    // Get top category
-    const topCategory = await Order.aggregate([
-      { $match: { createdAt: { $gte: firstDayOfMonth, $lte: lastDayOfMonth } } },
+    // Get highest growth category
+    const categoryGrowth = await Order.aggregate([
+      { 
+        $match: { 
+          createdAt: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
+          status: { $ne: 'Cancelled' } // Exclude cancelled orders
+        } 
+      },
       { $unwind: '$items' },
-      { $lookup: {
+      {
+        $lookup: {
           from: 'products',
           localField: 'items.productId',
           foreignField: '_id',
@@ -52,90 +74,57 @@ export const getSalesAnalytics = async (req, res) => {
         }
       },
       { $unwind: '$product' },
-      { $group: {
+      {
+        $group: {
           _id: '$product.category',
-          sales: { $sum: '$items.quantity' },
-          revenue: { $sum: { $multiply: ['$items.price', '$items.quantity'] } }
+          sales: { 
+            $sum: { 
+              $multiply: ['$items.price', '$items.quantity'] 
+            } 
+          },
+          count: { $sum: '$items.quantity' }
         }
       },
-      { $sort: { revenue: -1 } },
+      { $sort: { sales: -1 } },
       { $limit: 1 }
     ]);
 
     // Get monthly sales data for the chart
     const monthlySales = await Order.aggregate([
-      { $match: { 
-          createdAt: { 
-            $gte: new Date(currentDate.getFullYear(), currentDate.getMonth() - 6, 1),
-            $lte: lastDayOfMonth
-          }
+      {
+        $match: {
+          status: { $ne: 'Cancelled' } // Exclude cancelled orders
         }
       },
-      { $group: {
-          _id: { 
+      {
+        $group: {
+          _id: {
             year: { $year: '$createdAt' },
             month: { $month: '$createdAt' }
           },
-          total: { $sum: '$totalPrice' }
+          totalSales: { $sum: '$totalPrice' }
         }
       },
-      { $sort: { '_id.year': 1, '_id.month': 1 } }
+      { $sort: { '_id.year': 1, '_id.month': 1 } },
+      { $limit: 12 }
     ]);
 
-    // Format monthly sales data for the chart
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const formattedMonthlySales = {
-      labels: monthlySales.map(sale => `${months[sale._id.month - 1]} ${sale._id.year}`),
-      data: monthlySales.map(sale => sale.total)
+    // Format the response
+    const response = {
+      bestSeller: bestSeller[0] || { name: 'No sales', count: 0, revenue: 0 },
+      topCustomer: topCustomer[0] || { name: 'No customers', spend: 0, orders: 0 },
+      topCategory: categoryGrowth[0] || { _id: 'No sales', sales: 0, count: 0 },
+      monthlySales: monthlySales.map(sale => ({
+        month: new Date(sale._id.year, sale._id.month - 1).toLocaleString('default', { month: 'short' }),
+        total: sale.totalSales
+      }))
     };
 
-    // Calculate category growth
-    const lastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-    const lastMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-    
-    const lastMonthCategorySales = await Order.aggregate([
-      { $match: { createdAt: { $gte: lastMonth, $lte: lastMonthEnd } } },
-      { $unwind: '$items' },
-      { $lookup: {
-          from: 'products',
-          localField: 'items.productId',
-          foreignField: '_id',
-          as: 'product'
-        }
-      },
-      { $unwind: '$product' },
-      { $group: {
-          _id: '$product.category',
-          sales: { $sum: '$items.quantity' }
-        }
-      }
-    ]);
-
-    const categoryGrowth = lastMonthCategorySales.find(cat => cat._id === topCategory[0]?._id);
-    const growth = categoryGrowth ? 
-      ((topCategory[0].sales - categoryGrowth.sales) / categoryGrowth.sales * 100).toFixed(1) : 0;
-
-    res.json({
-      bestSeller: {
-        name: bestSeller[0]?.name || 'No sales',
-        revenue: bestSeller[0]?.revenue || 0,
-        count: bestSeller[0]?.count || 0
-      },
-      topCustomer: {
-        name: topCustomer[0]?.name || 'No customers',
-        spend: topCustomer[0]?.spend || 0,
-        orders: topCustomer[0]?.orders || 0
-      },
-      topCategory: {
-        name: topCategory[0]?._id || 'No category',
-        growth: growth,
-        sales: topCategory[0]?.sales || 0
-      },
-      monthlySales: formattedMonthlySales
-    });
+    console.log('Sales analytics response:', response); // Debug log
+    res.json(response);
   } catch (error) {
-    console.error('Error in getSalesAnalytics:', error);
-    res.status(500).json({ error: 'Failed to fetch sales analytics' });
+    console.error('Error getting sales analytics:', error);
+    res.status(500).json({ error: 'Failed to get sales analytics' });
   }
 };
 

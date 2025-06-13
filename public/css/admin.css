@@ -376,3 +376,63 @@ align-items: center;
 }
 */
 
+/* Order Management Table Specific Styles */
+#orders .table-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow-x: auto;
+  font-size: 0.8rem;
+}
+
+#orders .table {
+  font-size: 0.8rem;
+  width: 100%;
+}
+
+#orders .table th,
+#orders .table td {
+  padding: 4px 6px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+#orders .table td:nth-child(6) {
+  white-space: normal;
+  max-width: 120px;
+  min-width: 100px;
+}
+
+#orders .form-select {
+  padding: 2px 4px;
+  font-size: 0.8rem;
+  height: auto;
+  min-height: 24px;
+}
+
+#orders .btn-sm {
+  padding: 2px 4px;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+#orders .table th {
+  font-size: 0.8rem;
+  font-weight: 600;
+  background-color: #f8f9fa;
+  padding: 6px 8px;
+}
+
+#orders .table-responsive {
+  margin: 0;
+  padding: 0;
+}
+
+#orders .chart-container {
+  padding: 10px;
+}
+
+#orders .table td small {
+  font-size: 0.75rem;
+  color: #666;
+}
+
