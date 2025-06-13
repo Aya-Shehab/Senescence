@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Past Orders - My Account</title>
     <!-- Main stylesheets -->
-    <link rel="stylesheet" href="/css/account.css">
-    <%- include("partials/links.ejs")%>
+     <link rel="stylesheet" href="/css/account.css">
+ <%- include("partials/links.ejs")%>
     <style>
         .order-card {
             background: white;
@@ -131,23 +131,23 @@
                     </div>
                 <% }); %>
             <% } else { %>
-                <div class="empty-state">
-                    <div class="empty-state-icon">
-                        📦💭
-                    </div>
-                    <h3 class="empty-state-title">No Past Orders Yet</h3>
-                    <p class="empty-state-message">
-                        Once you place your first order, it will appear here for easy tracking and reordering!
-                    </p>
-                    <div class="empty-state-actions">
-                        <a href="/categories" class="btn btn-primary">Start Shopping</a>
-                    </div>
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    📦💭
                 </div>
+                <h3 class="empty-state-title">No Past Orders Yet</h3>
+                <p class="empty-state-message">
+                    Once you place your first order, it will appear here for easy tracking and reordering!
+                </p>
+                <div class="empty-state-actions">
+                    <a href="/categories" class="btn btn-primary">Start Shopping</a>
+                </div>
+            </div>
             <% } %>
         </main>
     </div>
     
-    <script src="/js/account.js"></script>
+      <script src="/js/account.js"></script>
     <%- include("partials/footer")%> 
     <%- include("partials/scripts")%>
     <%- include('partials/chatbot') %>

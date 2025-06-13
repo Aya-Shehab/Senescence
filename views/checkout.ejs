@@ -333,7 +333,7 @@
           const li = document.createElement('li');
           li.innerHTML = `
             <div class="single-box clearfix">
-              <img src="${item.image.startsWith('http') || item.image.startsWith('/') ? item.image : '/' + item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" />
+              <img src="${item.image}" alt="${item.name}" />
               <h6>${item.name} x ${item.quantity}</h6>
               <span>$${itemTotal.toFixed(2)}</span>
             </div>

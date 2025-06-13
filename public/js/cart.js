@@ -58,7 +58,7 @@ function updateCartDisplay() {
     itemElement.className = 'cart-item mb-3 pb-3 border-bottom';
     itemElement.innerHTML = `
       <div class="d-flex align-items-center">
-        <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="favorite-image">
+        <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover;" class="me-3">
         <div class="flex-grow-1">
           <h6 class="mb-1">${item.name} (${item.priceType === 'whole' ? 'Whole Cake' : 'Single Piece'})</h6>
           <p class="mb-1 text-muted">$${item.price.toFixed(2)}</p>
@@ -115,11 +115,6 @@ function addToCart(item) {
   const savedCart = localStorage.getItem('cart');
   if (savedCart) {
     cart = JSON.parse(savedCart);
-  }
-
-  // Ensure image URL is properly formatted
-  if (item.image && !item.image.startsWith('/')) {
-    item.image = '/' + item.image;
   }
 
   // Check for existing item with same ID AND price type
