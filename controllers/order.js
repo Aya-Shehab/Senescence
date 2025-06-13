@@ -7,7 +7,7 @@ import crypto from 'crypto';
 export const placeOrder = async (req, res) => {
   try {
     const { userId } = req.params;
-    const { shippingInfo, paymentMethod, items } = req.body;
+    const { shippingInfo, paymentMethod, items: clientItems } = req.body;
 
     if (!shippingInfo || !shippingInfo.firstName || !shippingInfo.lastName || 
         !shippingInfo.email || !shippingInfo.phone || !shippingInfo.address ||
@@ -16,8 +16,20 @@ export const placeOrder = async (req, res) => {
       return res.status(400).json({ error: 'Please fill all fields' });
     }
 
+    // Fetch items from cart if not provided by client
+    let items = clientItems;
     if (!items || items.length === 0) {
-      return res.status(400).json({ error: 'Cart is empty' });
+      const cart = await Cart.findOne({ userId }).populate('items.productId');
+      if (!cart || cart.items.length === 0) {
+        return res.status(400).json({ error: 'Cart is empty' });
+      }
+      items = cart.items.map((ci) => ({
+        id: ci.productId._id || ci.productId,
+        name: ci.productName,
+        image: ci.imageUrl,
+        quantity: ci.quantity,
+        price: ci.price,
+      }));
     }
 
     // Calculate totals
@@ -59,6 +71,13 @@ export const placeOrder = async (req, res) => {
         paymentMethod: 'cash',
         paymentStatus: 'pending'
       });
+
+      // After successful order creation (cash or card flow), clear user's cart
+      await Cart.findOneAndUpdate(
+        { userId },
+        { $set: { items: [], totalItems: 0, totalPrice: 0 } },
+        { new: true }
+      );
 
       return res.status(201).json({ 
         message: 'Order placed successfully for Cash on Delivery', 
@@ -127,6 +146,13 @@ export const placeOrder = async (req, res) => {
 
         // generate payment URL
         const paymentUrl = `https://accept.paymob.com/api/acceptance/iframes/${process.env.PAYMOB_IFRAME_ID}?payment_token=${paymentToken}`;
+
+        // After successful order creation (cash or card flow), clear user's cart
+        await Cart.findOneAndUpdate(
+          { userId },
+          { $set: { items: [], totalItems: 0, totalPrice: 0 } },
+          { new: true }
+        );
 
         return res.status(200).json({ 
           success: true, 

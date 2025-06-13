@@ -307,9 +307,8 @@
     <%- include('partials/chatbot') %>
 
     <script>
-      // Check if user is logged in and cart has items
-      document.addEventListener("DOMContentLoaded", function () {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      // Handle checkout logic with server-side cart
+      document.addEventListener("DOMContentLoaded", async function () {
         const user = JSON.parse('<%- JSON.stringify(user || null) %>');
 
         if (!user) {
@@ -317,24 +316,37 @@
           return;
         }
 
-        if (cart.length === 0) {
+        const orderItemsList = document.getElementById('orderItemsList');
+
+        // Fetch cart from server
+        let serverCart;
+        try {
+          const res = await fetch(`/api/v1/cart/${user._id}`, { credentials: 'include' });
+          if (!res.ok) throw new Error('Failed to fetch cart');
+          serverCart = await res.json();
+        } catch (err) {
+          console.error(err);
           window.location.href = '/';
           return;
         }
 
-        const orderItemsList = document.getElementById('orderItemsList');
+        if (!serverCart.items || serverCart.items.length === 0) {
+          window.location.href = '/';
+          return;
+        }
+
         let subtotal = 0;
 
         // Display cart items
-        cart.forEach(item => {
-          const itemTotal = item.price * item.quantity;
+        serverCart.items.forEach(ci => {
+          const itemTotal = ci.price * ci.quantity;
           subtotal += itemTotal;
-          
+
           const li = document.createElement('li');
           li.innerHTML = `
             <div class="single-box clearfix">
-              <img src="${item.image}" alt="${item.name}" />
-              <h6>${item.name} x ${item.quantity}</h6>
+              <img src="${ci.imageUrl}" alt="${ci.productName}" />
+              <h6>${ci.productName} (${ci.priceType === 'whole' ? 'Whole' : 'Piece'}) x ${ci.quantity}</h6>
               <span>$${itemTotal.toFixed(2)}</span>
             </div>
           `;
@@ -454,9 +466,7 @@
                 governorate: document.querySelector('select[name="governorate"]').value
               }
             },
-            paymentMethod: document.querySelector('input[name="payment_method"]:checked').value,
-            items: cart,
-            total: total
+            paymentMethod: document.querySelector('input[name="payment_method"]:checked').value
           };
 
           try {
@@ -475,17 +485,12 @@
             }
 
             if (formData.paymentMethod === 'card') {
-              // Open payment URL in new tab
+              // Open payment URL in new tab (card payments)
               window.open(data.paymentUrl, '_blank');
-              
-              // Immediately redirect to success page
-              localStorage.removeItem('cart'); // Clear cart
-              window.location.href = `/order-success?orderNumber=${data.order.orderNumber}&amount=${data.order.amount}&paymentMethod=${data.order.paymentMethod}`;
-            } else {
-              // For cash payment, redirect to success page
-              localStorage.removeItem('cart'); // Clear cart
-              window.location.href = `/order-success?orderNumber=${data.order.orderNumber}&amount=${data.order.amount}&paymentMethod=${data.order.paymentMethod}`;
             }
+
+            // Immediately redirect to success page (cash or after card)
+            window.location.href = `/order-success?orderNumber=${data.order.orderNumber}&amount=${data.order.amount}&paymentMethod=${data.order.paymentMethod}`;
           } catch (error) {
             alert(error.message || 'An error occurred while placing your order');
           }

@@ -18,6 +18,11 @@ const cartItemSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    priceType: {
+      type: String,
+      enum: ["whole", "piece"],
+      required: true,
+    },
     quantity: {
       type: Number,
       required: true,
