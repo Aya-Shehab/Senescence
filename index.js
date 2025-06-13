@@ -10,6 +10,7 @@ import contactRoutes from "./routes/contact.js";
 import chatRoutes from "./routes/chatMessage.js";
 import feedbackRoutes from "./routes/feedback.js";
 import shopRoutes from "./routes/shop.js";
+import adminRoutes from "./routes/admin.js";
 import multer from "multer";
 import path from "path";
 import cookieParser from "cookie-parser";
@@ -55,12 +56,13 @@ app.use(express.static("public"));
 // API Routes
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/cart", cartRoutes);
-app.use("/api/v1/order", orderRoutes);
-app.use("/api/v1/custom-orders", customOrderRoutes);
+app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/custom-orders", customOrderRoutes);
 app.use("/api/v1/contact", contactRoutes);
 app.use("/api/v1/chat", chatRoutes);
 app.use("/api/v1/feedback", feedbackRoutes);
+app.use("/api/v1/admin", adminRoutes);
 app.use(frontendRouter);
 
 // Connect to database

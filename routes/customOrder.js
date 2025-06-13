@@ -25,7 +25,7 @@ const upload = multer({ storage: storage });
 
 // Custom order routes
 router.post("/", upload.single("imageUrl"), createCustomOrder);
-router.get("/", getAllCustomOrders);    
+router.get("/", getAllCustomOrders);
 router.get("/:id", getCustomOrderById);
 router.put("/:id", updateCustomOrder);
 router.delete("/:id", deleteCustomOrder);

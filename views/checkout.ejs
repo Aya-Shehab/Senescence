@@ -369,19 +369,73 @@
           </li>
         `;
 
-        // Validation functions
-        const validations = {
-          email: (value) => {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(value);
-          },
-          phone: (value) => {
-            const phoneRegex = /^01[0125][0-9]{8}$/;
-            return phoneRegex.test(value);
-          },
-          required: (value) => value.trim() !== '',
-          governorate: (value) => value !== ''
-        };
+        // Form validation functions
+        function validateField(field, value) {
+          const fieldInput = field.closest('.field-input');
+          let isValid = true;
+          let errorMessage = '';
+
+          switch(field.name) {
+            case 'firstName':
+            case 'lastName':
+            case 'city':
+            case 'street':
+            case 'postCode':
+              isValid = value.trim() !== '';
+              errorMessage = `${field.name.charAt(0).toUpperCase() + field.name.slice(1)} is required`;
+              break;
+            case 'email':
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              isValid = emailRegex.test(value);
+              errorMessage = 'Please enter a valid email address';
+              break;
+            case 'phone':
+              const phoneRegex = /^01[0125][0-9]{8}$/;
+              isValid = phoneRegex.test(value);
+              errorMessage = 'Phone number must start with 01 and be 11 digits long';
+              break;
+            case 'governorate':
+              isValid = value !== '';
+              errorMessage = 'Please select a governorate';
+              break;
+          }
+
+          if (!isValid) {
+            fieldInput.classList.add('error');
+            fieldInput.querySelector('.error-message').textContent = errorMessage;
+          } else {
+            fieldInput.classList.remove('error');
+          }
+
+          return isValid;
+        }
+
+        function clearErrors() {
+          document.querySelectorAll('.field-input').forEach(input => {
+            input.classList.remove('error');
+          });
+        }
+
+        function validateForm() {
+          let isValid = true;
+          const form = document.getElementById('checkout-form');
+          const requiredFields = form.querySelectorAll('input[required], select[required]');
+          
+          requiredFields.forEach(field => {
+            if (!validateField(field, field.value)) {
+              isValid = false;
+            }
+          });
+
+          // Check if payment method is selected
+          const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+          if (!paymentMethod) {
+            alert('Please select a payment method');
+            isValid = false;
+          }
+
+          return isValid;
+        }
 
         // Form submission handler
         document.getElementById('checkout-form').addEventListener('submit', async function(e) {
@@ -409,11 +463,12 @@
               }
             },
             paymentMethod: document.querySelector('input[name="payment_method"]:checked').value,
-            items: JSON.parse(localStorage.getItem('cart') || '[]')
+            items: cart,
+            total: total
           };
 
           try {
-            const response = await fetch(`/api/orders/${user._id}`, {
+            const response = await fetch(`/api/v1/orders/${user._id}`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -436,19 +491,7 @@
               window.location.href = `/order-success?orderNumber=${data.order.orderNumber}&amount=${data.order.amount}&paymentMethod=${data.order.paymentMethod}`;
             }
           } catch (error) {
-            showToast(error.message, 'error');
-          }
-        });
-
-        // Handle payment completion
-        window.addEventListener('message', function(event) {
-          if (event.data === 'payment_completed') {
-            closePaymentIframe();
-            localStorage.removeItem('cart'); // Clear cart
-            window.location.href = '/order-success?orderNumber=' + event.data.orderNumber + '&amount=' + event.data.amount + '&paymentMethod=card';
-          } else if (event.data === 'payment_failed') {
-            closePaymentIframe();
-            showToast('Payment failed. Please try again.', 'error');
+            alert(error.message || 'An error occurred while placing your order');
           }
         });
 
@@ -486,7 +529,7 @@
           } catch (error) {
             console.error('Error processing payment message:', error);
           }
-          });
+        });
       });
     </script>
   </body>

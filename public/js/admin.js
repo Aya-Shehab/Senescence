@@ -316,42 +316,108 @@ feedbackTab.addEventListener('click', loadFeedbacks);
 
 // Fetch orders from backend and display in the table
 async function loadOrders() {
-  const res = await fetch('/api/v1/order');
-  const orders = await res.json();
-  const tbody = document.getElementById('orders-tbody');
-  tbody.innerHTML = '';
-  orders.forEach(order => {
-    const shipping = order.shippingInfo || {};
-    const address = shipping.address
-      ? `${shipping.address.street}, ${shipping.address.city}, ${shipping.address.governorate}, ${shipping.address.postCode}`
-      : '-';
-    const items = order.items && order.items.length
-      ? order.items.map(item => `${item.name} (x${item.quantity})`).join('<br>')
-      : '-';
-    tbody.innerHTML += `
-      <tr>
-        <td>${order.orderNumber}</td>
-        <td>${shipping.firstName || ''} ${shipping.lastName || ''}</td>
-        <td>${shipping.email || '-'}</td>
-        <td>${shipping.phone || '-'}</td>
-        <td>${address}</td>
-        <td>${items}</td>
-        <td>${order.totalPrice} ${order.currency || ''}</td>
-        <td><span class="status ${order.status}">${order.status}</span></td>
-        <td>${order.paymentMethod} (${order.paymentStatus})</td>
-        <td>${order.createdAt ? new Date(order.createdAt).toLocaleString() : '-'}</td>
-        <td>
-          <button class="btn btn-danger btn-sm" onclick="deleteOrder('${order._id}')">Delete</button>
-        </td>
-      </tr>
-    `;
-  });
+  try {
+    const response = await fetch('/api/v1/orders', {
+      credentials: 'include' // This will include cookies in the request
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const orders = await response.json();
+    const tbody = document.getElementById('orders-tbody');
+    tbody.innerHTML = '';
+    
+    // Update order counts
+    document.getElementById('totalOrders').textContent = orders.length;
+    document.getElementById('pendingOrders').textContent = 
+      orders.filter(order => order.status === 'Pending').length;
+
+    orders.forEach(order => {
+      const shipping = order.shippingInfo || {};
+      const address = shipping.address
+        ? `${shipping.address.street}, ${shipping.address.city}, ${shipping.address.governorate}`
+        : '-';
+      const items = order.items && order.items.length
+        ? order.items.map(item => `${item.name} (x${item.quantity})`).join('<br>')
+        : '-';
+      tbody.innerHTML += `
+        <tr>
+          <td>${order.orderNumber}</td>
+          <td>${shipping.firstName || ''} ${shipping.lastName || ''}</td>
+          <td>${shipping.email || '-'}</td>
+          <td>${shipping.phone || '-'}</td>
+          <td>${address}</td>
+          <td>${items}</td>
+          <td>${order.totalPrice} ${order.currency || 'EGP'}</td>
+          <td>
+            <select class="form-select form-select-sm" onchange="updateOrderStatus('${order._id}', this.value)">
+              <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
+              <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+              <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+            </select>
+          </td>
+          <td>${order.paymentMethod} (${order.paymentStatus})</td>
+          <td>${order.createdAt ? new Date(order.createdAt).toLocaleString() : '-'}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" onclick="deleteOrder('${order._id}')">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `;
+    });
+  } catch (error) {
+    console.error('Error loading orders:', error);
+    alert('Failed to load orders. Please try again.');
+  }
 }
 
-async function deleteOrder(id) {
-  if (confirm('Delete this order?')) {
-    await fetch(`/api/v1/order/${id}`, { method: 'DELETE' });
-    loadOrders();
+// Update order status
+async function updateOrderStatus(orderId, newStatus) {
+  try {
+    const response = await fetch(`/api/v1/orders/status/${orderId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include', // Include cookies in the request
+      body: JSON.stringify({ status: newStatus })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update order status');
+    }
+
+    await loadOrders(); // Refresh the orders list
+    alert('Order status updated successfully');
+  } catch (error) {
+    console.error('Error updating order status:', error);
+    alert('Failed to update order status');
+  }
+}
+
+// Delete order
+async function deleteOrder(orderId) {
+  if (!confirm('Are you sure you want to delete this order?')) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/v1/orders/${orderId}`, {
+      method: 'DELETE',
+      credentials: 'include' // Include cookies in the request
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete order');
+    }
+
+    await loadOrders(); // Refresh the orders list
+    alert('Order deleted successfully');
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    alert('Failed to delete order');
   }
 }
 
