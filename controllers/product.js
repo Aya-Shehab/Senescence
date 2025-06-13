@@ -1,4 +1,5 @@
 import Product from "../models/product.js";
+import Feedback from "../models/feedback.js";
 
 export const createProduct = async (req, res) => {
   try {
@@ -59,7 +60,11 @@ export const getProductById = async (req, res) => {
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
-    res.status(200).json(product);
+    
+    // Get all feedbacks sorted by date
+    const feedbacks = await Feedback.find().sort({ createdAt: -1 });
+    
+    res.render('product-detail', { product, feedbacks });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });

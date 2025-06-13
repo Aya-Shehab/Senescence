@@ -1632,6 +1632,8 @@ div#mCSB_1_container{
   width: 100%;
   right: 0px;
   transform: translateY(-50%);
+  margin-top: 50px; /* Adjust this value to fine-tune vertical alignment */
+  z-index: 10; /* Ensure navigation is on top */
 }
 
 .banner-carousel .owl-nav .owl-prev{
@@ -1650,12 +1652,13 @@ div#mCSB_1_container{
   width: 90px;
   height: 90px;
   line-height: 90px;
-  color: #222;
-  font-size: 15px;
+  color: transparent;
+  font-size: 0px;
   text-align: center;
-  background: #fff;
+  background: url(/img/icons/bread.png) no-repeat center center, url(/img/icons/icon-bg-6.png) no-repeat center center;
+  background-size: 50px 50px, 100% 100%;
   font-weight: 600;
-  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
   transition: all 500ms ease;
   -moz-transition: all 500ms ease;
   -webkit-transition: all 500ms ease;
@@ -1670,12 +1673,13 @@ div#mCSB_1_container{
   width: 90px;
   height: 90px;
   line-height: 90px;
-  color: #222;
-  font-size: 15px;
+  color: transparent;
+  font-size: 0px;
   text-align: center;
-  background: #fff;
+  background: url(/img/icons/bread\ \(1\).png) no-repeat center center, url(/img/icons/icon-bg-6.png) no-repeat center center;
+  background-size: 50px 50px, 100% 100%;
   font-weight: 600;
-  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
   transition: all 500ms ease;
   -moz-transition: all 500ms ease;
   -webkit-transition: all 500ms ease;
@@ -1684,10 +1688,12 @@ div#mCSB_1_container{
   cursor: pointer;
 }
 
+
 .nav-style-one .owl-nav .owl-prev:hover,
 .nav-style-one .owl-nav .owl-next:hover{
-  color: #fff;
-  background: #222;
+  color: transparent;
+  background-color: transparent;
+  transform: scale(1.1);
 }
 
 
