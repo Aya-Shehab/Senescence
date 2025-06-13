@@ -13,15 +13,20 @@ export const createCustomOrder = async (req, res) => {
       notes
     } = req.body;
 
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !phone ||
-      !address ||
-      !description
-    ) {
-      return res.status(400).json({ error: "All fields are required" });
+    // Validate required fields
+    const requiredFields = {
+      firstName: 'First name',
+      lastName: 'Last name',
+      email: 'Email',
+      phone: 'Phone number',
+      address: 'Address',
+      description: 'Description'
+    };
+
+    for (const [field, label] of Object.entries(requiredFields)) {
+      if (!req.body[field] || req.body[field].trim() === '') {
+        return res.status(400).json({ error: `${label} is required` });
+      }
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,19 +36,15 @@ export const createCustomOrder = async (req, res) => {
 
     const phoneRegex = /^01[0125][0-9]{8}$/;
     if (!phoneRegex.test(phone)) {
-      return res.status(400).json({ error: "Phone number must be 11 digits" });
+      return res.status(400).json({ error: "Phone number must be 11 digits starting with 01" });
     }
 
     if (address.length < 10) {
-      return res
-        .status(400)
-        .json({ error: "Address must be at least 10 characters long" });
+      return res.status(400).json({ error: "Address must be at least 10 characters long" });
     }
 
     if (description.length < 15) {
-      return res
-        .status(400)
-        .json({ error: "Description must be at least 15 characters long" });
+      return res.status(400).json({ error: "Description must be at least 15 characters long" });
     }
 
     const imageUrl = req.file ? req.file.path : null;
@@ -69,9 +70,7 @@ export const createCustomOrder = async (req, res) => {
     });
   } catch (e) {
     console.error('Custom order creation error:', e);
-    return res
-      .status(500)
-      .json({ error: "Internal server error .. try again later" });
+    return res.status(500).json({ error: "Internal server error. Please try again later." });
   }
 };
 

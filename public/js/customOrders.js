@@ -26,6 +26,7 @@ function initializeElements() {
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM Content Loaded - Initializing custom orders');
     if (initializeElements()) {
         loadCustomOrders();
         setupFormListeners();
@@ -37,11 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // Functions
 async function loadCustomOrders() {
     try {
+        console.log('Loading custom orders...');
         const response = await fetch('/api/v1/custom-orders');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const orders = await response.json();
+        console.log('Loaded orders:', orders);
         
         // Update total count
         if (totalRequests) {
@@ -57,6 +60,8 @@ async function loadCustomOrders() {
                 const row = createOrderRow(order);
                 requestsTbody.appendChild(row);
             });
+        } else {
+            console.error('Requests tbody not found');
         }
     } catch (error) {
         console.error('Error loading custom orders:', error);
@@ -65,38 +70,88 @@ async function loadCustomOrders() {
 }
 
 function createOrderRow(order) {
+    console.log('Creating row for order:', order);
     const row = document.createElement('tr');
+    
+    // Create main row content
     row.innerHTML = `
         <td>${order.firstName} ${order.lastName}</td>
-        <td>${order.email}</td>
-        <td>${order.phone}</td>
-        <td>${order.address}</td>
-        <td>${order.description}</td>
-        <td>${order.imageUrl ? `<img src="${order.imageUrl}" alt="Order" style="max-width: 50px;">` : 'No image'}</td>
-        <td>${order.preferredDate ? new Date(order.preferredDate).toLocaleDateString() : 'Not specified'}</td>
-        <td>${order.notes || 'No notes'}</td>
-        <td><span class="badge bg-${getStatusColor(order.status)}">${order.status}</span></td>
         <td>
-            <div class="btn-group">
-                <button class="btn btn-sm btn-primary" onclick="editRequest('${order._id}')">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-danger" onclick="deleteRequest('${order._id}')">
-                    <i class="bi bi-trash"></i>
-                </button>
+            <div><i class="bi bi-envelope"></i> ${order.email}</div>
+            <div><i class="bi bi-telephone"></i> ${order.phone}</div>
+            <div><i class="bi bi-geo-alt"></i> ${order.address}</div>
+        </td>
+        <td>
+            <div class="order-details">
+                <div class="mb-2"><strong>Description:</strong> ${order.description}</div>
+                ${order.imageUrl ? `<div class="mb-2"><img src="${order.imageUrl}" alt="Order Image" style="max-width: 100px; border-radius: 4px;"></div>` : ''}
+                ${order.preferredDate ? `<div><strong>Preferred Date:</strong> ${new Date(order.preferredDate).toLocaleDateString()}</div>` : ''}
+                ${order.notes ? `<div class="mt-2"><strong>Notes:</strong> ${order.notes}</div>` : ''}
             </div>
         </td>
+        <td>
+            <select class="form-select form-select-sm" onchange="updateRequestStatus('${order._id}', this.value)">
+                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
+                <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>Completed</option>
+                <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+            </select>
+        </td>
+        <td>${new Date(order.createdAt).toLocaleString()}</td>
+        <td>
+            <button class="btn btn-primary btn-sm me-1" onclick="editRequest('${order._id}')">
+                <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="deleteRequest('${order._id}')">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>
     `;
+
     return row;
 }
 
-function getStatusColor(status) {
-    switch (status) {
-        case 'pending': return 'warning';
-        case 'processing': return 'info';
-        case 'completed': return 'success';
-        case 'cancelled': return 'danger';
-        default: return 'secondary';
+async function updateRequestStatus(requestId, newStatus) {
+    try {
+        const response = await fetch(`/api/v1/custom-orders/${requestId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: newStatus })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update request status');
+        }
+
+        await loadCustomOrders(); // Refresh the list
+        showNotification('Request status updated successfully', 'success');
+    } catch (error) {
+        console.error('Error updating request status:', error);
+        showNotification('Failed to update request status', 'error');
+    }
+}
+
+async function deleteRequest(requestId) {
+    if (!confirm('Are you sure you want to delete this request?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/v1/custom-orders/${requestId}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete request');
+        }
+
+        await loadCustomOrders(); // Refresh the list
+        showNotification('Request deleted successfully', 'success');
+    } catch (error) {
+        console.error('Error deleting request:', error);
+        showNotification('Failed to delete request', 'error');
     }
 }
 
@@ -178,28 +233,6 @@ async function editRequest(id) {
     }
 }
 
-async function deleteRequest(id) {
-    if (!confirm('Are you sure you want to delete this request?')) {
-        return;
-    }
-    
-    try {
-        const response = await fetch(`/api/v1/custom-orders/${id}`, {
-            method: 'DELETE'
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        showNotification('Request deleted successfully', 'success');
-        loadCustomOrders();
-    } catch (error) {
-        console.error('Error deleting request:', error);
-        showNotification('Error deleting request: ' + error.message, 'error');
-    }
-}
-
 function setupFormListeners() {
     if (!customOrderForm) {
         console.error('Custom order form not found');
@@ -228,18 +261,17 @@ function setupFormListeners() {
             });
             
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const errorData = await response.json();
+                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
             }
-            
-            showNotification(
-                `Request ${currentRequestId ? 'updated' : 'created'} successfully`,
-                'success'
-            );
+
+            const result = await response.json();
+            showNotification(result.message || 'Request saved successfully', 'success');
             hideRequestForm();
-            loadCustomOrders();
+            await loadCustomOrders();
         } catch (error) {
             console.error('Error saving request:', error);
-            showNotification('Error saving request: ' + error.message, 'error');
+            showNotification(error.message || 'Error saving request', 'error');
         }
     });
 }
@@ -247,4 +279,20 @@ function setupFormListeners() {
 function showNotification(message, type = 'info') {
     // You can implement your preferred notification system here
     alert(message);
-} 
+}
+
+// Add some CSS for the details row
+const style = document.createElement('style');
+style.textContent = `
+    .details-row {
+        background-color: #f8f9fa;
+    }
+    .details-content {
+        border-top: 1px solid #dee2e6;
+    }
+    .img-thumbnail {
+        max-height: 200px;
+        object-fit: contain;
+    }
+`;
+document.head.appendChild(style); 

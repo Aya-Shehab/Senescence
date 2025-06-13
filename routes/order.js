@@ -7,15 +7,18 @@ import {
   updateOrderStatus,
   paymentCallback
 } from '../controllers/order.js';
+import { isAuthenticated, isAdmin } from '../middlewares/auth.js';
 
 const router = express.Router();
-//user functions
+
+// User functions
 router.post('/:userId', placeOrder);
-router.post('/callback', paymentCallback);
 router.get('/user/:userId', getUserOrders);
-router.put('/cancel/:orderId', cancelOrder);
-//admin functions
-router.get('/', getAllOrders);
-router.put('/status/:orderId', updateOrderStatus);
+
+// Admin functions
+router.get('/', isAuthenticated, isAdmin, getAllOrders);
+router.put('/status/:orderId', isAuthenticated, isAdmin, updateOrderStatus);
+router.put('/cancel/:orderId', isAuthenticated, isAdmin, cancelOrder);
+router.delete('/:orderId', isAuthenticated, isAdmin, cancelOrder);
 
 export default router;

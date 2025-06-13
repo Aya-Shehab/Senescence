@@ -72,6 +72,67 @@ export const deleteUser = async (req, res) => {
   }
 };
 
+export const updateUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { name, email, phone, role, isActive } = req.body;
+
+    // Find user by ID
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Check if email is being changed and if it's already taken
+    if (email && email !== user.email) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ error: "Email is already taken" });
+      }
+    }
+
+    // Validate role if provided
+    if (role && !['customer', 'admin'].includes(role)) {
+      return res.status(400).json({ error: "Invalid role. Must be either 'customer' or 'admin'" });
+    }
+
+    // Update user fields
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (phone) user.phone = phone;
+    if (role) user.role = role;
+    if (typeof isActive === 'boolean') user.isActive = isActive;
+
+    // Validate the updated user
+    try {
+      await user.validate();
+    } catch (validationError) {
+      return res.status(400).json({ 
+        error: "Validation failed", 
+        details: validationError.errors 
+      });
+    }
+
+    // Save updated user
+    await user.save();
+
+    // Return updated user without sensitive data
+    const updatedUser = user.toObject();
+    delete updatedUser.password;
+
+    res.json({ 
+      message: "User updated successfully", 
+      user: updatedUser 
+    });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return res.status(500).json({ 
+      error: "Internal server error", 
+      details: error.message 
+    });
+  }
+};
+
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
