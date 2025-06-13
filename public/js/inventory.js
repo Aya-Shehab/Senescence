@@ -145,12 +145,22 @@ document.getElementById('inventoryForm').addEventListener('submit', async (e) =>
         const response = await fetch(url, {
             method: method,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify(formData)
         });
         
         console.log('Response status:', response.status);
+        
+        // Check if the response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error('Non-JSON response:', text);
+            throw new Error('Server returned non-JSON response');
+        }
+
         const responseData = await response.json();
         console.log('Response data:', responseData);
 
@@ -160,11 +170,11 @@ document.getElementById('inventoryForm').addEventListener('submit', async (e) =>
             alert(productId ? 'Product updated successfully' : 'Product added successfully');
         } else {
             console.error('Error response:', responseData);
-            alert('Failed to save product: ' + (responseData.message || 'Unknown error'));
+            alert('Failed to save product: ' + (responseData.message || responseData.error || 'Unknown error'));
         }
     } catch (error) {
         console.error('Error saving product:', error);
-        alert('Error saving product: ' + error.message);
+        alert('Error saving product: ' + (error.message || 'Unknown error occurred'));
     }
 });
 

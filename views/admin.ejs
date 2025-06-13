@@ -65,7 +65,6 @@
             <p id="bestSellerName">Loading...</p>
             <h2 style="color: #4e73df" id="bestSellerRevenue">$0</h2>
             <p id="bestSellerTarget">0% of target 🚀</p>
-            <button class="btn view-btn" onclick="showSection('sales')">View sales</button>
           </div>
 
           <div class="card highlight-card">
@@ -79,7 +78,7 @@
             <h3>Orders</h3>
             <p>Total Orders</p>
             <h2 style="color: #4e73df" id="totalOrders">0</h2>
-            <p style="color: #28a745" id="ordersGrowth">+0%</p>
+            <p style="color: #28a745" id="ordersGrowth"></p>
           </div>
 
           <div class="card highlight-card">
@@ -93,12 +92,7 @@
             <h3>Profit</h3>
             <p>Net Profit</p>
             <h2 style="color: #4e73df" id="totalProfit">$0</h2>
-            <div class="chart" id="profitChart">
-              <!-- Profit bars will be dynamically inserted here -->
-            </div>
-            <div class="labels" id="profitLabels">
-              <!-- Labels will be dynamically inserted here -->
-            </div>
+         
           </div>
         </div>
 
@@ -213,11 +207,6 @@
               <div>
                 <p>Total Orders: <span id="totalOrders">0</span></p>
                 <p>Pending Orders: <span id="pendingOrders">0</span></p>
-              </div>
-              <div>
-                <button class="btn btn-primary" onclick="loadOrders()">
-                  <i class="bi bi-arrow-clockwise"></i> Refresh
-                </button>
               </div>
             </div>
           </div>
