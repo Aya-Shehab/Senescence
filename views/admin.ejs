@@ -487,7 +487,7 @@
               <label for="confirmPass">Confirm Password:</label>
               <input type="password" id="confirmPass" minlength="6" />
 
-              <button type="button" id="updatePassBtn">Update Password</button>
+              <button type="button" id="updatePassBtn" class="save-btn">Update Password</button>
             </form>
           </div>
         </div>
@@ -878,6 +878,17 @@
         border-radius: 5px;
         background-color: #f8f9fc;
       }
+      .save-btn {
+        background: #4e73df;
+        color: #fff;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 15px;
+        transition: background 0.2s;
+      }
+      .save-btn:hover { background:#375ab7; }
     </style>
     <script>
       // Load orders when the orders section is shown
@@ -1339,6 +1350,24 @@
           }
         });
       });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded',()=>{
+        const btn=document.getElementById('updatePassBtn');
+        const form=document.getElementById('passwordForm');
+        if(!btn||!form)return;
+        btn.addEventListener('click',async ()=>{
+          const currentPass=document.getElementById('currentPass').value.trim();
+          const newPass=document.getElementById('newPass').value.trim();
+          const confirmPass=document.getElementById('confirmPass').value.trim();
+          if(!currentPass||!newPass||!confirmPass){alert('Fill all fields');return;}
+          if(newPass!==confirmPass){alert('Passwords do not match');return;}
+          try{
+            const res=await fetch(`/api/v1/users/<%= user ? user._id : '' %>/change-password`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({currentPassword:currentPass,newPassword:newPass})});
+            const data=await res.json();
+            if(!res.ok) throw new Error(data.error||'Failed');
+            alert('Password updated successfully');form.reset();
+          }catch(err){alert(err.message);console.error(err);} }); });
     </script>
   </body>
 </html>
