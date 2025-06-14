@@ -36,25 +36,34 @@ export const getSalesAnalytics = async (req, res) => {
       { $limit: 1 }
     ]);
 
-    // Get top customer
-    const topCustomer = await Order.aggregate([
-      { 
-        $match: { 
+    // Get top customer (by number of orders) and enrich with user collection for accurate name
+    const topCustomerAgg = await Order.aggregate([
+      {
+        $match: {
           createdAt: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
-          status: { $ne: 'Cancelled' } // Exclude cancelled orders
-        } 
+          status: { $ne: 'Cancelled' }
+        }
       },
       {
         $group: {
           _id: '$userId',
-          name: { $first: { $concat: ['$shippingInfo.firstName', ' ', '$shippingInfo.lastName'] } },
           spend: { $sum: '$totalPrice' },
           orders: { $sum: 1 }
         }
       },
-      { $sort: { spend: -1 } },
+      { $sort: { orders: -1 } },
       { $limit: 1 }
     ]);
+
+    let topCustomer = [{ name: 'No customers', spend: 0, orders: 0 }];
+    if (topCustomerAgg.length) {
+      const userDoc = await User.findById(topCustomerAgg[0]._id).select('name');
+      topCustomer = [{
+        name: userDoc?.name || 'Unknown',
+        spend: topCustomerAgg[0].spend,
+        orders: topCustomerAgg[0].orders
+      }];
+    }
 
     // Get highest growth category
     const categoryGrowth = await Order.aggregate([
@@ -89,6 +98,29 @@ export const getSalesAnalytics = async (req, res) => {
       { $limit: 1 }
     ]);
 
+    // Orders status distribution for charts
+    const ordersStatusAgg = await Order.aggregate([
+      { $match: { createdAt: { $gte: firstDayOfMonth, $lte: lastDayOfMonth } } },
+      { $group: { _id: '$status', count: { $sum: 1 } } }
+    ]);
+
+    const ordersStatus = ordersStatusAgg.reduce((acc, cur) => {
+      acc[cur._id] = cur.count;
+      return acc;
+    }, {});
+
+    // Sales per category (full list)
+    const categorySalesAgg = await Order.aggregate([
+      { $match: { createdAt: { $gte: firstDayOfMonth, $lte: lastDayOfMonth }, status: { $ne: 'Cancelled' } } },
+      { $unwind: '$items' },
+      { $lookup: { from: 'products', localField: 'items.productId', foreignField: '_id', as: 'product' } },
+      { $unwind: '$product' },
+      { $group: { _id: '$product.category', sales: { $sum: { $multiply: ['$items.price', '$items.quantity'] } } } },
+      { $sort: { sales: -1 } }
+    ]);
+
+    const categorySales = categorySalesAgg.map(item => ({ category: item._id, sales: item.sales }));
+
     // Get monthly sales data for the chart
     const monthlySales = await Order.aggregate([
       {
@@ -114,10 +146,20 @@ export const getSalesAnalytics = async (req, res) => {
       bestSeller: bestSeller[0] || { name: 'No sales', count: 0, revenue: 0 },
       topCustomer: topCustomer[0] || { name: 'No customers', spend: 0, orders: 0 },
       topCategory: categoryGrowth[0] || { _id: 'No sales', sales: 0, count: 0 },
+      ordersStatus,
+      categorySales,
       monthlySales: monthlySales.map(sale => ({
         month: new Date(sale._id.year, sale._id.month - 1).toLocaleString('default', { month: 'short' }),
         total: sale.totalSales
-      }))
+      })),
+      options: {
+        maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true } },
+        plugins: {},
+        layout: { padding: { right: 20 } },
+        categoryPercentage: 0.6,
+        barPercentage: 0.7
+      }
     };
 
     console.log('Sales analytics response:', response); // Debug log

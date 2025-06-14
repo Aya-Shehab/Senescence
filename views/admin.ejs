@@ -21,7 +21,6 @@
     <script src="/js/inventory.js" defer></script>
     <script src="/js/feedback.js"></script>
     <script src="/js/customOrders.js" defer></script>
-    <script src="/js/orders.js"></script>
   </head>
   <body>
     <script>const currentUserId = "<%= user ? user._id : '' %>";</script>
@@ -79,7 +78,7 @@
           <div class="card highlight-card">
             <h3>Orders</h3>
             <p>Total Orders</p>
-            <h2 style="color: #4e73df" id="totalOrders">0</h2>
+            <h2 style="color: #4e73df" id="dashboardOrdersTotal">0</h2>
             <p style="color: #28a745" id="ordersGrowth"></p>
           </div>
 
@@ -94,7 +93,9 @@
             <h3>Profit</h3>
             <p>Net Profit</p>
             <h2 style="color: #4e73df" id="totalProfit">$0</h2>
-         
+            <!-- Mini bar chart for profit -->
+            <div id="profitChart" class="chart" style="margin-top:10px"></div>
+            <div id="profitLabels" class="labels"></div>
           </div>
         </div>
 
@@ -406,26 +407,34 @@
         <div class="card-container" style="display: flex; gap: 2rem">
           <div class="card highlight-card" style="flex: 1">
             <h3>Best Seller Product</h3>
-            <p id="bestSellerName" class="mb-2">Loading...</p>
-            <h2 style="color: #4e73df" id="bestSellerRevenue">$0</h2>
-            <p id="bestSellerCount" class="text-muted">0 sold this month</p>
+            <p id="salesBestSellerName" class="mb-2">Loading...</p>
+            <h2 style="color: #4e73df" id="salesBestSellerRevenue">$0</h2>
+            <p id="salesBestSellerCount" class="text-muted">0 sold this month</p>
           </div>
           <div class="card highlight-card" style="flex: 1">
             <h3>Top Customer</h3>
-            <p id="topCustomerName" class="mb-2">Loading...</p>
-            <h2 style="color: #4e73df" id="topCustomerSpend">$0</h2>
-            <p id="topCustomerOrders" class="text-muted">0 orders this month</p>
+            <p id="salesTopCustomerName" class="mb-2">Loading...</p>
+            <h2 style="color: #4e73df" id="salesTopCustomerSpend">$0</h2>
+            <p id="salesTopCustomerOrders" class="text-muted">0 orders this month</p>
           </div>
           <div class="card highlight-card" style="flex: 1">
             <h3>Highest Growth Category</h3>
-            <p id="topCategoryName" class="mb-2">Loading...</p>
-            <h2 style="color: #4e73df" id="topCategorySales">$0</h2>
-            <p id="topCategoryCount" class="text-muted">0 sales this month</p>
+            <p id="salesTopCategoryName" class="mb-2">Loading...</p>
+            <h2 style="color: #4e73df" id="salesTopCategorySales">$0</h2>
+            <p id="salesTopCategoryCount" class="text-muted">0 sales this month</p>
           </div>
         </div>
         <div class="chart-container">
-          <h3>Monthly Sales Analysis</h3>
-          <canvas id="salesChart"></canvas>
+          <h3>Monthly Sales (EGP)</h3>
+          <canvas id="monthlySalesChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <h3>Orders by Status</h3>
+          <canvas id="ordersStatusChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <h3>Sales by Category (EGP)</h3>
+          <canvas id="categorySalesChart"></canvas>
         </div>
       </div>
 
@@ -599,7 +608,7 @@
           document.getElementById('salesGrowth').textContent = `+${data.sales.growth}%`;
 
           // Update Orders
-          document.getElementById('ordersTotal').textContent = data.orders.total;
+          document.getElementById('dashboardOrdersTotal').textContent = data.orders.total;
           document.getElementById('ordersGrowth').textContent = `+${data.orders.growth}%`;
 
           // Update Customer Orders
@@ -1166,6 +1175,9 @@
     </style>
     <script>
       // Load sales data when the sales section is shown
+      let monthlySalesChartInstance = null;
+      let ordersStatusChartInstance = null;
+      let categorySalesChartInstance = null;
       document.addEventListener('DOMContentLoaded', () => {
         const salesTab = document.querySelector('[onclick="showSection(\'sales\')"]');
         if (salesTab) {
@@ -1215,9 +1227,9 @@
           }
 
           // Update Best Seller
-          const bestSellerElement = document.getElementById('bestSellerName');
-          const bestSellerRevenueElement = document.getElementById('bestSellerRevenue');
-          const bestSellerCountElement = document.getElementById('bestSellerCount');
+          const bestSellerElement = document.getElementById('salesBestSellerName');
+          const bestSellerRevenueElement = document.getElementById('salesBestSellerRevenue');
+          const bestSellerCountElement = document.getElementById('salesBestSellerCount');
 
           if (bestSellerElement && bestSellerRevenueElement && bestSellerCountElement) {
             bestSellerElement.textContent = data.bestSeller.name || 'No sales';
@@ -1226,9 +1238,9 @@
           }
 
           // Update Top Customer
-          const topCustomerElement = document.getElementById('topCustomerName');
-          const topCustomerSpendElement = document.getElementById('topCustomerSpend');
-          const topCustomerOrdersElement = document.getElementById('topCustomerOrders');
+          const topCustomerElement = document.getElementById('salesTopCustomerName');
+          const topCustomerSpendElement = document.getElementById('salesTopCustomerSpend');
+          const topCustomerOrdersElement = document.getElementById('salesTopCustomerOrders');
 
           if (topCustomerElement && topCustomerSpendElement && topCustomerOrdersElement) {
             topCustomerElement.textContent = data.topCustomer.name || 'No customers';
@@ -1237,9 +1249,9 @@
           }
 
           // Update Top Category
-          const topCategoryElement = document.getElementById('topCategoryName');
-          const topCategorySalesElement = document.getElementById('topCategorySales');
-          const topCategoryCountElement = document.getElementById('topCategoryCount');
+          const topCategoryElement = document.getElementById('salesTopCategoryName');
+          const topCategorySalesElement = document.getElementById('salesTopCategorySales');
+          const topCategoryCountElement = document.getElementById('salesTopCategoryCount');
 
           if (topCategoryElement && topCategorySalesElement && topCategoryCountElement) {
             topCategoryElement.textContent = data.topCategory._id || 'No sales';
@@ -1247,45 +1259,69 @@
             topCategoryCountElement.textContent = `${data.topCategory.count || 0} sales this month`;
           }
 
-          // Update Sales Chart
-          const ctx = document.getElementById('salesChart');
-          if (ctx) {
-            new Chart(ctx.getContext('2d'), {
-              type: 'line',
-              data: {
-                labels: data.monthlySales.map(sale => sale.month),
-                datasets: [{
-                  label: 'Monthly Sales',
-                  data: data.monthlySales.map(sale => sale.total),
-                  backgroundColor: 'rgba(78, 115, 223, 0.05)',
-                  borderColor: '#4e73df',
-                  borderWidth: 2,
-                  fill: true
-                }]
-              },
-              options: {
-                responsive: true,
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                    ticks: {
-                      callback: function(value) {
-                        return '$' + value.toFixed(2);
+          // Update Monthly Sales Bar Chart
+          const canvas = document.getElementById('monthlySalesChart');
+          if (canvas) {
+             const ctx = canvas.getContext('2d');
+             // Destroy previous instance to avoid duplicate canvas errors
+             if (monthlySalesChartInstance) {
+               monthlySalesChartInstance.destroy();
+             }
+             monthlySalesChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: data.monthlySales.map(sale => sale.month),
+                  datasets: [{
+                    label: 'Sales (EGP)',
+                    data: data.monthlySales.map(sale => sale.total),
+                    backgroundColor: 'rgba(78,115,223,0.6)',
+                    borderColor: '#4e73df',
+                    borderWidth: 1
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      ticks: {
+                        callback: function(value) {
+                          return value.toLocaleString() + ' EGP';
+                        }
                       }
                     }
-                  }
-                },
-                plugins: {
-                  tooltip: {
-                    callbacks: {
-                      label: function(context) {
-                        return '$' + context.raw.toFixed(2);
+                  },
+                  plugins: {
+                    tooltip: {
+                      callbacks: {
+                        label: function(context) {
+                          return context.raw.toLocaleString() + ' EGP';
+                        }
                       }
                     }
                   }
                 }
-              }
-            });
+              });
+          }
+
+          /* Orders Status Doughnut */
+          const statusCanvas = document.getElementById('ordersStatusChart');
+          if(statusCanvas){
+             const ctxStatus = statusCanvas.getContext('2d');
+             if(ordersStatusChartInstance){ ordersStatusChartInstance.destroy(); }
+             const labelsStatus = Object.keys(data.ordersStatus);
+             const valuesStatus = labelsStatus.map(k=>data.ordersStatus[k]);
+             ordersStatusChartInstance = new Chart(ctxStatus,{type:'doughnut',data:{labels:labelsStatus,datasets:[{data:valuesStatus,backgroundColor:['#F6C6EA','#C8B6FF','#B8E0D2','#F5E960']}]} ,options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+          }
+
+          /* Category Sales Bar */
+          const catCanvas = document.getElementById('categorySalesChart');
+          if(catCanvas){
+             const ctxCat = catCanvas.getContext('2d');
+             if(categorySalesChartInstance){ categorySalesChartInstance.destroy(); }
+             const catLabels = data.categorySales.map(c=>c.category);
+             const catValues = data.categorySales.map(c=>c.sales);
+             categorySalesChartInstance = new Chart(ctxCat,{type:'bar',data:{labels:catLabels,datasets:[{label:'Sales (EGP)',data:catValues,backgroundColor:'#FFB5A7'}]},options:{responsive:true,scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}});
           }
         } catch (error) {
           console.error('Error loading sales data:', error);
