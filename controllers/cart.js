@@ -53,7 +53,7 @@ export const addToCart = async (req, res) => {
 
     let cart = await Cart.findOne({ userId });
     if (!cart) {
-      cart = new Cart({ userId, items: [] });
+      cart = new Cart({ userId, user: userId, items: [] });
     }
 
     // Find existing item with same product and priceType

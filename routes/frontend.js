@@ -95,65 +95,24 @@ router.get("/admin", auth(["admin"]),async (req, res) => {
   const customOrders = await customOrder.find();
   const feedbacks = await Feedback.find();
   const orders = await Order.find();
-  res.render("admin" , {users : await User.find(), customOrders, feedbacks, orders});
+  const users = await User.find();
+  res.render("admin" , {users, customOrders, feedbacks, orders});
 });
 
 // Mount shop routes before the catch-all route
 router.use("/shop", shopRoutes);
 
-const getUserFromToken = async (req, res, next) => {
+router.get('/pastorders', auth(['customer']), async (req, res) => {
   try {
-    const token = req.cookies.token; // Assuming you store JWT in cookies
-    if (!token) {
-      return res.redirect('/login'); // Redirect to login if no token
-    }
-    
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
-    
-    if (!user) {
-      return res.redirect('/login');
-    }
-    
-    req.user = user;
-    next();
-  } catch (error) {
-    return res.redirect('/login');
-  }
-};
-
-// Account route
-router.get('/account', getUserFromToken, (req, res) => {
-  res.render('account', { user: req.user });
-});
-
-
-//////////////
-
-router.get('/account', async (req, res) => {
-  try {
-    // Get user data from your database
-    // (Replace this with however you get the current user)
-    const user = await User.findById(req.user.id); // Adjust based on your auth system
-    
-    res.render('account', { user: user });
-  } catch (error) {
-    console.error('Error:', error);
-    res.render('account', { user: { name: 'User' } }); // Fallback
-  }
-});
-router.get('/pastorders', getUserFromToken, async (req, res) => {
-  try {
-    const userId = req.user._id; 
-    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    const orders = await Order.find({ userId: req.user._id }).sort({ createdAt: -1 });
     res.render('pastorders', { orders });
   } catch (error) {
     console.error('Error fetching orders:', error);
-    res.render('pastorders', { orders: [] }); 
+    res.render('pastorders', { orders: [] });
   }
 });
 
-router.get('/favorites', getUserFromToken, async (req, res) => {
+router.get('/favorites', auth(['customer']), async (req, res) => {
   try {
     const user = await User.findById(req.user._id).populate('favorites');
     res.render('favorites', { favorites: user.favorites });
@@ -164,7 +123,7 @@ router.get('/favorites', getUserFromToken, async (req, res) => {
 });
 
 // Add to favorites API
-router.post('/api/v1/favorites/:productId', getUserFromToken, async (req, res) => {
+router.post('/api/v1/favorites/:productId', auth(['customer']), async (req, res) => {
   try {
     const { productId } = req.params;
     const user = await User.findById(req.user._id);
@@ -186,7 +145,7 @@ router.post('/api/v1/favorites/:productId', getUserFromToken, async (req, res) =
 });
 
 // Remove from favorites API
-router.delete('/api/v1/favorites/:productId', getUserFromToken, async (req, res) => {
+router.delete('/api/v1/favorites/:productId', auth(['customer']), async (req, res) => {
   try {
     const { productId } = req.params;
     const user = await User.findById(req.user._id);

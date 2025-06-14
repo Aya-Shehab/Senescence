@@ -41,7 +41,7 @@ function updateCartDisplay() {
   const cartTotal = document.getElementById('cartTotal');
   const cartCounts = document.querySelectorAll('#cartCount'); // Get all cart count elements
 
-  if (!cartItemsList) return; // Exit if we're not on a page with cart display
+  // Even if cartItemsList is missing (e.g., on listing pages), we still update the badge counts.
 
   if (cart.length === 0) {
     if (emptyCart) emptyCart.classList.remove('d-none');
@@ -62,8 +62,10 @@ function updateCartDisplay() {
     if (count) count.textContent = totalItems;
   });
 
-  // Clear existing items
-  cartItemsList.innerHTML = '';
+  if (cartItemsList) {
+    // Clear existing items
+    cartItemsList.innerHTML = '';
+  }
 
   let subtotal = 0;
 
@@ -71,26 +73,28 @@ function updateCartDisplay() {
   cart.forEach((item, index) => {
     subtotal += item.price * item.quantity;
     
-    const itemElement = document.createElement('div');
-    itemElement.className = 'cart-item mb-3 pb-3 border-bottom';
-    itemElement.innerHTML = `
-      <div class="d-flex align-items-center">
-        <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover;" class="me-3">
-        <div class="flex-grow-1">
-          <h6 class="mb-1">${item.name} (${item.priceType === 'whole' ? 'Whole Cake' : 'Single Piece'})</h6>
-          <p class="mb-1 text-muted">$${item.price.toFixed(2)}</p>
-          <div class="d-flex align-items-center">
-            <button class="btn btn-sm btn-outline-secondary me-2" onclick="updateQuantity(${index}, -1)">-</button>
-            <span class="mx-2">${item.quantity}</span>
-            <button class="btn btn-sm btn-outline-secondary ms-2" onclick="updateQuantity(${index}, 1)">+</button>
-            <button class="btn btn-sm btn-danger ms-auto" onclick="removeItem(${index})">
-              <i class="bi bi-trash"></i>
-            </button>
+    if (cartItemsList) {
+      const elem = document.createElement('div');
+      elem.className = 'cart-item mb-3 pb-3 border-bottom';
+      elem.innerHTML = `
+        <div class="d-flex align-items-center">
+          <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover;" class="me-3">
+          <div class="flex-grow-1">
+            <h6 class="mb-1">${item.name} (${item.priceType === 'whole' ? 'Whole Cake' : 'Single Piece'})</h6>
+            <p class="mb-1 text-muted">$${item.price.toFixed(2)}</p>
+            <div class="d-flex align-items-center">
+              <button class="btn btn-sm btn-outline-secondary me-2" onclick="updateQuantity(${index}, -1)">-</button>
+              <span class="mx-2">${item.quantity}</span>
+              <button class="btn btn-sm btn-outline-secondary ms-2" onclick="updateQuantity(${index}, 1)">+</button>
+              <button class="btn btn-sm btn-danger ms-auto" onclick="removeItem(${index})">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    `;
-    cartItemsList.appendChild(itemElement);
+      `;
+      cartItemsList.appendChild(elem);
+    }
   });
 
   // Update totals

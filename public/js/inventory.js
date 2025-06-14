@@ -69,7 +69,11 @@ function hideProductForm() {
 async function editProduct(productId) {
     console.log('Editing product:', productId);
     try {
-        const response = await fetch(`/api/v1/products/${productId}`);
+        const response = await fetch(`/api/v1/products/${productId}`, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
         console.log('Edit response status:', response.status);
         const product = await response.json();
         console.log('Product to edit:', product);

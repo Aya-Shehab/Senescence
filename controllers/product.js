@@ -60,14 +60,19 @@ export const getProductById = async (req, res) => {
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
-    
-    // Get all feedbacks sorted by date
+
+    // If the client explicitly wants JSON (e.g., admin panel fetch)
+    const wantsJson = req.headers.accept && req.headers.accept.includes('application/json');
+    if (wantsJson || req.xhr) {
+      return res.status(200).json(product);
+    }
+
+    // Otherwise render the product page with feedbacks
     const feedbacks = await Feedback.find().sort({ createdAt: -1 });
-    
-    res.render('product-detail', { product, feedbacks });
+    return res.render('product-detail', { product, feedbacks });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
