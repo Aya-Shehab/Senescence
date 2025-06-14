@@ -92,7 +92,7 @@
                 </ul>
               </li>
               <li>
-                <a href="/custom-order" style="color: #000">
+                <a href="/custom-order" class="requires-login" style="color: #000">
                   <img
                     src="/img/icons/cupcake.png"
                     alt="Custom Order"
@@ -657,4 +657,15 @@
   });
 
   window.currentUserId = '<%= typeof user !== "undefined" && user ? user._id : "" %>';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('a.requires-login').forEach(link => {
+      link.addEventListener('click', function(e) {
+        if (!window.currentUserId) {
+          e.preventDefault();
+          showToast('Please login first to access this page', 'error');
+        }
+      });
+    });
+  });
 </script>
