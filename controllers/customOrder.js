@@ -118,6 +118,22 @@ export const deleteCustomOrder = async (req, res) => {
 export const updateCustomOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
+
+    // Allow updating ONLY the status field without validating other fields
+    if (req.body.status && Object.keys(req.body).length === 1) {
+      const updated = await customOrder.findByIdAndUpdate(
+        orderId,
+        { status: req.body.status },
+        { new: true }
+      );
+
+      if (!updated) {
+        return res.status(404).json({ error: "Custom order not found" });
+      }
+
+      return res.status(200).json({ message: "Status updated", order: updated });
+    }
+
     const {
       firstName,
       lastName,

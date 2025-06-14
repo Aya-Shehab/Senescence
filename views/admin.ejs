@@ -1006,9 +1006,9 @@
           const response = await fetch(`/api/v1/orders/status/${orderId}`, {
             method: 'PUT',
             headers: {
-              'Content-Type': 'application/json',
-              credentials: 'include'
+              'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify({ status: newStatus })
           });
 
@@ -1128,6 +1128,7 @@
             headers: {
               'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify({ status: newStatus })
           });
 
