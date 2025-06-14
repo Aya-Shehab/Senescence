@@ -133,6 +133,33 @@ export const updateUser = async (req, res) => {
   }
 };
 
+export const toggleUserStatus = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { isActive } = req.body;
+
+    if (typeof isActive !== 'boolean') {
+      return res.status(400).json({ error: 'isActive boolean is required' });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    user.isActive = isActive;
+    await user.save();
+
+    const updatedUser = user.toObject();
+    delete updatedUser.password;
+
+    res.json({ message: 'User status updated', user: updatedUser });
+  } catch (error) {
+    console.error('Error toggling user status:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -145,6 +172,11 @@ export const loginUser = async (req, res) => {
 
     if (user == null) {
       return res.status(400).json({ error: "Wrong email or password" });
+    }
+
+    // Block inactive accounts
+    if (user.isActive === false) {
+      return res.status(403).json({ error: "Your account has been blocked. Please contact support." });
     }
 
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);

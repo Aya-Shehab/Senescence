@@ -327,7 +327,8 @@
           class="users-flex-container"
           style="display: flex; gap: 2rem; align-items: flex-start"
         >
-          <div style="flex: 1">
+          <div style="flex: 1; max-width: 700px;">
+            <h3 style="text-align:center; margin-bottom:1rem;">Edit Users</h3>
             <input type="text" id="search" placeholder="Search users..." />
             <table class="user-table">
               <thead>
@@ -346,7 +347,13 @@
                   <td><%= user.name %></td>
                   <td><%= user.email %></td>
                   <td><%= user.phone || 'N/A' %></td>
-                  <td><%= user.role %></td>
+                  <td>
+                    <select class="form-select form-select-sm user-role-select" data-id="<%= user._id %>">
+                      <option value="" disabled selected><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></option>
+                      <option value="customer">Customer</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </td>
                   <td>
                     <span
                       class="status <%= user.isActive ? 'active' : 'inactive' %>"
@@ -365,14 +372,6 @@
                         <i class="fas fa-ellipsis-v"></i>
                       </button>
                       <ul class="dropdown-menu">
-                        <li>
-                          <button
-                            class="dropdown-item edit"
-                            data-id="<%= user._id %>"
-                          >
-                            <i class="bi bi-pencil-square"></i> Edit
-                          </button>
-                        </li>
                         <li>
                           <button
                             class="dropdown-item toggle-status"
@@ -397,38 +396,6 @@
                 <% }); %>
               </tbody>
             </table>
-          </div>
-          <div style="flex: 1">
-            <h3>Add/Edit User</h3>
-            <form class="user-form">
-              <label for="name">Name:</label>
-              <input type="text" id="name" name="name" required />
-
-              <label for="email">Email:</label>
-              <input type="email" id="email" name="email" required />
-
-              <label for="phone">Phone:</label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                pattern="^01[0125][0-9]{8}$"
-              />
-
-              <label for="role">Role:</label>
-              <select id="role" name="role">
-                <option value="customer">Customer</option>
-                <option value="admin">Admin</option>
-              </select>
-
-              <label for="isActive">Status:</label>
-              <select id="isActive" name="isActive">
-                <option value="true">Active</option>
-                <option value="false">Inactive</option>
-              </select>
-
-              <button type="submit">Save</button>
-            </form>
           </div>
         </div>
       </div>
@@ -1335,6 +1302,34 @@
           alert(`Failed to load sales data: ${error.message}`);
         }
       }
+    </script>
+    <script>
+      // Role change functionality
+      document.querySelectorAll(".user-role-select").forEach(select => {
+        select.addEventListener("change", async () => {
+          const userId = select.getAttribute("data-id");
+          const newRole = select.value;
+
+          try {
+            const response = await fetch(`/api/v1/users/${userId}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ role: newRole })
+            });
+
+            if (response.ok) {
+              alert("User role updated successfully");
+            } else {
+              alert("Failed to update user role");
+            }
+          } catch (error) {
+            console.error("Error updating user role:", error);
+            alert("Error updating user role");
+          }
+        });
+      });
     </script>
   </body>
 </html>

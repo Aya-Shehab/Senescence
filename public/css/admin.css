@@ -503,3 +503,13 @@ align-items: center;
   background-color: #f8f9fa;
 }
 
+/* --- Added: wider dropdown for user roles --- */
+.user-role-select {
+  min-width: 120px;
+  width: 120px; /* ensures placeholder fully visible */
+}
+
+.users-flex-container {
+  justify-content: center;
+}
+

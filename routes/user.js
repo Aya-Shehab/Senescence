@@ -5,7 +5,8 @@ import {
   getUserById,
   deleteUser,
   loginUser,
-  updateUser
+  updateUser,
+  toggleUserStatus
 } from "../controllers/user.js";
 
 const router = express.Router();
@@ -25,6 +26,7 @@ router.get("/logout", (req,res) => {
 router.get("/", getAllUsers);
 router.get("/:id", getUserById);
 router.put("/:id", updateUser);
+router.patch("/:id/toggle-status", toggleUserStatus);
 router.delete("/:id", deleteUser);
 
 export default router;
