@@ -61,21 +61,21 @@
                     <div class="col-lg-12 col-md-12 col-sm-12 info-column">
                         <div class="contact-info-inner">
                             <div class="single-box">
-                                <h3>Opening hours</h3>
+                                <h3 style="color:black">Opening hours</h3>
                                 <ul class="list clearfix"> 
                                     <li>Daily: 9.30 AM–6.00 PM</li>
                                     <li>Sunday & Holidays: Closed</li>
                                 </ul>
                             </div>
                             <div class="single-box">
-                                <h3>Contact info</h3>
+                                <h3 style="color:black">Contact info</h3>
                                 <ul class="list clearfix">
                                     <li><a href="mailto:example@info.com">example@info.com</a></li>
                                     <li><a href="tel:6174959400326">(617) 495-9400-326</a></li>
                                 </ul>
                             </div>
                             <div class="single-box">
-                                <h3>Location</h3>
+                                <h3 style="color:black">Location</h3>
                                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d221082.78135104929!2d31.389189678804595!3d30.02485050703663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145822cffcd270e7%3A0x98b73d687889fd8!2sNew%20Cairo%20City%2C%20Cairo%20Governorate!5e0!3m2!1sen!2seg!4v1749523631533!5m2!1sen!2seg" width="100%" height="130" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                             </div>
                         </div>
@@ -94,14 +94,14 @@
     <style>
         /* Contact Info Styling */
         .contact-section .contact-info-inner {
-            background-color: #fffefc; /* warm pastel background */
-            border: 10px solid #e5d3bc;
+            background-color: white;
+            border: 10px solid #e3a087;
             padding: 25px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: space-between;
             gap: 20px;
-            margin-top: 50px; /* Increased space between form and contact info */
+            margin-top: 50px;
         }
 
         .contact-section .contact-info-inner .single-box {
@@ -111,13 +111,14 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            color: black;
         }
 
         .contact-section .contact-info-inner h3 {
             font-size: 22px;
-            color: #8c5e3c;
+            color: #e3a087;
             margin-bottom: 15px;
-            border-bottom: 2px solid #e6b98c;
+            border-bottom: 2px solid #e3a087;
             display: inline-block;
             padding-bottom: 5px;
         }
@@ -129,23 +130,34 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            color: black;
         }
 
         .contact-section .contact-info-inner .list li {
             font-size: 16px;
-            color: #5a3e2b;
+            color: black;
             margin-bottom: 8px;
-            padding-left: 0; /* Removed left padding since we're centering */
+            padding-left: 0;
             position: relative;
             text-align: center;
+        }
+
+        .contact-section .contact-info-inner .list li a {
+            color: black;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-section .contact-info-inner .list li a:hover {
+            color: #e3a087;
         }
 
         /* Form card */
         .contact-section .form-inner {
             padding: 30px;
-            background-color: #fffefc;
-            border: 10px solid #e5d3bc;
-            box-shadow: 0 4px 12px rgba(165, 120, 80, 0.1);
+            background-color: white;
+            border: 10px solid #e3a087;
+            box-shadow: 0 4px 12px rgba(227, 160, 135, 0.2);
             max-width: 800px;
             margin: 0 auto;
         }
@@ -155,8 +167,8 @@
         .contact-section .default-form textarea {
             width: 100%;
             padding: 10px 15px;
-            border: 1px solid #c2a98d;
-            background-color: #fffaf5;
+            border: 1px solid #e3a087;
+            background-color: #ffffff;
             margin-bottom: 10px;
             font-size: 15px;
             transition: border-color 0.3s ease;
@@ -164,13 +176,13 @@
 
         .contact-section .default-form input:focus,
         .contact-section .default-form textarea:focus {
-            border-color: #a67c52;
+            border-color: #e3a087;
             outline: none;
         }
 
         /* Labels and small notes */
         .contact-section .default-form small {
-            color: #7a5c3f;
+            color: black;
             font-size: 13px;
             display: block;
             margin-top: 3px;
@@ -178,7 +190,7 @@
 
         /* Submit button */
         .contact-section .theme-btn-one {
-            background-color: #a67c52;
+            background-color: #e3a087;
             color: white;
             padding: 12px 25px;
             border: none;
@@ -189,7 +201,7 @@
             margin: 0 auto;
         }
         .contact-section .theme-btn-one:hover {
-            background-color: #8c6239;
+            background-color: #d18c73;
         }
 
         /* Error styling */
