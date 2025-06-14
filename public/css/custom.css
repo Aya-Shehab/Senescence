@@ -85,16 +85,20 @@ html, body {
 
 .shop-block-one .inner-box {
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
     background: #fff;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    height: 600px; /* Increased height to remove scrollbar */
+    overflow: hidden; /* Keep overflow hidden for the main box */
 }
 
 .shop-block-one .inner-box .image-box {
     position: relative;
-    display: block;
+    width: 100%;
+    padding-top: 130%; /* Increased from 110% to make images larger */
     overflow: hidden;
-    padding-top: 120%; /* Increased from 100% to make images slightly taller */
+    flex-shrink: 0;
 }
 
 .shop-block-one .inner-box .image-box img {
@@ -114,6 +118,11 @@ html, body {
 .shop-block-one .inner-box .lower-content {
     position: relative;
     padding: 20px 25px 25px 25px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Removed overflow-y: auto; */
 }
 
 .shop-block-one .inner-box .lower-content h3 {
@@ -125,6 +134,7 @@ html, body {
     font-weight: 500;
     color: #222;
     margin-bottom: 8px;
+    text-align: center; /* Center the product name */
 }
 
 .shop-block-one .inner-box .lower-content h3 a {
@@ -702,4 +712,41 @@ body .theme-btn-one:active {
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Pushes 'Add to cart' to bottom */
+}
+
+.cart-btn {
+    display: flex;
+    flex-direction: column; /* Arrange buttons vertically */
+    gap: 10px; /* Add some space between buttons */
+}
+
+.cart-btn .theme-btn-two {
+    width: 100%; /* Make buttons take full width */
+}
+
+.dropdown-menu {
+  background-color: #ffffff !important;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.dropdown-item {
+  color: #000000 !important;
+  transition: all 0.3s ease;
+  padding: 8px 15px;
+  display: block;
+  width: 100%;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background-color: #add8d3 !important;
+  color: #ffffff !important;
+}
+
+.dropdown-divider {
+  border-color: #e9ecef;
+  margin: 8px 0;
 } 
