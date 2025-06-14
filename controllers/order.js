@@ -7,7 +7,7 @@ import crypto from 'crypto';
 export const placeOrder = async (req, res) => {
   try {
     const { userId } = req.params;
-    const { shippingInfo, paymentMethod, items: clientItems } = req.body;
+    const { shippingInfo, paymentMethod } = req.body;
 
     if (!shippingInfo || !shippingInfo.firstName || !shippingInfo.lastName || 
         !shippingInfo.email || !shippingInfo.phone || !shippingInfo.address ||
@@ -16,21 +16,19 @@ export const placeOrder = async (req, res) => {
       return res.status(400).json({ error: 'Please fill all fields' });
     }
 
-    // Fetch items from cart if not provided by client
-    let items = clientItems;
-    if (!items || items.length === 0) {
-      const cart = await Cart.findOne({ userId }).populate('items.productId');
-      if (!cart || cart.items.length === 0) {
-        return res.status(400).json({ error: 'Cart is empty' });
-      }
-      items = cart.items.map((ci) => ({
-        id: ci.productId._id || ci.productId,
-        name: ci.productName,
-        image: ci.imageUrl,
-        quantity: ci.quantity,
-        price: ci.price,
-      }));
+    // Always fetch items directly from the user's cart to avoid client-side tampering
+    const cart = await Cart.findOne({ userId }).populate('items.productId');
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({ error: 'Cart is empty' });
     }
+
+    const items = cart.items.map((ci) => ({
+      id: ci.productId._id || ci.productId,
+      name: ci.productName,
+      image: ci.imageUrl,
+      quantity: ci.quantity,
+      price: ci.price,
+    }));
 
     // Calculate totals
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
