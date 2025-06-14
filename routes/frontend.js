@@ -164,4 +164,12 @@ router.delete('/api/v1/favorites/:productId', auth(['customer']), async (req, re
 // Search route
 router.post('/search', searchProducts);
 
+router.get("/privacy", (req, res) => {
+  res.render("privacy");
+});
+
+router.get("/terms", (req, res) => {
+  res.render("terms");
+});
+
 export default router;
