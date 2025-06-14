@@ -563,7 +563,7 @@
 }
 
 .main-menu .navigation > li{
-  position:inherit;
+  position:relative;
   float:left;
   z-index:2;
   padding:45px 0px;
@@ -634,7 +634,7 @@
   margin-top: 0px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(20px);
+  transform: translateY(5px);
   transition: all 300ms ease;
   z-index: 100;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
