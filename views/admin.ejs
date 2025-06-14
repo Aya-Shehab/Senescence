@@ -945,7 +945,7 @@
       // Fetch orders from backend and display in the table
       async function loadOrders() {
         try {
-          const response = await fetch('/api/v1/orders');
+          const response = await fetch('/api/v1/orders', { credentials: 'include' });
           if (!response.ok) {
             throw new Error('Failed to fetch orders');
           }
@@ -1006,7 +1006,8 @@
           const response = await fetch(`/api/v1/orders/status/${orderId}`, {
             method: 'PUT',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              credentials: 'include'
             },
             body: JSON.stringify({ status: newStatus })
           });
@@ -1031,7 +1032,8 @@
 
         try {
           const response = await fetch(`/api/v1/orders/${orderId}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            credentials: 'include'
           });
 
           if (!response.ok) {
