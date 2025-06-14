@@ -36,13 +36,16 @@ export const placeOrder = async (req, res) => {
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-    const orderItems = items.map(item => ({
-      productId: item.id,
-      name: item.name,
-      imageUrl: item.image,
-      quantity: item.quantity,
-      price: item.price
-    }));
+    const orderItems = items
+  .filter(item => item && item.id) 
+  .map(item => ({
+    productId: item.id,
+    name: item.name,
+    imageUrl: item.image,
+    quantity: item.quantity,
+    price: item.price
+  }));
+
 
     const generateOrderNumber = async () => {
       let orderNumber;
