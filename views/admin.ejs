@@ -24,6 +24,7 @@
     <script src="/js/orders.js"></script>
   </head>
   <body>
+    <script>const currentUserId = "<%= user ? user._id : '' %>";</script>
     <div class="sidebar">
       <h2>Bakery Admin</h2>
       <a onclick="showSection('modern-dashboard')"
@@ -56,6 +57,7 @@
       <div class="navbar">
         <h1>Dashboard Overview</h1>
         <span>Welcome, Admin!</span>
+        <button onclick="window.location.href='/api/v1/users/logout'" class="btn btn-link p-0" style="text-decoration: none; color: #000; border: 1px solid #000; border-radius: 20px; padding: 5px 15px !important; transition: all 0.3s ease;">Logout</button>
       </div>
 
       <div id="modern-dashboard" class="section active-section">
@@ -205,7 +207,7 @@
             <h3>Order Management</h3>
             <div class="d-flex justify-content-between align-items-center">
               <div>
-                <p>Total Orders: <span id="totalOrders">0</span></p>
+                <p>Total Orders: <span id="ordersTotal">0</span></p>
                 <p>Pending Orders: <span id="pendingOrders">0</span></p>
               </div>
             </div>
@@ -452,46 +454,23 @@
 
 
       <div id="account" class="section">
-        <div class="card-container">
-          <div class="card highlight-card">
-            <h3>👤 My Account</h3>
-            <h2 style="color: #4e73df">Admin Profile</h2>
-            <p>Account Status: Active</p>
-            <button class="btn view-btn">Edit Profile</button>
-          </div>
-
-          <div class="card highlight-card">
-            <div class="title">Last Login</div>
-            <div class="amount">Today</div>
-            <div class="change">9:30 AM</div>
-          </div>
-        </div>
-
         <div class="profile-container" style="display: flex; gap: 2rem">
           <div class="chart-container" style="flex: 1">
             <h3>Profile Information</h3>
             <form class="user-form" id="accountForm">
               <label for="adminName">Full Name:</label>
-              <input type="text" id="adminName" value="John Admin" required />
+              <input type="text" id="adminName" value="<%= user ? user.name : '' %>" required />
 
               <label for="adminEmail">Email:</label>
               <input
                 type="email"
                 id="adminEmail"
-                value="admin@bakery.com"
+                value="<%= user ? user.email : '' %>"
                 required
               />
 
               <label for="adminPhone">Phone:</label>
-              <input type="tel" id="adminPhone" value="+1 (555) 123-4567" />
-
-              <label for="adminRole">Role:</label>
-              <input
-                type="text"
-                id="adminRole"
-                value="Store Manager"
-                readonly
-              />
+              <input type="tel" id="adminPhone" value="<%= user && user.phone ? user.phone : '' %>" />
 
               <button type="submit">Save Changes</button>
             </form>
@@ -503,12 +482,12 @@
               <input type="password" id="currentPass" required />
 
               <label for="newPass">New Password:</label>
-              <input type="password" id="newPass" minlength="8" />
+              <input type="password" id="newPass" minlength="6" />
 
               <label for="confirmPass">Confirm Password:</label>
-              <input type="password" id="confirmPass" minlength="8" />
+              <input type="password" id="confirmPass" minlength="6" />
 
-              <button type="submit">Update Password</button>
+              <button type="button" id="updatePassBtn">Update Password</button>
             </form>
           </div>
         </div>
@@ -620,7 +599,7 @@
           document.getElementById('salesGrowth').textContent = `+${data.sales.growth}%`;
 
           // Update Orders
-          document.getElementById('totalOrders').textContent = data.orders.total;
+          document.getElementById('ordersTotal').textContent = data.orders.total;
           document.getElementById('ordersGrowth').textContent = `+${data.orders.growth}%`;
 
           // Update Customer Orders
@@ -921,7 +900,7 @@
           tbody.innerHTML = '';
 
           // Update order counts
-          document.getElementById('totalOrders').textContent = orders.length;
+          document.getElementById('ordersTotal').textContent = orders.length;
           document.getElementById('pendingOrders').textContent = 
             orders.filter(order => order.status === 'Pending').length;
 
@@ -1327,6 +1306,36 @@
           } catch (error) {
             console.error("Error updating user role:", error);
             alert("Error updating user role");
+          }
+        });
+      });
+    </script>
+    <script>
+      // Handle profile update
+      document.addEventListener('DOMContentLoaded', () => {
+        const accountForm = document.getElementById('accountForm');
+        if (!accountForm) return;
+
+        accountForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const name = document.getElementById('adminName').value.trim();
+          const email = document.getElementById('adminEmail').value.trim();
+          const phone = document.getElementById('adminPhone').value.trim();
+
+          try {
+            const res = await fetch(`/api/v1/users/<%= user ? user._id : '' %>`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name, email, phone })
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to update');
+
+            alert('Profile updated successfully');
+          } catch (err) {
+            alert(err.message);
+            console.error(err);
           }
         });
       });

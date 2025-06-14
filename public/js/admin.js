@@ -161,20 +161,35 @@ accountForm.addEventListener('submit', function(e) {
 // Password form
 const passwordForm = document.getElementById('passwordForm');
 if (passwordForm) {
-passwordForm.addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const newPass = document.getElementById('newPass').value;
-  const confirmPass = document.getElementById('confirmPass').value;
-  
-  if (newPass !== confirmPass) {
-    alert('Passwords do not match!');
-    return;
-  }
-  
-  alert('Password updated successfully!');
-  this.reset();
-});
+  passwordForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const currentPass = document.getElementById('currentPass').value;
+    const newPass = document.getElementById('newPass').value;
+    const confirmPass = document.getElementById('confirmPass').value;
+
+    if (newPass !== confirmPass) {
+      alert('Passwords do not match!');
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/v1/users/${currentUserId}/change-password`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword: currentPass, newPassword: newPass })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update password');
+
+      alert('Password updated successfully');
+      passwordForm.reset();
+    } catch (err) {
+      alert(err.message);
+      console.error(err);
+    }
+  });
 }
 });
 
@@ -328,7 +343,7 @@ async function loadOrders() {
     tbody.innerHTML = '';
     
     // Update order counts
-    document.getElementById('totalOrders').textContent = orders.length;
+    document.getElementById('ordersTotal').textContent = orders.length;
     document.getElementById('pendingOrders').textContent = 
       orders.filter(order => order.status === 'Pending').length;
 
