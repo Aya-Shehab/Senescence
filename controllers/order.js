@@ -22,13 +22,23 @@ export const placeOrder = async (req, res) => {
       return res.status(400).json({ error: 'Cart is empty' });
     }
 
-    const items = cart.items.map((ci) => ({
-      id: ci.productId._id || ci.productId,
-      name: ci.productName,
-      image: ci.imageUrl,
-      quantity: ci.quantity,
-      price: ci.price,
-    }));
+    // Filter out any cart entries lacking a valid product reference to avoid null errors
+    const items = cart.items
+      .filter((ci) => ci && ci.productId)
+      .map((ci) => {
+        const prodRef = ci.productId; // may be populated doc or plain ObjectId
+        return {
+          id: prodRef._id ? prodRef._id : prodRef,
+          name: ci.productName || (prodRef.name ?? 'Unknown'),
+          image: ci.imageUrl || prodRef.imageUrl || '',
+          quantity: ci.quantity,
+          price: ci.price,
+        };
+      });
+
+    if (items.length === 0) {
+      return res.status(400).json({ error: 'Cart is empty' });
+    }
 
     // Calculate totals
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
