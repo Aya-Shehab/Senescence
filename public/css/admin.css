@@ -378,7 +378,7 @@ align-items: center;
 
 /* Order Management Table Specific Styles */
 #orders .table-container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   overflow-x: auto;
   font-size: 0.8rem;
@@ -387,30 +387,86 @@ align-items: center;
 #orders .table {
   font-size: 0.8rem;
   width: 100%;
+  table-layout: fixed;  /* Added to control column widths */
 }
 
 #orders .table th,
 #orders .table td {
-  padding: 4px 6px;
+  padding: 8px 10px;
   white-space: nowrap;
   vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* Define column widths */
+#orders .table th:nth-child(1), /* Order Number */
+#orders .table td:nth-child(1) {
+  width: 8%;
+}
+
+#orders .table th:nth-child(2), /* Customer */
+#orders .table td:nth-child(2) {
+  width: 10%;
+}
+
+#orders .table th:nth-child(3), /* Email */
+#orders .table td:nth-child(3) {
+  width: 15%;
+}
+
+#orders .table th:nth-child(4), /* Phone */
+#orders .table td:nth-child(4) {
+  width: 10%;
+}
+
+#orders .table th:nth-child(5), /* Address */
+#orders .table td:nth-child(5) {
+  width: 15%;
+}
+
+#orders .table th:nth-child(6), /* Items */
 #orders .table td:nth-child(6) {
+  width: 15%;
   white-space: normal;
-  max-width: 120px;
-  min-width: 100px;
+  word-wrap: break-word;
+}
+
+#orders .table th:nth-child(7), /* Total Price */
+#orders .table td:nth-child(7) {
+  width: 8%;
+}
+
+#orders .table th:nth-child(8), /* Status */
+#orders .table td:nth-child(8) {
+  width: 8%;
+}
+
+#orders .table th:nth-child(9), /* Payment */
+#orders .table td:nth-child(9) {
+  width: 8%;
+}
+
+#orders .table th:nth-child(10), /* Date */
+#orders .table td:nth-child(10) {
+  width: 8%;
+}
+
+#orders .table th:nth-child(11), /* Actions */
+#orders .table td:nth-child(11) {
+  width: 5%;
 }
 
 #orders .form-select {
-  padding: 2px 4px;
+  padding: 4px 8px;
   font-size: 0.8rem;
   height: auto;
   min-height: 24px;
+  width: 100%;
 }
 
 #orders .btn-sm {
-  padding: 2px 4px;
+  padding: 4px 8px;
   font-size: 0.8rem;
   line-height: 1;
 }
@@ -419,20 +475,31 @@ align-items: center;
   font-size: 0.8rem;
   font-weight: 600;
   background-color: #f8f9fa;
-  padding: 6px 8px;
+  padding: 8px 10px;
 }
 
 #orders .table-responsive {
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
 #orders .chart-container {
-  padding: 10px;
+  padding: 15px;
+  width: 100%;
 }
 
 #orders .table td small {
   font-size: 0.75rem;
   color: #666;
+}
+
+/* Add hover effect for better readability */
+#orders .table td:hover {
+  white-space: normal;
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+  background-color: #f8f9fa;
 }
 
