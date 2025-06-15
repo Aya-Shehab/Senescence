@@ -56,21 +56,6 @@ chart.addEventListener('mouseleave', () => {
 });
 
 
-// Order Management - Status Filter and Actions
-document.addEventListener("DOMContentLoaded", function () {
-  // Status Filter Implementation
-  const filter = document.getElementById("statusFilter");
-
-  filter.addEventListener("change", function () {
-    const status = this.value;
-    const rows = document.querySelectorAll("tbody tr");
-
-    rows.forEach((row) => {
-      const statusText = row.querySelector(".status").textContent.trim();
-      row.style.display = (status === "All" || statusText === status) ? "" : "none";
-    });
-  });
-});
 
 // Account Management - Profile and Password
 document.addEventListener('DOMContentLoaded', function() {
