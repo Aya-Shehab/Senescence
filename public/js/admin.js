@@ -100,35 +100,6 @@ document.addEventListener("DOMContentLoaded", function () {
       row.style.display = (status === "All" || statusText === status) ? "" : "none";
     });
   });
-
-  // Action Menu Toggle
-  document.querySelectorAll(".dots-btn").forEach(button => {
-    button.addEventListener("click", function (e) {
-      e.stopPropagation();
-      closeAllMenus();
-      const menu = this.nextElementSibling;
-      menu.style.display = "block";
-    });
-  });
-
-  // View More Action Handler
-  document.querySelectorAll(".action-item.view").forEach(item => {
-    item.addEventListener("click", function () {
-      const productName = this.closest("tr").querySelector("td").innerText;
-      alert("Viewing more details for:\n\n" + productName);
-      closeAllMenus();
-    });
-  });
-
-  // Delete Action Handler
-  document.querySelectorAll(".action-item.delete").forEach(item => {
-    item.addEventListener("click", function () {
-      if (confirm("Are you sure you want to delete this order?")) {
-        const row = this.closest("tr");
-        row.remove();
-      }
-    });
-  });
 });
 
 // Account Management - Profile and Password
@@ -586,7 +557,7 @@ async function deleteRequest(requestId) {
 function editRequest(requestId) {
   showAddRequestForm();
 
-  
+
   // Fetch and populate the form data
   fetch(`/api/v1/custom-orders/${requestId}`)
     .then(response => response.json())
