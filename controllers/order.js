@@ -2,6 +2,7 @@ import Cart from '../models/cart.js';
 import Order from '../models/order.js';
 import axios from 'axios';
 import crypto from 'crypto';
+import mongoose from 'mongoose';
 
 //user
 export const placeOrder = async (req, res) => {
@@ -16,23 +17,29 @@ export const placeOrder = async (req, res) => {
       return res.status(400).json({ error: 'Please fill all fields' });
     }
 
+    // Validate Egyptian phone format server-side
+    const phoneRegex = /^01[0125]\d{8}$/;
+    if (!phoneRegex.test(shippingInfo.phone)) {
+      return res.status(400).json({ error: 'Invalid phone number' });
+    }
+
     // Always fetch items directly from the user's cart to avoid client-side tampering
     const cart = await Cart.findOne({ userId }).populate('items.productId');
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({ error: 'Cart is empty' });
     }
 
-    // Filter out any cart entries lacking a valid product reference to avoid null errors
+   
     const items = cart.items
-      .filter((ci) => ci && ci.productId)
-      .map((ci) => {
-        const prodRef = ci.productId; // may be populated doc or plain ObjectId
+      .filter((item) => item && item.productId)
+      .map((item) => {
+        const prodRef = item.productId;
         return {
           id: prodRef._id ? prodRef._id : prodRef,
-          name: ci.productName || (prodRef.name ?? 'Unknown'),
-          image: ci.imageUrl || prodRef.imageUrl || '',
-          quantity: ci.quantity,
-          price: ci.price,
+          name: item.productName || (prodRef.name ?? 'Unknown'),
+          image: item.imageUrl || prodRef.imageUrl || '',
+          quantity: item.quantity,
+          price: item.price,
         };
       });
 
@@ -40,7 +47,7 @@ export const placeOrder = async (req, res) => {
       return res.status(400).json({ error: 'Cart is empty' });
     }
 
-    // Calculate totals
+    
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
@@ -58,7 +65,7 @@ export const placeOrder = async (req, res) => {
       let isUnique = false;
       while (!isUnique) {
         const timestamp = Date.now();
-        const random = Math.random().toString(36).substr(2, 9).toUpperCase();
+        const random = Math.random().toString(36).substring(2, 9).toUpperCase();
         orderNumber = `ORD-${timestamp}-${random}`;
         const existingOrder = await Order.findOne({ orderNumber });
         if (!existingOrder) {
@@ -81,7 +88,7 @@ export const placeOrder = async (req, res) => {
         paymentStatus: 'pending'
       });
 
-      // After successful order creation (cash or card flow), clear user's cart
+      
       await Cart.findOneAndUpdate(
         { userId },
         { $set: { items: [], totalItems: 0, totalPrice: 0 } },
@@ -156,7 +163,7 @@ export const placeOrder = async (req, res) => {
         // generate payment URL
         const paymentUrl = `https://accept.paymob.com/api/acceptance/iframes/${process.env.PAYMOB_IFRAME_ID}?payment_token=${paymentToken}`;
 
-        // After successful order creation (cash or card flow), clear user's cart
+        // After order creation (cash or card), clear user's cart
         await Cart.findOneAndUpdate(
           { userId },
           { $set: { items: [], totalItems: 0, totalPrice: 0 } },
@@ -223,25 +230,6 @@ export const paymentCallback = async (req, res) => {
   }
 };
 
-export const cancelOrder = async (req, res) => {
-  try {
-    const { orderId } = req.params;
-    
-    const order = await Order.findByIdAndUpdate(
-      orderId,
-      { status: 'Cancelled' },
-      { new: true }
-    );
-    
-    if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
-    }
-    res.status(200).json({ message: 'Order cancelled', order });
-  } catch (error) {
-    res.status(500).json({ error: 'Server error' });
-  }
-};
-
 export const getUserOrders = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -276,6 +264,25 @@ export const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ error: 'Order not found' });
     }
     res.status(200).json({ message: 'Order status updated', order });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+export const deleteOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      return res.status(400).json({ error: 'Invalid order ID' });
+    }
+
+    const deleted = await Order.findByIdAndDelete(orderId);
+    if (!deleted) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.status(200).json({ message: 'Order permanently deleted' });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }

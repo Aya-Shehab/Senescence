@@ -58,14 +58,14 @@
         margin: 0;
       }
       .product-discription {
-        padding-top: 30px; /* Adjust this value to decrease/increase space */
+        padding-top: 30px; 
       }
       .other-links {
         margin-top: 20px;
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        justify-content: center; /* Center the tags/ingredients */
+        justify-content: center; 
       }
       .other-links .list {
         margin-right: 20px;
@@ -151,7 +151,7 @@
                         <div class="tab-btn-box">
                             <ul class="tab-btns tab-buttons clearfix">
                                 <li class="tab-btn active-btn" data-tab="#tab-1">Description</li>
-                                <li class="tab-btn" data-tab="#tab-2">Reviews (2)</li>
+                                <li class="tab-btn" data-tab="#tab-2">Reviews</li>
                             </ul>
                         </div>
                         <div class="tabs-content">
@@ -229,7 +229,6 @@
                 </div>
             </div>
         </section>
-        <!-- single-product end -->
     </main>
     <%- include("partials/footer")%>
     <%- include("partials/scripts")%>
@@ -242,17 +241,14 @@
 
             priceButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Remove active class from all buttons
                     priceButtons.forEach(btn => btn.classList.remove('active'));
-                    // Add active class to clicked button
                     this.classList.add('active');
-                    // Update hidden inputs
                     selectedPriceInput.value = this.dataset.price;
                     selectedPriceTypeInput.value = this.dataset.priceType;
                 });
             });
 
-            // Set initial active state for whole cake button
+           
             priceButtons[0].classList.add('active');
         });
 

@@ -83,7 +83,7 @@ async function editProduct(productId) {
         document.getElementById('productId').value = product._id;
         document.getElementById('name').value = product.name;
         document.getElementById('category').value = product.category;
-        document.getElementById('imageUrl').value = product.imageUrl;
+        // Cannot set value for file input programmatically due to browser security
         document.getElementById('pricePackWhole').value = product.pricePackWhole;
         document.getElementById('pricePiece').value = product.pricePiece;
         document.getElementById('description').value = product.description;
@@ -126,33 +126,29 @@ document.getElementById('inventoryForm').addEventListener('submit', async (e) =>
     console.log('Form submitted');
 
     const productId = document.getElementById('productId').value;
-    const formData = {
-        name: document.getElementById('name').value,
-        category: document.getElementById('category').value,
-        imageUrl: document.getElementById('imageUrl').value,
-        pricePackWhole: parseFloat(document.getElementById('pricePackWhole').value),
-        pricePiece: parseFloat(document.getElementById('pricePiece').value) || undefined,
-        description: document.getElementById('description').value,
-        ingredients: document.getElementById('ingredients').value.split(',').map(i => i.trim()).filter(i => i),
-        inStock: document.getElementById('inStock').value === 'true',
-        quantity: parseInt(document.getElementById('quantity').value) || 0,
-        tags: document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t)
-    };
+    const formElement = document.getElementById('inventoryForm');
+    const fd = new FormData(formElement);
 
-    console.log('Form data being sent:', formData);
+    // Manually append additional processed fields
+    fd.set('pricePackWhole', parseFloat(document.getElementById('pricePackWhole').value));
+    const pricePieceVal = document.getElementById('pricePiece').value;
+    if(pricePieceVal) fd.set('pricePiece', parseFloat(pricePieceVal));
+    fd.set('inStock', document.getElementById('inStock').value === 'true');
+    fd.set('quantity', parseInt(document.getElementById('quantity').value) || 0);
+    // Convert arrays to comma-separated strings
+    fd.set('ingredients', document.getElementById('ingredients').value);
+    fd.set('tags', document.getElementById('tags').value);
+
+    console.log('Submitting FormData:', [...fd.entries()]);
 
     try {
         const url = productId ? `/api/v1/products/${productId}` : '/api/v1/products';
         const method = productId ? 'PUT' : 'POST';
-        console.log('Sending request to:', url, 'with method:', method);
 
         const response = await fetch(url, {
             method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(formData)
+            body: fd,
+            credentials: 'include'
         });
         
         console.log('Response status:', response.status);

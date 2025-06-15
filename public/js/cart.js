@@ -1,7 +1,7 @@
 // Cart functionality (server-side powered)
 let cart = [];
 
-// Helper to map server cart model → front-end structure
+
 function mapServerCartItems(items = []) {
   return items.map((it) => ({
     id: (it.productId && it.productId._id) || it.productId,

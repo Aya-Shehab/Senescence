@@ -791,7 +791,7 @@
 
 	// Update cart UI function (dummy for now)
 	function updateCartUI() {
-		// This function would typically fetch the latest cart quantity
+		
 		// and update the cart icon/count in the header.
 		console.log("Cart UI updated.");
 		// Example: Fetch new cart quantity from API

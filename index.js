@@ -65,6 +65,16 @@ app.use("/api/v1/feedback", feedbackRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use(frontendRouter);
 
+// Handle undefined routes (404)
+app.use((req, res) => {
+  // If the request is for the API, respond with JSON
+  if (req.originalUrl.startsWith('/api/')) {
+    return res.status(404).json({ error: 'Route not found' });
+  }
+  // Otherwise render the 404 page
+  return res.status(404).render('404');
+});
+
 // Connect to database
 const startServer = async () => {
   try {

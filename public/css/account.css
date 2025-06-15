@@ -10,12 +10,15 @@ body {
     background: #ffffff;
     color: #333;
     line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .account-container {
     display: flex;
-    min-height: 100vh;
-    padding-top: 80px; /* Account for navbar */
+    flex: 1;
+    position: relative;
 }
 
 /* Sidebar Styles */
@@ -24,10 +27,9 @@ body {
     background: linear-gradient(135deg, #a8e6cf 0%, #88d8c0 100%);
     padding: 2rem 0;
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    position: fixed;
-    left: 0;
-    top: 80px;
-    bottom: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
     overflow-y: auto;
 }
 
@@ -159,8 +161,9 @@ body {
 /* Main Content */
 .main-content {
     flex: 1;
-    margin-left: 280px;
     padding: 2rem;
+    min-height: 100vh;
+    overflow-y: auto;
 }
 
 .welcome-section {
@@ -679,8 +682,6 @@ body {
         max-width: 250px;
     }
 }
-
-
 
 /* Empty State Styles - Add these to your account.css file */
 .empty-state {

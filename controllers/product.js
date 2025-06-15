@@ -3,8 +3,11 @@ import Feedback from "../models/feedback.js";
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, category, pricePackWhole } = req.body;
-    if (!name || !category || !pricePackWhole) {
+    const { name, category } = req.body;
+    const pricePackWholeRaw = req.body.pricePackWhole;
+    const pricePackWhole = Number(pricePackWholeRaw);
+
+    if (!name || !category || pricePackWholeRaw === undefined) {
       return res.status(400).json({ error: "All fields are required" });
     }
     const validCategories = ["Cake", "Cookie", "Croissant"];
@@ -15,7 +18,7 @@ export const createProduct = async (req, res) => {
           error: `Category must be one of: ${validCategories.join(", ")}`,
         });
     }
-    if (typeof pricePackWhole !== "number" || pricePackWhole < 0) {
+    if (isNaN(pricePackWhole) || pricePackWhole < 0) {
       return res
         .status(400)
         .json({ error: "pricePackWhole must be a non-negative number." });
@@ -24,17 +27,28 @@ export const createProduct = async (req, res) => {
     if (product != null) {
       return res.status(400).json({ error: "Product already exists" });
     }
+    
+    const parseArrayField = (field) => {
+      if (!field) return [];
+      if (Array.isArray(field)) return field;
+      try {
+        return JSON.parse(field);
+      } catch {
+        return String(field).split(',').map(s=>s.trim()).filter(Boolean);
+      }
+    };
+
     const newProduct = new Product({
       name: req.body.name,
       category: req.body.category,
-      pricePackWhole: req.body.pricePackWhole,
-      imageUrl: req.body.imageUrl || "",
+      pricePackWhole,
+      imageUrl: req.file ? `/uploads/${req.file.filename}` : (req.body.imageUrl || ""),
       pricePiece: req.body.pricePiece || 0,
       description: req.body.description || "",
-      ingredients: req.body.ingredients || [],
-      inStock: req.body.inStock || true,
+      ingredients: parseArrayField(req.body.ingredients),
+      inStock: req.body.inStock === 'false' ? false : !!req.body.inStock,
       quantity: req.body.quantity || 0,
-      tags: req.body.tags || [],
+      tags: parseArrayField(req.body.tags),
     });
     await newProduct.save();
     return res.status(201).json(newProduct);
@@ -78,8 +92,11 @@ export const getProductById = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   try {
-    const { name, category, pricePackWhole } = req.body;
-    if (!name || !category || !pricePackWhole) {
+    const { name, category } = req.body;
+    const pricePackWholeRaw = req.body.pricePackWhole;
+    const pricePackWhole = Number(pricePackWholeRaw);
+
+    if (!name || !category || pricePackWholeRaw === undefined) {
       return res.status(400).json({ error: "All fields are required" });
     }
     const validCategories = ["Cake", "Cookie", "Croissant"];
@@ -88,7 +105,7 @@ export const updateProduct = async (req, res) => {
         error: `Category must be one of: ${validCategories.join(", ")}`,
       });
     }
-    if (typeof pricePackWhole !== "number" || pricePackWhole < 0) {
+    if (isNaN(pricePackWhole) || pricePackWhole < 0) {
       return res.status(400).json({ error: "pricePackWhole must be a non-negative number." });
     }
 
@@ -105,19 +122,29 @@ export const updateProduct = async (req, res) => {
       }
     }
 
+    const parseArrayField = (field) => {
+      if (!field) return product.ingredients; // fallback
+      if (Array.isArray(field)) return field;
+      try {
+        return JSON.parse(field);
+      } catch {
+        return String(field).split(',').map(s=>s.trim()).filter(Boolean);
+      }
+    };
+
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       {
         name: req.body.name,
         category: req.body.category,
-        pricePackWhole: req.body.pricePackWhole,
-        imageUrl: req.body.imageUrl || product.imageUrl,
+        pricePackWhole,
+        imageUrl: req.file ? `/uploads/${req.file.filename}` : (req.body.imageUrl || product.imageUrl),
         pricePiece: req.body.pricePiece || product.pricePiece,
         description: req.body.description || product.description,
-        ingredients: req.body.ingredients || product.ingredients,
-        inStock: req.body.inStock !== undefined ? req.body.inStock : product.inStock,
+        ingredients: parseArrayField(req.body.ingredients),
+        inStock: req.body.inStock !== undefined ? (req.body.inStock === 'false' ? false : !!req.body.inStock) : product.inStock,
         quantity: req.body.quantity || product.quantity,
-        tags: req.body.tags || product.tags,
+        tags: parseArrayField(req.body.tags),
       },
       { new: true }
     );

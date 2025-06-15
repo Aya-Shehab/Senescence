@@ -52,8 +52,47 @@ router.get("/customer", (req, res) => {
     res.redirect("/" );
   });
   
-router.get("/account", auth(["customer"]), (req, res) => {
-  res.render("account"); 
+router.get("/account", auth(["customer"]), async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    // Fetch all orders for this user
+    const orders = await Order.find({ userId });
+    const totalOrders = orders.length;
+
+    // Determine favorite category based on items ordered
+    let favoriteCategory = 'N/A';
+    if (totalOrders > 0) {
+      const favAgg = await Order.aggregate([
+        { $match: { userId: req.user._id } },
+        { $unwind: '$items' },
+        {
+          $lookup: {
+            from: 'products',
+            localField: 'items.productId',
+            foreignField: '_id',
+            as: 'product'
+          }
+        },
+        { $unwind: '$product' },
+        { $group: { _id: '$product.category', count: { $sum: '$items.quantity' } } },
+        { $sort: { count: -1 } },
+        { $limit: 1 }
+      ]);
+
+      if (favAgg.length) {
+        favoriteCategory = favAgg[0]._id;
+      }
+    }
+
+    res.render("account", { totalOrders, favoriteCategory });
+  } catch (error) {
+    console.error('Error loading account page:', error);
+    res.status(500).render('error', {
+      message: 'Error loading account page',
+      error: process.env.NODE_ENV === 'development' ? error : {}
+    });
+  }
 });
 
 router.get("/about-us", (req, res) => {
