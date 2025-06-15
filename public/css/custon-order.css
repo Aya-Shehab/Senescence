@@ -1,0 +1,112 @@
+
+/* Form card */
+.form-inner {
+    padding: 30px;
+    background-color: #fffefc;
+    border: 10px solid #e3a087;
+    box-shadow: 0 4px 12px rgba(165, 120, 80, 0.1);
+}
+
+/* Form elements */
+.default-form input,
+.default-form textarea,
+.default-form input[type="file"],
+.default-form input[type="date"] {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #e3a087;
+    background-color: #fffaf5;
+    margin-bottom: 10px;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+}
+
+.default-form input:focus,
+.default-form textarea:focus {
+    border-color: #a67c52;
+    outline: none;
+}
+
+/* Labels and small notes */
+.default-form small {
+    color: #7a5c3f;
+    font-size: 13px;
+    display: block;
+    margin-top: 3px;
+}
+
+/* Submit button */
+.theme-btn-one {
+    background-color: #e3a087;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+.theme-btn-one:hover {
+    background-color: #8c6239;
+}
+
+/* Center submit button container */
+.message-btn {
+    text-align: center;
+}
+
+/* Error styling (already present but enhancing) */
+.error {
+    border-color: #dc3545 !important;
+}
+
+.custom-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    color: white;
+    font-size: 16px;
+    z-index: 9999;
+    display: none;
+    animation: slideIn 0.5s ease-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.notification-success {
+    background-color: #28a745;
+}
+
+.notification-error {
+    background-color: #dc3545;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}

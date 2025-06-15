@@ -1,0 +1,39 @@
+      
+      .success-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            text-align: center;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .success-icon {
+            color: #28a745;
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .order-details {
+            margin: 30px 0;
+            text-align: left;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .order-details p {
+            margin: 10px 0;
+        }
+        .btn-continue {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: #e3a087;
+            border-color: #e3a087;
+            color: #fff;
+        }
+        .btn-continue:hover {
+            background: #ce896f;
+            border-color: #ce896f;
+        }
+
+       
+    

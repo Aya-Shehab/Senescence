@@ -28,16 +28,14 @@
                 <div class="account-card">
                     <div class="card-icon">📊</div>
                     <h3>Order Summary</h3>
-                    <p>Total Orders: <strong>0</strong></p>
-                    <p>This Month: <strong>0</strong></p>
+                    <p>Total Orders: <strong><%= typeof totalOrders !== 'undefined' ? totalOrders : 0 %></strong></p>
                 </div>
                 
                 
                 <div class="account-card">
                     <div class="card-icon">🎂</div>
                     <h3>Favorite Category</h3>
-                    <p><strong>Croissants</strong></p>
-                    <p>0 orders this year</p>
+                    <p><strong><%= typeof favoriteCategory !== 'undefined' ? favoriteCategory : 'N/A' %></strong></p>
                 </div>
           
             </div>

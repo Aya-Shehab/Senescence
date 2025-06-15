@@ -245,7 +245,7 @@
           <button
             class="search-box-btn"
             type="button"
-            id="searchToggle"
+            id="searchToggleSticky"
             style="color: #000; background: none; border: none; padding: 8px 12px; display: flex; align-items: center;"
           >
             <img
@@ -254,7 +254,7 @@
               style="width: 30px; height: 30px"
             />
           </button>
-          <div class="search-panel" id="searchPanel" style="display: none;">
+          <div class="search-panel" id="searchPanelSticky" style="display: none;">
             <form method="post" action="/search" class="p-3">
               <div class="form-group position-relative">
                 <input
@@ -651,32 +651,34 @@
     });
   });
 
-  document.addEventListener('DOMContentLoaded', function() {
-    const searchToggle = document.getElementById('searchToggle');
-    const searchPanel = document.getElementById('searchPanel');
-    
-    // Toggle search panel
-    searchToggle.addEventListener('click', function(e) {
+  // Attach search toggle handlers for both normal and sticky headers
+  function initSearchToggle(toggleId, panelId){
+    const toggle = document.getElementById(toggleId);
+    const panel = document.getElementById(panelId);
+    if(!toggle || !panel) return;
+
+    toggle.addEventListener('click', function(e){
       e.stopPropagation();
-      searchPanel.style.display = searchPanel.style.display === 'none' ? 'block' : 'none';
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
     });
 
-    // Close search panel when clicking outside
-    document.addEventListener('click', function(e) {
-      if (!searchPanel.contains(e.target) && !searchToggle.contains(e.target)) {
-        searchPanel.style.display = 'none';
+    document.addEventListener('click', function(ev){
+      if (!panel.contains(ev.target) && !toggle.contains(ev.target)) {
+        panel.style.display = 'none';
       }
     });
+  }
 
-    // Handle search form submission
-    const searchForms = document.querySelectorAll('.search-panel form');
-    searchForms.forEach(form => {
-      form.addEventListener('submit', function(e) {
+  initSearchToggle('searchToggle','searchPanel');
+  initSearchToggle('searchToggleSticky','searchPanelSticky');
+
+  // Prevent empty search submission for all search forms (normal + sticky)
+  document.querySelectorAll('.search-panel form').forEach(form => {
+    form.addEventListener('submit', function(e){
         const searchInput = this.querySelector('input[type="search"]');
         if (!searchInput.value.trim()) {
           e.preventDefault();
         }
-      });
     });
   });
 

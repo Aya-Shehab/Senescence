@@ -11,7 +11,7 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #b8deda 0%, #719db4 100%);
+    background: linear-gradient(135deg, #f8d4b0 0%, #e6a17c 100%);
     border: none;
     cursor: pointer;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -29,7 +29,7 @@
 }
 
 .chat-toggle.active {
-    background: linear-gradient(135deg, #f4deea 0%, #eb9baa 100%);
+    background: linear-gradient(135deg, #f8d4b0 0%, #e6a17c 100%);
 }
 
 .chat-window {
@@ -64,7 +64,7 @@
 
 /* Chat Header */
 .chat-header {
-    background: linear-gradient(135deg, #f4deea 0%, #eb9baa 100%);
+    background: linear-gradient(135deg, #f8d4b0 0%, #e6a17c 100%);
     color: white;
     padding: 20px;
     text-align: center;
@@ -147,7 +147,7 @@
 }
 
 .message.user .message-bubble {
-    background: linear-gradient(135deg, #f4deea 0%, #eb9baa 100%);;
+    background: linear-gradient(135deg, #f8d4b0 0%, #e6a17c 100%);
     color: white;
     border-bottom-right-radius: 8px;
 }
@@ -227,7 +227,7 @@
     height: 40px;
     border: none;
     border-radius: 50%;
-    background: linear-gradient(135deg, #f4deea 0%, #eb9baa 100%);
+    background: linear-gradient(135deg, #f8d4b0 0%, #e6a17c 100%);
     color: white;
     cursor: pointer;
     display: flex;
