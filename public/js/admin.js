@@ -47,10 +47,6 @@ function updateWidget() {
   amount.textContent = `$${newAmount}`;
   change.textContent = `+${newChange}%`;
 }
-
-
-
-
 chart.addEventListener('mouseleave', () => {
   tooltip.style.display = 'none';
 });
@@ -59,16 +55,7 @@ chart.addEventListener('mouseleave', () => {
 
 // Account Management - Profile and Password
 document.addEventListener('DOMContentLoaded', function() {
-  // Profile Form Handler
-  const accountForm = document.getElementById('accountForm');
-  if (accountForm) {
-    accountForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      alert('Profile updated successfully!');
-    });
-  }
 
-  // Password Form Handler
   const passwordForm = document.getElementById('passwordForm');
   if (passwordForm) {
     passwordForm.addEventListener('submit', async function(e) {
