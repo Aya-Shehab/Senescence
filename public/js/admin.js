@@ -10,21 +10,8 @@ function showSection(id) {
 
 // Dashboard Charts Initialization
 document.addEventListener('DOMContentLoaded', function() {
-  // Sales Chart Configuration
   const salesCtx = document.getElementById('salesChart').getContext('2d');
   new Chart(salesCtx, {
-    type: 'line',
-    data: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-      datasets: [{
-        label: 'Sales ($)',
-        data: [12000, 15000, 14000, 17000, 21000, 23840],
-        backgroundColor: 'rgba(78, 115, 223, 0.05)', // Match Total Income (Yearly)
-        borderColor: '#4e73df', // Match Total Income (Yearly)
-        borderWidth: 2,
-        fill: true
-      }]
-    },
     options: { responsive: true, scales: { y: { beginAtZero: true } } }
   });
 
@@ -62,24 +49,7 @@ function updateWidget() {
 }
 
 
-// Chart Tooltip and Dynamic Updates
 
-const chart = document.getElementById('chart');
-const tooltip = document.getElementById('tooltip');
-const bars = chart.getElementsByClassName('bar');
-
-chart.addEventListener('mousemove', (e) => {
-  const rect = chart.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const barWidth = rect.width / bars.length;
-  const index = Math.floor(x / barWidth);
-  if (index >= 0 && index < bars.length) {
-    tooltip.style.display = 'block';
-    tooltip.style.left = e.pageX + 10 + 'px';
-    tooltip.style.top = e.pageY - 40 + 'px';
-    tooltip.textContent = `series-1: ${Math.floor(Math.random() * 100)}`;
-  }
-});
 
 chart.addEventListener('mouseleave', () => {
   tooltip.style.display = 'none';
@@ -156,49 +126,6 @@ function terminateSession(button) {
   }
 }
 
-
-// Action Menu and Status Updates
-
-// Dots Menu Handler
-document.querySelectorAll('.dots-btn').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    // Close all other menus
-    document.querySelectorAll('.dots-dropdown').forEach(menu => menu.style.display = 'none');
-    // Open this menu
-    this.nextElementSibling.style.display = 'block';
-  });
-});
-
-// Close menu when clicking outside
-document.addEventListener('click', () => {
-  document.querySelectorAll('.dots-dropdown').forEach(menu => menu.style.display = 'none');
-});
-
-// Status Update Handlers
-document.querySelectorAll('.action-item.confirm').forEach(btn => {
-  btn.addEventListener('click', function() {
-    const status = this.closest('tr').querySelector('.status');
-    if (status) status.textContent = 'Confirmed';
-    this.parentElement.style.display = 'none';
-  });
-});
-
-document.querySelectorAll('.action-item.complete').forEach(btn => {
-  btn.addEventListener('click', function() {
-    const status = this.closest('tr').querySelector('.status');
-    if (status) status.textContent = 'Completed';
-    this.parentElement.style.display = 'none';
-  });
-});
-
-document.querySelectorAll('.action-item.cancel').forEach(btn => {
-  btn.addEventListener('click', function() {
-    const status = this.closest('tr').querySelector('.status');
-    if (status) status.textContent = 'Cancelled';
-    this.parentElement.style.display = 'none';
-  });
-});
 
 
 // Feedback Management
