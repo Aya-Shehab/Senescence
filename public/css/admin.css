@@ -513,3 +513,32 @@ align-items: center;
   justify-content: center;
 }
 
+.user-form.editing {
+  border: 2px solid #4e73df;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #f8f9fc;
+}
+.save-btn {
+  background: #4e73df;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.2s;
+}
+.save-btn:hover { background:#375ab7; }
+
+.order-details {
+  max-width: 400px;
+  word-wrap: break-word;
+}
+.table td {
+  vertical-align: middle;
+}
+.table img {
+  max-height: 100px;
+  object-fit: cover;
+}
