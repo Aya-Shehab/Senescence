@@ -30,8 +30,8 @@ function displayProducts(products) {
             <td>${product.name}</td>
             <td>${product.category}</td>
             <td><img src="${product.imageUrl || '/images/placeholder.jpg'}" alt="${product.name}" style="width: 50px; height: 50px; object-fit: cover;"></td>
-            <td>$${product.pricePackWhole.toFixed(2)}</td>
-            <td>${product.pricePiece ? '$' + product.pricePiece.toFixed(2) : 'N/A'}</td>
+            <td>${product.pricePackWhole.toFixed(2)} EGP</td>
+            <td>${product.pricePiece ? product.pricePiece.toFixed(2) + ' EGP' : 'N/A'}</td>
             <td>${product.description || 'N/A'}</td>
             <td>${product.ingredients.join(', ') || 'N/A'}</td>
             <td>${product.inStock ? 'Yes' : 'No'}</td>
