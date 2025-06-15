@@ -127,7 +127,6 @@ function terminateSession(button) {
 }
 
 
-
 // Feedback Management
 
 async function loadFeedbacks() {
@@ -349,33 +348,6 @@ async function deleteProduct(id) {
 }
 
 
-// Special Requests Management
-async function loadRequests() {
-  const res = await fetch('/api/v1/custom-orders');
-  const requests = await res.json();
-  const tbody = document.getElementById('requests-tbody');
-  tbody.innerHTML = '';
-  requests.forEach(req => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${req.firstName} ${req.lastName}</td>
-        <td>${req.email}</td>
-        <td>${req.phone}</td>
-        <td>${req.address}</td>
-        <td>${req.description}</td>
-        <td>
-          ${req.imageUrl ? `<img src="${req.imageUrl}" alt="Request Photo" style="width:40px;height:40px;object-fit:cover;border-radius:5px;" />` : 'N/A'}
-        </td>
-        <td>${req.preferredDate ? new Date(req.preferredDate).toLocaleDateString() : '-'}</td>
-        <td>${req.notes || '-'}</td>
-        <td><span class="status ${req.status}">${req.status.charAt(0).toUpperCase() + req.status.slice(1)}</span></td>
-        <td>
-          <button class="btn btn-danger btn-sm" onclick="deleteRequest('${req._id}')">Delete</button>
-        </td>
-      </tr>
-    `;
-  });
-}
 
 // Custom Orders Management
 async function loadCustomOrders() {
