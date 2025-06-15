@@ -56,7 +56,7 @@ SERVICES:
 - Daily fresh baking
 - Special dietary options (gluten-free, vegan, sugar-free)
 - Online ordering available
-- Free delivery for orders over $50
+- Free delivery for orders over 300 EGP
 
 POLICIES:
 - Custom orders require 48-hour advance notice
