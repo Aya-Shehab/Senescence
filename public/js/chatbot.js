@@ -5,7 +5,6 @@ class Chatbot {
         this.isLoading = false;
         this.initializeElements();
         this.attachEventListeners();
-        this.loadChatHistory();
     }
 
     initializeElements() {
@@ -126,28 +125,6 @@ class Chatbot {
         setTimeout(() => {
             this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
         }, 100);
-    }
-
-    async loadChatHistory() {
-        try {
-            const response = await fetch(`/api/v1/chat/history/${this.sessionId}`);
-            const data = await response.json();
-
-            if (data.success && data.messages.length > 0) {
-                // Remove welcome message
-                const welcomeMsg = this.chatMessages.querySelector('.welcome-message');
-                if (welcomeMsg) {
-                    welcomeMsg.remove();
-                }
-
-                // Add historical messages
-                data.messages.forEach(msg => {
-                    this.addMessage(msg.content, msg.sender);
-                });
-            }
-        } catch (error) {
-            console.error('Failed to load chat history:', error);
-        }
     }
 
     async clearChatHistory() {

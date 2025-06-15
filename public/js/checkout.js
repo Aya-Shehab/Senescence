@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       const requiredFields = form.querySelectorAll('input[required], select[required]');
       
       let firstInvalid = null;
-
+      
       requiredFields.forEach(field => {
         if (!validateField(field, field.value)) {
           isValid = false;

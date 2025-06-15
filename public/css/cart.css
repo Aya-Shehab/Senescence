@@ -43,14 +43,15 @@
 }
 
 #checkoutBtn {
-  background-color: #28a745;
-  border-color: #28a745;
+  background-color: #e3a087;
+  border-color: #e68a68;
   transition: all 0.3s ease;
 }
 
 #checkoutBtn:hover {
-  background-color: #218838;
-  border-color: #1e7e34;
+  color: #e3a087;
+  background-color: #fff;
+  border-color: #e68a68;
   transform: translateY(-1px);
 }
 

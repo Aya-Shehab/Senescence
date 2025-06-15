@@ -47,43 +47,15 @@ function updateWidget() {
   amount.textContent = `$${newAmount}`;
   change.textContent = `+${newChange}%`;
 }
-
-
-
-
 chart.addEventListener('mouseleave', () => {
   tooltip.style.display = 'none';
 });
 
 
-// Order Management - Status Filter and Actions
-document.addEventListener("DOMContentLoaded", function () {
-  // Status Filter Implementation
-  const filter = document.getElementById("statusFilter");
-
-  filter.addEventListener("change", function () {
-    const status = this.value;
-    const rows = document.querySelectorAll("tbody tr");
-
-    rows.forEach((row) => {
-      const statusText = row.querySelector(".status").textContent.trim();
-      row.style.display = (status === "All" || statusText === status) ? "" : "none";
-    });
-  });
-});
 
 // Account Management - Profile and Password
 document.addEventListener('DOMContentLoaded', function() {
-  // Profile Form Handler
-  const accountForm = document.getElementById('accountForm');
-  if (accountForm) {
-    accountForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      alert('Profile updated successfully!');
-    });
-  }
 
-  // Password Form Handler
   const passwordForm = document.getElementById('passwordForm');
   if (passwordForm) {
     passwordForm.addEventListener('submit', async function(e) {
