@@ -3,7 +3,6 @@ import CustomOrder from '../models/customOrder.js';
 import Product from '../models/product.js';
 import User from '../models/user.js';
 
-// ... existing code ...
 
 export const getSalesAnalytics = async (req, res) => {
   try {
