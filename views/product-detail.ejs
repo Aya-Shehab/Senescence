@@ -136,7 +136,7 @@
                                             quantity: parseInt(document.getElementById('quantity').value),
                                             priceType: document.getElementById('selectedPriceType').value
                                         })" <%= !product.inStock ? 'disabled' : '' %>><%= product.inStock ? 'Add To Cart' : 'Out of Stock' %></button></li>
-                                        <li><button type="button" class="theme-btn-one" onclick="addToFavorites('<%= product._id %>')"><img src="/img/icons/love.png" alt="Add to Favorites"></img> Add to Favorites</button></li>
+                                        <li><button type="button" class="theme-btn-one" onclick="addToFavorites('<%= product._id %>')"><img src="/img/icons/love.png" style="width: 25px; height: 25px;" alt="Add to Favorites"></img> Add to Favorites</button></li>
                                     </ul>
                                 </div>
                             </div>
