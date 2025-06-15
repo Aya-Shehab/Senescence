@@ -81,7 +81,7 @@ function updateCartDisplay() {
           <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover;" class="me-3">
           <div class="flex-grow-1">
             <h6 class="mb-1">${item.name} (${item.priceType === 'whole' ? 'Whole Cake' : 'Single Piece'})</h6>
-            <p class="mb-1 text-muted">$${item.price.toFixed(2)}</p>
+            <p class="mb-1 text-muted">EGP${item.price.toFixed(2)}</p>
             <div class="d-flex align-items-center">
               <button class="btn btn-sm btn-outline-secondary me-2" onclick="updateQuantity(${index}, -1)">-</button>
               <span class="mx-2">${item.quantity}</span>
@@ -98,12 +98,12 @@ function updateCartDisplay() {
   });
 
   // Update totals
-  const shipping = subtotal > 0 ? 5.99 : 0;
+  const shipping = subtotal > 0 ? 59.99 : 0;
   const total = subtotal + shipping;
 
-  if (cartSubtotal) cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
-  if (cartShipping) cartShipping.textContent = `$${shipping.toFixed(2)}`;
-  if (cartTotal) cartTotal.textContent = `$${total.toFixed(2)}`;
+  if (cartSubtotal) cartSubtotal.textContent = `EGP${subtotal.toFixed(2)}`;
+  if (cartShipping) cartShipping.textContent = `EGP${shipping.toFixed(2)}`;
+  if (cartTotal) cartTotal.textContent = `EGP${total.toFixed(2)}`;
 }
 
 async function updateQuantity(index, change) {

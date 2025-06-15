@@ -115,7 +115,7 @@
                                         <div class="item-name"><%= item.name %></div>
                                         <div class="item-quantity">Quantity: <%= item.quantity %></div>
                                     </div>
-                                    <div class="item-price">$<%= (item.price * item.quantity).toFixed(2) %></div>
+                                    <div class="item-price">EGP<%= (item.price * item.quantity).toFixed(2) %></div>
                                 </div>
                             <% }); %>
                         </div>
@@ -126,7 +126,7 @@
                         </div>
                         
                         <div class="order-total">
-                            Total: $<%= order.totalPrice.toFixed(2) %>
+                            Total: EGP<%= order.totalPrice.toFixed(2) %>
                         </div>
                     </div>
                 <% }); %>

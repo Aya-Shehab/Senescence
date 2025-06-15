@@ -1,4 +1,4 @@
-<footer class="main-footer" style="background-image: url(/img/background/footer-1.jpg);">
+<footer class="main-footer" >
             <div class="auto-container">
                 <div class="subscribe-inner clearfix">
                     <div class="text">
@@ -66,7 +66,7 @@
         <!-- Toast notification & styles -->
         <div id="toast" class="toast">Submitted</div>
         <style>
-            .subscribe-inner {
+            .main-footer .subscribe-inner {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -77,20 +77,43 @@
 
             .subscribe-inner .form-group {
                 display: flex;
+                width: 100%;
+                position: relative;
             }
 
-            .subscribe-inner input[type="email"] {
-                padding: 10px 15px;
+            .main-footer .subscribe-inner input[type="email"] {
+                flex: 1;
+                padding: 15px 20px;
                 border: none;
                 border-radius: 4px 0 0 4px;
+                background: #2d2d2d;
+                color: #ffffff;
+                min-width: 300px;
                 outline: none;
             }
 
-            .subscribe-inner button {
+            .main-footer .subscribe-inner input[type="email"]::placeholder {
+                color: #ffffff;
+            }
+
+            .main-footer .subscribe-inner .subscribe-form .form-group button {
+                position: static !important;
+                margin-left: -4px; /* to overlap border radius edge */
+            }
+
+            .main-footer .subscribe-inner button {
                 border: none;
-                padding: 10px 20px;
+                padding: 15px 30px;
                 border-radius: 0 4px 4px 0;
+                background: #f0b59d;
+                color: #ffffff;
+                font-weight: 600;
                 cursor: pointer;
+                transition: background 0.3s ease;
+            }
+
+            .main-footer .subscribe-inner button:hover {
+                background: #e7a68c;
             }
 
             .toast {

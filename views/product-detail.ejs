@@ -118,9 +118,9 @@
                                     <% } %>
                                 </div>
                                 <div class="price-buttons">
-                                    <button type="button" class="theme-btn-one price-select" data-price-type="whole" data-price="<%= product.pricePackWhole %>">Whole/Pack ($<%= product.pricePackWhole %>)</button>
+                                    <button type="button" class="theme-btn-one price-select" data-price-type="whole" data-price="<%= product.pricePackWhole %>">Whole/Pack (EGP<%= product.pricePackWhole %>)</button>
                                     <% if (product.pricePiece) { %>
-                                        <button type="button" class="theme-btn-one price-select" data-price-type="piece" data-price="<%= product.pricePiece %>">Single Piece ($<%= product.pricePiece %>)</button>
+                                        <button type="button" class="theme-btn-one price-select" data-price-type="piece" data-price="<%= product.pricePiece %>">Single Piece (EGP<%= product.pricePiece %>)</button>
                                     <% } %>
                                 </div>
                                 <input type="hidden" id="selectedPrice" value="<%= product.pricePackWhole %>">
@@ -137,7 +137,7 @@
                                             quantity: parseInt(document.getElementById('quantity').value),
                                             priceType: document.getElementById('selectedPriceType').value
                                         })" <%= !product.inStock ? 'disabled' : '' %>><%= product.inStock ? 'Add To Cart' : 'Out of Stock' %></button></li>
-                                        <li><button type="button" class="theme-btn-one" onclick="addToFavorites('<%= product._id %>')"><i class="fa fa-heart"></i> Add to Favorites</button></li>
+                                        <li><button type="button" class="theme-btn-one" onclick="addToFavorites('<%= product._id %>')"><img src="/images/icons/love.png" alt="Add to Favorites"></img> Add to Favorites</button></li>
                                     </ul>
                                 </div>
                             </div>
@@ -151,7 +151,7 @@
                         <div class="tab-btn-box">
                             <ul class="tab-btns tab-buttons clearfix">
                                 <li class="tab-btn active-btn" data-tab="#tab-1">Description</li>
-                                <li class="tab-btn" data-tab="#tab-2">Reviews (2)</li>
+                                <li class="tab-btn" data-tab="#tab-2">Reviews</li>
                             </ul>
                         </div>
                         <div class="tabs-content">

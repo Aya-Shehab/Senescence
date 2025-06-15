@@ -347,29 +347,29 @@
             <div class="single-box clearfix">
               <img src="${ci.imageUrl}" alt="${ci.productName}" />
               <h6>${ci.productName} (${ci.priceType === 'whole' ? 'Whole' : 'Piece'}) x ${ci.quantity}</h6>
-              <span>$${itemTotal.toFixed(2)}</span>
+              <span>EGP${itemTotal.toFixed(2)}</span>
             </div>
           `;
           orderItemsList.appendChild(li);
         });
 
         // Add subtotal and shipping
-        const shipping = 5.99;
+        const shipping = 59.99;
         const total = subtotal + shipping;
 
         // Add totals to the list
         orderItemsList.innerHTML += `
           <li class="sub-total clearfix">
             <h6>Sub Total</h6>
-            <span>$${subtotal.toFixed(2)}</span>
+            <span>EGP${subtotal.toFixed(2)}</span>
           </li>
           <li class="shipping clearfix">
             <h6>Shipping</h6>
-            <span>$${shipping.toFixed(2)}</span>
+            <span>EGP${shipping.toFixed(2)}</span>
           </li>
           <li class="order-total clearfix">
             <h6>Order Total</h6>
-            <span>$${total.toFixed(2)}</span>
+            <span>EGP${total.toFixed(2)}</span>
           </li>
         `;
 

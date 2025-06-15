@@ -1096,7 +1096,7 @@
   height: 100%;
   max-height: 100%;
   overflow-y: auto;
-  background: #202020;
+  background: #ffffff;
   padding: 0px 0px;
   z-index: 5;
   opacity: 0;
@@ -1160,15 +1160,15 @@
 .mobile-menu .navigation li{
   position: relative;
   display: block;
-  border-top: 1px solid rgba(255,255,255,0.10);
+  border-top: 1px solid rgba(0,0,0,0.10);
 }
 
 .mobile-menu .navigation:last-child{
-  border-bottom: 1px solid rgba(255,255,255,0.10);
+  border-bottom: 1px solid rgba(0,0,0,0.10);
 }
 
 .mobile-menu .navigation li > ul > li:first-child{
-  border-top: 1px solid rgba(255,255,255,0.10);
+  border-top: 1px solid rgba(0,0,0,0.10);
 }
 
 .mobile-menu .navigation li > a{
@@ -1178,7 +1178,7 @@
   padding: 10px 25px;
   font-size: 15px;
   font-weight: 500;
-  color: #ffffff;
+  color: #000000;
   text-transform: uppercase;
   -webkit-transition: all 500ms ease;
   -moz-transition: all 500ms ease;
@@ -1199,7 +1199,7 @@
   left:0;
   top:0;
   height:0;
-  border-left:5px solid #fff;
+  border-left:5px solid #000;
   -webkit-transition: all 500ms ease;
   -moz-transition: all 500ms ease;
   -ms-transition: all 500ms ease;
@@ -1220,8 +1220,8 @@
   text-align:center;
   font-size:16px;
   line-height:32px;
-  color:#ffffff;
-  background:rgba(255,255,255,0.10);
+  color:#000000;
+  background:rgba(0,0,0,0.10);
   cursor:pointer;
   border-radius:2px;
   -webkit-transition: all 500ms ease;
