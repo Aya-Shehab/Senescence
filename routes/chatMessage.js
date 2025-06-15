@@ -1,6 +1,6 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
-import { clearChatHistory, getChatHistory, sendMessage } from '../controllers/chatMessage.js';
+import { clearChatHistory, sendMessage } from '../controllers/chatMessage.js';
 
 const router = express.Router();
 
@@ -19,7 +19,6 @@ const chatRateLimit = rateLimit({
 router.use(chatRateLimit);
 
 router.post('/message', sendMessage);
-router.get('/history/:sessionId', getChatHistory);
 router.delete('/clear/:sessionId', clearChatHistory);
 
 export default router;

@@ -51,11 +51,11 @@
 
     // Hide after 4 seconds
     setTimeout(() => {
-      notification.style.animation = 'slideOut 0.5s ease-out forwards';
-      setTimeout(() => {
-        notification.style.display = 'none';
-        notification.style.animation = 'slideIn 0.5s ease-out';
-      }, 500);
+        notification.style.animation = 'slideOut 0.5s ease-out forwards';
+        setTimeout(() => {
+            notification.style.display = 'none';
+            notification.style.animation = 'slideIn 0.5s ease-out';
+        }, 500);
     }, 4000);
   }
 
