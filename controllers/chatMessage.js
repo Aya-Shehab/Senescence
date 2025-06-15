@@ -75,46 +75,6 @@ import Product from '../models/product.js';
     }
   }
 
-  // get chat history for a session
-export const getChatHistory = async (req, res) => {
-    try {
-      const { sessionId } = req.params;
-      const { limit = 50 } = req.query;
-
-      if (!sessionId) {
-        return res.status(400).json({
-          success: false,
-          error: 'Session ID is required'
-        });
-      }
-
-      const messages = await ChatMessage.find({ sessionId })
-        .sort({ createdAt: -1 })
-        .limit(parseInt(limit))
-        .select('message response sender createdAt')
-        .lean();
-
-      // format messages for frontend
-      const formattedMessages = messages.reverse().map(msg => ({
-        content: msg.sender === 'user' ? msg.message : msg.response,
-        sender: msg.sender,
-        timestamp: msg.createdAt
-      }));
-
-      res.json({
-        success: true,
-        messages: formattedMessages
-      });
-
-    } catch (error) {
-      console.error('Get Chat History Error:', error);
-      res.status(500).json({
-        success: false,
-        error: 'Failed to retrieve chat history'
-      });
-    }
-  }
-
   // Clear chat history for a session
 export const clearChatHistory = async (req, res) => {
     try {

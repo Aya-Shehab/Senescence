@@ -481,26 +481,6 @@
 
 <!-- JavaScript -->
 <script>
-  function showToast(text, type = "success") {
-    const colors = {
-      success: "#28a745",
-      error: "#dc3545",
-    };
-
-    Toastify({
-      text,
-      duration: 3000,
-      newWindow: false,
-      close: true,
-      gravity: "top",
-      position: "right",
-      stopOnFocus: true,
-      style: {
-        background: colors[type] || colors.success,
-      },
-    }).showToast();
-  }
-
   const modalTitle = document.getElementById("modalTitle");
   const signupForm = document.getElementById("signupForm");
   const signinForm = document.getElementById("signinForm");
