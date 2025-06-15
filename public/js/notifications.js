@@ -88,6 +88,22 @@
   // Expose globally
   window.showNotification = showNotification;
 
+  /*
+   * Alias: showToast
+   * ---------------------------------
+   * Many legacy scripts (cart.js, navbar inline JS, etc.) call `showToast(...)`.
+   * To avoid duplicating notification helpers on individual pages we expose
+   * a thin alias that simply forwards to the canonical `showNotification`.
+   * This lets us delete or trim per-page helper snippets without breaking
+   * existing code paths.
+   */
+
+  if (!window.showToast) {
+    window.showToast = function(message, type = 'success') {
+      showNotification(message, type);
+    };
+  }
+
   // ----------------------------------------------------
   // Override window.alert to use toast instead of blocking dialog
   // ----------------------------------------------------
