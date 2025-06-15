@@ -1,4 +1,3 @@
-import ChatMessage from '../models/chatMessage.js';
 import GroqService from '../services/groqService.js';
 import Product from '../models/product.js'; 
 
@@ -31,34 +30,7 @@ import Product from '../models/product.js';
       // generate AI response
       const aiResponse = await GroqService.generateResponse(message, recentProducts);
 
-      // Save user message
-      const userMessage = new ChatMessage({
-        sessionId,
-        userId: req.user?.id || null, // null lw not signed in
-        message,
-        response: '', // empty for user messages
-        sender: 'user',
-        metadata: {
-          userAgent: req.get('User-Agent'),
-          ipAddress: req.ip || req.connection.remoteAddress
-        }
-      });
-
-      // save bot response
-      const botMessage = new ChatMessage({
-        sessionId,
-        userId: req.user?.id || null,
-        message: '', // empty for bot messages
-        response: aiResponse,
-        sender: 'bot',
-        metadata: {
-          userAgent: req.get('User-Agent'),
-          ipAddress: req.ip || req.connection.remoteAddress
-        }
-      });
-
-      // Save both messages
-      await Promise.all([userMessage.save(), botMessage.save()]);
+      // NOTE: History persistence has been removed to simplify the setup.
 
       res.json({
         success: true,
@@ -87,11 +59,10 @@ export const clearChatHistory = async (req, res) => {
         });
       }
 
-      await ChatMessage.deleteMany({ sessionId });
-
+      // Nothing to clear because we no longer store chat logs.
       res.json({
         success: true,
-        message: 'Chat history cleared successfully'
+        message: 'Chat history cleared (no-op)'
       });
 
     } catch (error) {

@@ -103,7 +103,7 @@ export const updateUser = async (req, res) => {
     if (role) user.role = role;
     if (typeof isActive === 'boolean') user.isActive = isActive;
 
-    // Validate the updated user
+    // validate the updated user
     try {
       await user.validate();
     } catch (validationError) {
