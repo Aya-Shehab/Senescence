@@ -1,3 +1,5 @@
+
+// Section Navigation Function
 function showSection(id) {
   document.querySelectorAll('.section').forEach(section => {
     section.classList.remove('active-section');
@@ -5,9 +7,10 @@ function showSection(id) {
   document.getElementById(id).classList.add('active-section');
 }
 
-// Wait for DOM to be ready before initializing charts
+
+// Dashboard Charts Initialization
 document.addEventListener('DOMContentLoaded', function() {
-  // Sales Chart
+  // Sales Chart Configuration
   const salesCtx = document.getElementById('salesChart').getContext('2d');
   new Chart(salesCtx, {
     type: 'line',
@@ -25,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
     options: { responsive: true, scales: { y: { beginAtZero: true } } }
   });
 
-  // Total Income (Yearly) Chart
+  // Total Income Chart Configuration
   const incomeCanvas = document.getElementById('incomeChart');
   if (incomeCanvas) {
     const incomeCtx = incomeCanvas.getContext('2d');
@@ -45,291 +48,234 @@ document.addEventListener('DOMContentLoaded', function() {
       options: { responsive: true, scales: { y: { beginAtZero: true } } }
     });
   }
-
-  // Optional: Add other chart initializations here (orderChart, etc.)
 });
 
+
+// Dashboard Widget Updates
 function updateWidget() {
-        const amount = document.querySelector('.amount');
-        const change = document.querySelector('.change');
-        const newAmount = Math.floor(Math.random() * 5000 + 1000);
-        const newChange = (Math.random() * 30).toFixed(2);
-        amount.textContent = `$${newAmount}`;
-        change.textContent = `+${newChange}%`;
-    }
-
-    // Update every 5 seconds (optional)
-    setInterval(updateWidget, 5000);
-    updateWidget(); // Initial call
-
-
-    const chart = document.getElementById('chart');
-    const tooltip = document.getElementById('tooltip');
-    const bars = chart.getElementsByClassName('bar');
-
-    chart.addEventListener('mousemove', (e) => {
-        const rect = chart.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const barWidth = rect.width / bars.length;
-        const index = Math.floor(x / barWidth);
-        if (index >= 0 && index < bars.length) {
-            tooltip.style.display = 'block';
-            tooltip.style.left = e.pageX + 10 + 'px';
-            tooltip.style.top = e.pageY - 40 + 'px';
-            tooltip.textContent = `series-1: ${Math.floor(Math.random() * 100)}`;
-        }
-    });
-
-    chart.addEventListener('mouseleave', () => {
-        tooltip.style.display = 'none';
-    });
-
-    // Optional: Add dynamic updates
-    function updateValues() {
-        const ordersValue = document.querySelector('.card:first-child .value');
-        const customerOrdersValue = document.querySelector('.card:last-child .value');
-        ordersValue.textContent = `${Math.floor(Math.random() * 100)}% used`;
-        customerOrdersValue.textContent = `$${Math.floor(Math.random() * 20000)}`;
-    }
-
-    // Update every 5 seconds (optional)
-    setInterval(updateValues, 5000);
-    updateValues(); // Initial call
-
-
-document.addEventListener("DOMContentLoaded", function () {
-const filter = document.getElementById("statusFilter");
-
-filter.addEventListener("change", function () {
-const status = this.value;
-const rows = document.querySelectorAll("tbody tr");
-
-rows.forEach((row) => {
-  const statusText = row.querySelector(".status").textContent.trim();
-  row.style.display = (status === "All" || statusText === status) ? "" : "none";
-});
-});
-
-// Toggle action menu
-document.querySelectorAll(".dots-btn").forEach(button => {
-button.addEventListener("click", function (e) {
-  e.stopPropagation();
-  closeAllMenus();
-  const menu = this.nextElementSibling;
-  menu.style.display = "block";
-});
-});
-
-// Close menus when clicking outside
-document.addEventListener("click", closeAllMenus);
-
-function closeAllMenus() {
-document.querySelectorAll(".action-menu").forEach(menu => {
-  menu.style.display = "none";
-});
+  const amount = document.querySelector('.amount');
+  const change = document.querySelector('.change');
+  const newAmount = Math.floor(Math.random() * 5000 + 1000);
+  const newChange = (Math.random() * 30).toFixed(2);
+  amount.textContent = `$${newAmount}`;
+  change.textContent = `+${newChange}%`;
 }
 
-// View More action
-document.querySelectorAll(".action-item.view").forEach(item => {
-item.addEventListener("click", function () {
-  const productName = this.closest("tr").querySelector("td").innerText;
-  alert("Viewing more details for:\n\n" + productName);
-  closeAllMenus();
-});
-});
 
-// Delete action
-document.querySelectorAll(".action-item.delete").forEach(item => {
-item.addEventListener("click", function () {
-  if (confirm("Are you sure you want to delete this order?")) {
-    const row = this.closest("tr");
-    row.remove();
+// Chart Tooltip and Dynamic Updates
+
+const chart = document.getElementById('chart');
+const tooltip = document.getElementById('tooltip');
+const bars = chart.getElementsByClassName('bar');
+
+chart.addEventListener('mousemove', (e) => {
+  const rect = chart.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const barWidth = rect.width / bars.length;
+  const index = Math.floor(x / barWidth);
+  if (index >= 0 && index < bars.length) {
+    tooltip.style.display = 'block';
+    tooltip.style.left = e.pageX + 10 + 'px';
+    tooltip.style.top = e.pageY - 40 + 'px';
+    tooltip.textContent = `series-1: ${Math.floor(Math.random() * 100)}`;
   }
 });
+
+chart.addEventListener('mouseleave', () => {
+  tooltip.style.display = 'none';
 });
-});
-document.addEventListener('DOMContentLoaded', function() {
-// Profile form
-const accountForm = document.getElementById('accountForm');
-if (accountForm) {
-accountForm.addEventListener('submit', function(e) {
-  e.preventDefault();
-  alert('Profile updated successfully!');
-});
-}
 
-// Password form
-const passwordForm = document.getElementById('passwordForm');
-if (passwordForm) {
-  passwordForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
 
-    const currentPass = document.getElementById('currentPass').value;
-    const newPass = document.getElementById('newPass').value;
-    const confirmPass = document.getElementById('confirmPass').value;
+// Order Management - Status Filter and Actions
+document.addEventListener("DOMContentLoaded", function () {
+  // Status Filter Implementation
+  const filter = document.getElementById("statusFilter");
 
-    if (newPass !== confirmPass) {
-      alert('Passwords do not match!');
-      return;
-    }
+  filter.addEventListener("change", function () {
+    const status = this.value;
+    const rows = document.querySelectorAll("tbody tr");
 
-    try {
-      const res = await fetch(`/api/v1/users/${currentUserId}/change-password`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentPassword: currentPass, newPassword: newPass })
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to update password');
-
-      alert('Password updated successfully');
-      passwordForm.reset();
-    } catch (err) {
-      alert(err.message);
-      console.error(err);
-    }
+    rows.forEach((row) => {
+      const statusText = row.querySelector(".status").textContent.trim();
+      row.style.display = (status === "All" || statusText === status) ? "" : "none";
+    });
   });
-}
+
+  // Action Menu Toggle
+  document.querySelectorAll(".dots-btn").forEach(button => {
+    button.addEventListener("click", function (e) {
+      e.stopPropagation();
+      closeAllMenus();
+      const menu = this.nextElementSibling;
+      menu.style.display = "block";
+    });
+  });
+
+  // View More Action Handler
+  document.querySelectorAll(".action-item.view").forEach(item => {
+    item.addEventListener("click", function () {
+      const productName = this.closest("tr").querySelector("td").innerText;
+      alert("Viewing more details for:\n\n" + productName);
+      closeAllMenus();
+    });
+  });
+
+  // Delete Action Handler
+  document.querySelectorAll(".action-item.delete").forEach(item => {
+    item.addEventListener("click", function () {
+      if (confirm("Are you sure you want to delete this order?")) {
+        const row = this.closest("tr");
+        row.remove();
+      }
+    });
+  });
 });
 
+// Account Management - Profile and Password
+document.addEventListener('DOMContentLoaded', function() {
+  // Profile Form Handler
+  const accountForm = document.getElementById('accountForm');
+  if (accountForm) {
+    accountForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Profile updated successfully!');
+    });
+  }
+
+  // Password Form Handler
+  const passwordForm = document.getElementById('passwordForm');
+  if (passwordForm) {
+    passwordForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const currentPass = document.getElementById('currentPass').value;
+      const newPass = document.getElementById('newPass').value;
+      const confirmPass = document.getElementById('confirmPass').value;
+
+      if (newPass !== confirmPass) {
+        alert('Passwords do not match!');
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/v1/users/${currentUserId}/change-password`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ currentPassword: currentPass, newPassword: newPass })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to update password');
+
+        alert('Password updated successfully');
+        passwordForm.reset();
+      } catch (err) {
+        alert(err.message);
+        console.error(err);
+      }
+    });
+  }
+});
+
+// Session Management
 function terminateSession(button) {
-if (confirm('End this session?')) {
-button.closest('tr').remove();
-alert('Session ended successfully.');
-}
+  if (confirm('End this session?')) {
+    button.closest('tr').remove();
+    alert('Session ended successfully.');
+  }
 }
 
+
+// Action Menu and Status Updates
+
+// Dots Menu Handler
 document.querySelectorAll('.dots-btn').forEach(btn => {
-btn.addEventListener('click', function(e) {
-e.stopPropagation();
-// Close all other menus
-document.querySelectorAll('.dots-dropdown').forEach(menu => menu.style.display = 'none');
-// Open this menu
-this.nextElementSibling.style.display = 'block';
-});
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    // Close all other menus
+    document.querySelectorAll('.dots-dropdown').forEach(menu => menu.style.display = 'none');
+    // Open this menu
+    this.nextElementSibling.style.display = 'block';
+  });
 });
 
 // Close menu when clicking outside
 document.addEventListener('click', () => {
-document.querySelectorAll('.dots-dropdown').forEach(menu => menu.style.display = 'none');
-});
-
-// Handle Confirm, Complete, Cancel actions
-document.querySelectorAll('.action-item.confirm').forEach(btn => {
-btn.addEventListener('click', function() {
-const status = this.closest('tr').querySelector('.status');
-if (status) status.textContent = 'Confirmed';
-this.parentElement.style.display = 'none';
-});
-});
-document.querySelectorAll('.action-item.complete').forEach(btn => {
-btn.addEventListener('click', function() {
-const status = this.closest('tr').querySelector('.status');
-if (status) status.textContent = 'Completed';
-this.parentElement.style.display = 'none';
-});
-});
-document.querySelectorAll('.action-item.cancel').forEach(btn => {
-btn.addEventListener('click', function() {
-const status = this.closest('tr').querySelector('.status');
-if (status) status.textContent = 'Cancelled';
-this.parentElement.style.display = 'none';
-});
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-// Event delegation for dots menu (handles dynamically added rows too)
-document.body.addEventListener('click', function (e) {
-// Open the menu
-if (e.target.classList.contains('dots-btn')) {
-  // Close all other menus
   document.querySelectorAll('.dots-dropdown').forEach(menu => menu.style.display = 'none');
-  // Open this menu
-  const menu = e.target.nextElementSibling;
-  if (menu) menu.style.display = 'block';
-  e.stopPropagation();
-}
-// Handle Confirm
-if (e.target.classList.contains('action-item') && e.target.classList.contains('confirm')) {
-  const status = e.target.closest('tr').querySelector('.status');
-  if (status) status.textContent = 'Confirmed';
-  e.target.parentElement.style.display = 'none';
-  e.stopPropagation();
-}
-// Handle Complete
-if (e.target.classList.contains('action-item') && e.target.classList.contains('complete')) {
-  const status = e.target.closest('tr').querySelector('.status');
-  if (status) status.textContent = 'Completed';
-  e.target.parentElement.style.display = 'none';
-  e.stopPropagation();
-}
-// Handle Cancel
-if (e.target.classList.contains('action-item') && e.target.classList.contains('cancel')) {
-  const status = e.target.closest('tr').querySelector('.status');
-  if (status) status.textContent = 'Cancelled';
-  e.target.parentElement.style.display = 'none';
-  e.stopPropagation();
-}
 });
 
-// Close all menus when clicking outside
-document.addEventListener('click', function () {
-document.querySelectorAll('.dots-dropdown').forEach(menu => menu.style.display = 'none');
-});
+// Status Update Handlers
+document.querySelectorAll('.action-item.confirm').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const status = this.closest('tr').querySelector('.status');
+    if (status) status.textContent = 'Confirmed';
+    this.parentElement.style.display = 'none';
+  });
 });
 
-// Fetch feedbacks from backend and display in the table
+document.querySelectorAll('.action-item.complete').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const status = this.closest('tr').querySelector('.status');
+    if (status) status.textContent = 'Completed';
+    this.parentElement.style.display = 'none';
+  });
+});
+
+document.querySelectorAll('.action-item.cancel').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const status = this.closest('tr').querySelector('.status');
+    if (status) status.textContent = 'Cancelled';
+    this.parentElement.style.display = 'none';
+  });
+});
+
+
+// Feedback Management
+
 async function loadFeedbacks() {
-const res = await fetch('/feedback');
-const feedbacks = await res.json();
-const tbody = document.getElementById('feedback-tbody');
-tbody.innerHTML = '';
-feedbacks.forEach(fb => {
-const tr = document.createElement('tr');
-tr.innerHTML = `
-  <td>${fb.user}</td>
-  <td>${fb.email}</td>
-  <td>${fb.message}</td>
-  <td>${new Date(fb.createdAt).toLocaleString()}</td>
-  <td>${fb.response || ''}</td>
-  <td>
-    <button onclick="respondFeedback('${fb._id}')">Respond</button>
-    <button onclick="deleteFeedback('${fb._id}')">Delete</button>
-  </td>
-`;
-tbody.appendChild(tr);
-});
+  const res = await fetch('/feedback');
+  const feedbacks = await res.json();
+  const tbody = document.getElementById('feedback-tbody');
+  tbody.innerHTML = '';
+  feedbacks.forEach(fb => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${fb.user}</td>
+      <td>${fb.email}</td>
+      <td>${fb.message}</td>
+      <td>${new Date(fb.createdAt).toLocaleString()}</td>
+      <td>${fb.response || ''}</td>
+      <td>
+        <button onclick="respondFeedback('${fb._id}')">Respond</button>
+        <button onclick="deleteFeedback('${fb._id}')">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
 }
 
 async function respondFeedback(id) {
-const response = prompt('Enter your response:');
-if (response) {
-await fetch(`/feedback/${id}/respond`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ response })
-});
-loadFeedbacks();
-}
+  const response = prompt('Enter your response:');
+  if (response) {
+    await fetch(`/feedback/${id}/respond`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ response })
+    });
+    loadFeedbacks();
+  }
 }
 
 async function deleteFeedback(id) {
-if (confirm('Delete this feedback?')) {
-await fetch(`/feedback/${id}`, { method: 'DELETE' });
-loadFeedbacks();
-}
+  if (confirm('Delete this feedback?')) {
+    await fetch(`/feedback/${id}`, { method: 'DELETE' });
+    loadFeedbacks();
+  }
 }
 
-// Load feedbacks when the feedback section is shown
-document.addEventListener('DOMContentLoaded', () => {
-const feedbackTab = document.querySelector('[onclick="showSection(\'feedback\')"]');
-if (feedbackTab) {
-feedbackTab.addEventListener('click', loadFeedbacks);
-}
-});
 
-// Fetch orders from backend and display in the table
+// Order Management
+
 async function loadOrders() {
   try {
     const response = await fetch('/api/v1/orders', {
@@ -388,7 +334,6 @@ async function loadOrders() {
   }
 }
 
-// Update order status
 async function updateOrderStatus(orderId, newStatus) {
   try {
     const response = await fetch(`/api/v1/orders/status/${orderId}`, {
@@ -412,7 +357,6 @@ async function updateOrderStatus(orderId, newStatus) {
   }
 }
 
-// Delete order
 async function deleteOrder(orderId) {
   if (!confirm('Are you sure you want to delete this order?')) {
     return;
@@ -436,129 +380,78 @@ async function deleteOrder(orderId) {
   }
 }
 
-// Load orders when the orders section is shown
-document.addEventListener('DOMContentLoaded', () => {
-  const ordersTab = document.querySelector('[onclick="showSection(\'orders\')"]');
-  if (ordersTab) {
-    ordersTab.addEventListener('click', loadOrders);
-  }
-});
-
-// Fetch users from backend and display in the table
+// User Management
 async function loadUsers() {
-const res = await fetch('/api/v1/users');
-const users = await res.json();
-const tbody = document.getElementById('users-tbody');
-tbody.innerHTML = '';
-users.forEach(user => {
-tbody.innerHTML += `
-  <tr>
-    <td>${user.name}</td>
-    <td>${user.email}</td>
-    <td>${user.role}</td>
-    <td>
-      <button onclick="editUser('${user._id}')">Edit</button>
-      <button onclick="deleteUser('${user._id}')">Delete</button>
-    </td>
-  </tr>
-`;
-});
+  const res = await fetch('/api/v1/users');
+  const users = await res.json();
+  const tbody = document.getElementById('users-tbody');
+  tbody.innerHTML = '';
+  users.forEach(user => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${user.name}</td>
+        <td>${user.email}</td>
+        <td>${user.role}</td>
+        <td>
+          <button onclick="editUser('${user._id}')">Edit</button>
+          <button onclick="deleteUser('${user._id}')">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
 }
 
 async function deleteUser(id) {
-if (confirm('Delete this user?')) {
-await fetch(`/api/v1/users/${id}`, { method: 'DELETE' });
-loadUsers();
-}
+  if (confirm('Delete this user?')) {
+    await fetch(`/api/v1/users/${id}`, { method: 'DELETE' });
+    loadUsers();
+  }
 }
 
 function editUser(id) {
-// You can fetch user details and fill the form for editing
-// Example:
-fetch(`/api/v1/users/${id}`)
-.then(res => res.json())
-.then(user => {
-  document.getElementById('username').value = user.name;
-  document.getElementById('email').value = user.email;
-  document.getElementById('role').value = user.role;
-  // Store user id for update
-  document.querySelector('.user-form').setAttribute('data-user-id', user._id);
-});
+
+  fetch(`/api/v1/users/${id}`)
+    .then(res => res.json())
+    .then(user => {
+      document.getElementById('username').value = user.name;
+      document.getElementById('email').value = user.email;
+      document.getElementById('role').value = user.role;
+      // Store user id for update
+      document.querySelector('.user-form').setAttribute('data-user-id', user._id);
+    });
 }
 
-// Handle add/edit user form submission
-document.querySelector('.user-form').addEventListener('submit', async function(e) {
-e.preventDefault();
-const id = this.getAttribute('data-user-id');
-const name = document.getElementById('username').value;
-const email = document.getElementById('email').value;
-const role = document.getElementById('role').value;
-if (id) {
-// Update user
-await fetch(`/api/v1/users/${id}`, {
-  method: 'PATCH',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ name, email, role })
-});
-this.removeAttribute('data-user-id');
-} else {
-// Add new user
-await fetch('/api/v1/users', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ name, email, role, password: 'default123' }) // Set a default password or prompt for one
-});
-}
-this.reset();
-loadUsers();
-});
-
-// Load users when the users section is shown
-document.addEventListener('DOMContentLoaded', () => {
-const usersTab = document.querySelector('[onclick="showSection(\'users\')"]');
-if (usersTab) {
-usersTab.addEventListener('click', loadUsers);
-}
-});
-
-// Fetch products from backend and display in the table
+// Product Management
 async function loadProducts() {
-const res = await fetch('/api/v1/products');
-const products = await res.json();
-const tbody = document.getElementById('products-tbody');
-tbody.innerHTML = '';
-products.forEach(product => {
-tbody.innerHTML += `
-  <tr>
-    <td>${product.name}</td>
-    <td>${product.category}</td>
-    <td>${product.pricePackWhole}</td>
-    <td>${product.pricePiece ?? '-'}</td>
-    <td>${product.inStock ? 'Yes' : 'No'}</td>
-    <td>
-      <button onclick="deleteProduct('${product._id}')">Delete</button>
-    </td>
-  </tr>
-`;
-});
+  const res = await fetch('/api/v1/products');
+  const products = await res.json();
+  const tbody = document.getElementById('products-tbody');
+  tbody.innerHTML = '';
+  products.forEach(product => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${product.name}</td>
+        <td>${product.category}</td>
+        <td>${product.pricePackWhole}</td>
+        <td>${product.pricePiece ?? '-'}</td>
+        <td>${product.inStock ? 'Yes' : 'No'}</td>
+        <td>
+          <button onclick="deleteProduct('${product._id}')">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
 }
 
 async function deleteProduct(id) {
-if (confirm('Delete this product?')) {
-await fetch(`/api/v1/products/${id}`, { method: 'DELETE' });
-loadProducts();
-}
+  if (confirm('Delete this product?')) {
+    await fetch(`/api/v1/products/${id}`, { method: 'DELETE' });
+    loadProducts();
+  }
 }
 
-// Load products when the products section is shown
-document.addEventListener('DOMContentLoaded', () => {
-const productsTab = document.querySelector('[onclick="showSection(\'products\')"]');
-if (productsTab) {
-productsTab.addEventListener('click', loadProducts);
-}
-});
 
-// Fetch special requests from backend and display in the table
+// Special Requests Management
 async function loadRequests() {
   const res = await fetch('/api/v1/custom-orders');
   const requests = await res.json();
@@ -586,18 +479,140 @@ async function loadRequests() {
   });
 }
 
-// Load requests when the requests section is shown
-document.addEventListener('DOMContentLoaded', () => {
-  const requestsTab = document.querySelector('[onclick="showSection(\'requests\')"]');
-  if (requestsTab) {
-    requestsTab.addEventListener('click', loadRequests);
+// Custom Orders Management
+async function loadCustomOrders() {
+  try {
+    const response = await fetch('/api/v1/custom-orders');
+    if (!response.ok) {
+      throw new Error('Failed to fetch custom orders');
+    }
+    const orders = await response.json();
+    const tbody = document.getElementById('requests-tbody');
+    tbody.innerHTML = '';
+
+    // Update total requests count
+    document.getElementById('totalRequests').textContent = orders.length;
+
+    orders.forEach(order => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>
+          <strong>${order.firstName} ${order.lastName}</strong>
+        </td>
+        <td>
+          <div><i class="bi bi-envelope"></i> ${order.email}</div>
+          <div><i class="bi bi-telephone"></i> ${order.phone}</div>
+          <div><i class="bi bi-geo-alt"></i> ${order.address}</div>
+        </td>
+        <td>
+          <div class="order-details">
+            <div class="mb-2"><strong>Description:</strong> ${order.description}</div>
+            ${order.imageUrl ? `<div class="mb-2"><img src="${order.imageUrl}" alt="Order Image" style="max-width: 100px; border-radius: 4px;"></div>` : ''}
+            ${order.preferredDate ? `<div><strong>Preferred Date:</strong> ${new Date(order.preferredDate).toLocaleDateString()}</div>` : ''}
+            ${order.notes ? `<div class="mt-2"><strong>Notes:</strong> ${order.notes}</div>` : ''}
+          </div>
+        </td>
+        <td>
+          <select class="form-select form-select-sm" onchange="updateRequestStatus('${order._id}', this.value)">
+            <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+            <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
+            <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>Completed</option>
+            <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+          </select>
+        </td>
+        <td>${new Date(order.createdAt).toLocaleString()}</td>
+        <td>
+          <button class="btn btn-primary btn-sm me-1" onclick="editRequest('${order._id}')">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="deleteRequest('${order._id}')">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+  } catch (error) {
+    console.error('Error loading custom orders:', error);
+    alert('Failed to load custom orders. Please try again.');
   }
-});
+}
+
+async function updateRequestStatus(requestId, newStatus) {
+  try {
+    const response = await fetch(`/api/v1/custom-orders/${requestId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ status: newStatus })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update request status');
+    }
+
+    await loadCustomOrders(); // Refresh the requests list
+    alert('Request status updated successfully');
+  } catch (error) {
+    console.error('Error updating request status:', error);
+    alert('Failed to update request status');
+  }
+}
+
+async function deleteRequest(requestId) {
+  if (!confirm('Are you sure you want to delete this request?')) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/v1/custom-orders/${requestId}`, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete request');
+    }
+
+    await loadCustomOrders(); // Refresh the requests list
+    alert('Request deleted successfully');
+  } catch (error) {
+    console.error('Error deleting request:', error);
+    alert('Failed to delete request');
+  }
+}
+
+function editRequest(requestId) {
+  showAddRequestForm();
+
+  
+  // Fetch and populate the form data
+  fetch(`/api/v1/custom-orders/${requestId}`)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('requestId').value = data._id;
+      document.getElementById('firstName').value = data.firstName;
+      document.getElementById('lastName').value = data.lastName;
+      document.getElementById('email').value = data.email;
+      document.getElementById('phone').value = data.phone;
+      document.getElementById('address').value = data.address;
+      document.getElementById('description').value = data.description;
+      document.getElementById('imageUrl').value = data.imageUrl || '';
+      document.getElementById('preferredDate').value = data.preferredDate ? new Date(data.preferredDate).toISOString().split('T')[0] : '';
+      document.getElementById('notes').value = data.notes || '';
+      document.getElementById('status').value = data.status;
+      document.getElementById('formTitle').textContent = 'Edit Request';
+    })
+    .catch(error => {
+      console.error('Error fetching request data:', error);
+      alert('Failed to load request data');
+    });
+}
 
 
-
- // Role change functionality
- document.querySelectorAll(".user-role-select").forEach(select => {
+// Role Management
+document.querySelectorAll(".user-role-select").forEach(select => {
   select.addEventListener("change", async () => {
     const userId = select.getAttribute("data-id");
     const newRole = select.value;
@@ -623,149 +638,90 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
- // Debug function to check if customOrders.js is loaded
- console.log('Custom Orders script loaded');
+// Debug Function
+console.log('Custom Orders script loaded');
 
-  // Load custom orders when the requests section is shown
-  document.addEventListener('DOMContentLoaded', () => {
-    const requestsTab = document.querySelector('[onclick="showSection(\'requests\')"]');
-    if (requestsTab) {
-      requestsTab.addEventListener('click', loadCustomOrders);
+// Event Delegation for Action Menu
+document.addEventListener('DOMContentLoaded', function () {
+  // Event delegation for dots menu (handles dynamically added rows too)
+  document.body.addEventListener('click', function (e) {
+    // Open the menu
+    if (e.target.classList.contains('dots-btn')) {
+      // Close all other menus
+      document.querySelectorAll('.dots-dropdown').forEach(menu => menu.style.display = 'none');
+      // Open this menu
+      const menu = e.target.nextElementSibling;
+      if (menu) menu.style.display = 'block';
+      e.stopPropagation();
+    }
+    // Handle Confirm
+    if (e.target.classList.contains('action-item') && e.target.classList.contains('confirm')) {
+      const status = e.target.closest('tr').querySelector('.status');
+      if (status) status.textContent = 'Confirmed';
+      e.target.parentElement.style.display = 'none';
+      e.stopPropagation();
+    }
+    // Handle Complete
+    if (e.target.classList.contains('action-item') && e.target.classList.contains('complete')) {
+      const status = e.target.closest('tr').querySelector('.status');
+      if (status) status.textContent = 'Completed';
+      e.target.parentElement.style.display = 'none';
+      e.stopPropagation();
+    }
+    // Handle Cancel
+    if (e.target.classList.contains('action-item') && e.target.classList.contains('cancel')) {
+      const status = e.target.closest('tr').querySelector('.status');
+      if (status) status.textContent = 'Cancelled';
+      e.target.parentElement.style.display = 'none';
+      e.stopPropagation();
     }
   });
 
-  // Fetch custom orders from backend and display in the table
-  async function loadCustomOrders() {
-    try {
-      const response = await fetch('/api/v1/custom-orders');
-      if (!response.ok) {
-        throw new Error('Failed to fetch custom orders');
-      }
-      const orders = await response.json();
-      const tbody = document.getElementById('requests-tbody');
-      tbody.innerHTML = '';
+  // Close all menus when clicking outside
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.dots-dropdown').forEach(menu => menu.style.display = 'none');
+  });
+});
 
-      // Update total requests count
-      document.getElementById('totalRequests').textContent = orders.length;
-
-      orders.forEach(order => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>
-            <strong>${order.firstName} ${order.lastName}</strong>
-          </td>
-          <td>
-            <div><i class="bi bi-envelope"></i> ${order.email}</div>
-            <div><i class="bi bi-telephone"></i> ${order.phone}</div>
-            <div><i class="bi bi-geo-alt"></i> ${order.address}</div>
-          </td>
-          <td>
-            <div class="order-details">
-              <div class="mb-2"><strong>Description:</strong> ${order.description}</div>
-              ${order.imageUrl ? `<div class="mb-2"><img src="${order.imageUrl}" alt="Order Image" style="max-width: 100px; border-radius: 4px;"></div>` : ''}
-              ${order.preferredDate ? `<div><strong>Preferred Date:</strong> ${new Date(order.preferredDate).toLocaleDateString()}</div>` : ''}
-              ${order.notes ? `<div class="mt-2"><strong>Notes:</strong> ${order.notes}</div>` : ''}
-            </div>
-          </td>
-          <td>
-            <select class="form-select form-select-sm" onchange="updateRequestStatus('${order._id}', this.value)">
-              <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
-              <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
-              <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>Completed</option>
-              <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-            </select>
-          </td>
-          <td>${new Date(order.createdAt).toLocaleString()}</td>
-          <td>
-            <button class="btn btn-primary btn-sm me-1" onclick="editRequest('${order._id}')">
-              <i class="bi bi-pencil-square"></i>
-            </button>
-            <button class="btn btn-danger btn-sm" onclick="deleteRequest('${order._id}')">
-              <i class="bi bi-trash"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-    } catch (error) {
-      console.error('Error loading custom orders:', error);
-      alert('Failed to load custom orders. Please try again.');
-    }
+// Load Custom Orders
+document.addEventListener('DOMContentLoaded', () => {
+  const requestsTab = document.querySelector('[onclick="showSection(\'requests\')"]');
+  if (requestsTab) {
+    requestsTab.addEventListener('click', loadCustomOrders);
   }
+});
 
-  // Update request status
-  async function updateRequestStatus(requestId, newStatus) {
-    try {
-      const response = await fetch(`/api/v1/custom-orders/${requestId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({ status: newStatus })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update request status');
-      }
-
-      await loadCustomOrders(); // Refresh the requests list
-      alert('Request status updated successfully');
-    } catch (error) {
-      console.error('Error updating request status:', error);
-      alert('Failed to update request status');
-    }
+// Load Orders
+document.addEventListener('DOMContentLoaded', () => {
+  const ordersTab = document.querySelector('[onclick="showSection(\'orders\')"]');
+  if (ordersTab) {
+    ordersTab.addEventListener('click', loadOrders);
   }
+});
 
-  // Delete request
-  async function deleteRequest(requestId) {
-    if (!confirm('Are you sure you want to delete this request?')) {
-      return;
-    }
+// Load Users
 
-    try {
-      const response = await fetch(`/api/v1/custom-orders/${requestId}`, {
-        method: 'DELETE'
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete request');
-      }
-
-      await loadCustomOrders(); // Refresh the requests list
-      alert('Request deleted successfully');
-    } catch (error) {
-      console.error('Error deleting request:', error);
-      alert('Failed to delete request');
-    }
+document.addEventListener('DOMContentLoaded', () => {
+  const usersTab = document.querySelector('[onclick="showSection(\'users\')"]');
+  if (usersTab) {
+    usersTab.addEventListener('click', loadUsers);
   }
+});
 
-  // Edit request
-  function editRequest(requestId) {
-    // Show the form and populate it with the request data
-    showAddRequestForm();
-    // Fetch and populate the form data
-    fetch(`/api/v1/custom-orders/${requestId}`)
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('requestId').value = data._id;
-        document.getElementById('firstName').value = data.firstName;
-        document.getElementById('lastName').value = data.lastName;
-        document.getElementById('email').value = data.email;
-        document.getElementById('phone').value = data.phone;
-        document.getElementById('address').value = data.address;
-        document.getElementById('description').value = data.description;
-        document.getElementById('imageUrl').value = data.imageUrl || '';
-        document.getElementById('preferredDate').value = data.preferredDate ? new Date(data.preferredDate).toISOString().split('T')[0] : '';
-        document.getElementById('notes').value = data.notes || '';
-        document.getElementById('status').value = data.status;
-        document.getElementById('formTitle').textContent = 'Edit Request';
-      })
-      .catch(error => {
-        console.error('Error fetching request data:', error);
-        alert('Failed to load request data');
-      });
+// Load Products
+document.addEventListener('DOMContentLoaded', () => {
+  const productsTab = document.querySelector('[onclick="showSection(\'products\')"]');
+  if (productsTab) {
+    productsTab.addEventListener('click', loadProducts);
   }
+});
 
+// Load Requests
+document.addEventListener('DOMContentLoaded', () => {
+  const requestsTab = document.querySelector('[onclick="showSection(\'requests\')"]');
+  if (requestsTab) {
+    requestsTab.addEventListener('click', loadRequests);
+  }
+});
 
   

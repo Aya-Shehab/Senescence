@@ -26,30 +26,14 @@
     <script>const currentUserId = "<%= user ? user._id : '' %>";</script>
     <div class="sidebar">
       <h2>Bakery Admin</h2>
-      <a onclick="showSection('modern-dashboard')"
-        ><i class="fas fa-tachometer-alt"></i> Dashboard Overview</a
-      >
-      <a onclick="showSection('account')"
-        ><i class="fas fa-user-circle"></i> Account Management</a
-      >
-      <a onclick="showSection('inventory')"
-        ><i class="fas fa-boxes"></i> Inventory</a
-      >
-      <a onclick="showSection('orders')"
-        ><i class="fas fa-shopping-cart"></i> Order Management</a
-      >
-      <a onclick="showSection('requests')"
-        ><i class="fas fa-gift"></i> Special Requests</a
-      >
-      <a onclick="showSection('users')"
-        ><i class="fas fa-users"></i> User Management</a
-      >
-      <a onclick="showSection('sales')"
-        ><i class="fas fa-chart-line"></i> Sales Analysis</a
-      >
-      <a onclick="showSection('feedback')"
-        ><i class="fas fa-comment-dots"></i> Feedback & Reviews</a
-      >
+      <a onclick="showSection('modern-dashboard')">Dashboard Overview</a>
+      <a onclick="showSection('account')"> Account Management</a>
+      <a onclick="showSection('inventory')">Inventory</a>
+      <a onclick="showSection('orders')" > Order Management</a>
+      <a onclick="showSection('requests')" >Special Requests</a>
+      <a onclick="showSection('users')"> User Management</a >
+      <a onclick="showSection('sales')" > Sales Analysis</a >
+      <a onclick="showSection('feedback')"> Feedback & Reviews</a >
     </div>
 
     <div class="main">
